@@ -1,0 +1,130 @@
+<div *ngIf="isWait">
+  <div>
+    <img src="/assets/bamboo_logo_raindrops_final.png" width="200" height="auto">
+  </div>
+  <div>
+    <mat-progress-bar
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-bar>
+  </div>
+</div>
+<div *ngIf="!isWait">
+  <div class="container-column-va">
+    <div class="container-row-va">
+      <div class="item-va">
+        <img src="/assets/bamboo_logo_vault_final.png" class="img-big-va">
+        <div class="item-va">
+          <mat-card class="mat-elevation-z4">
+            <mat-card-title>{{ 'vault.bbyp' | translate }}</mat-card-title>
+            <mat-card-content>
+              <span class="num-va">{{ vault.totalBBYP }}&nbsp;</span>
+              <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      <div class="item-va">
+        <div class="item-va">
+          <mat-card class="mat-elevation-z4">
+            <mat-card-title>{{ 'vault.feesActual' | translate }}</mat-card-title>
+            <mat-card-content>
+              <span class="num-va">{{ vault.feesActual }}&nbsp;</span>
+              <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+              <div>
+                <img src="/assets/comming-soon-transparent.png" alt="Comming Soon" width="120px"
+                     style="margin-top: 15px;">
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="item-va">
+          <mat-card class="mat-elevation-z4">
+            <mat-card-title>{{ 'vault.fees24' | translate }}</mat-card-title>
+            <mat-card-content>
+              <span class="num-va">{{ vault.fees24 }}&nbsp;</span>
+              <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+              <div>
+                <img src="/assets/comming-soon-transparent.png" alt="Comming Soon" width="120px"
+                     style="margin-top: 15px;">
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+        <div class="item-va">
+          <mat-card class="mat-elevation-z4">
+            <mat-card-title>{{ 'vault.balance' | translate }}</mat-card-title>
+            <mat-card-content>
+              <span class="num-va">{{ vault.balance }}&nbsp;</span>
+              <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+    <div class="container-row-va">
+      <div class="item-va">
+        <mat-card class="mat-elevation-z4">
+          <mat-card-title>{{ 'vault.charity' | translate }}</mat-card-title>
+          <mat-card-content>
+            <div><img src="" width="120px" height="auto"></div>
+            <mat-list>
+              <div class="text-va">
+                {{ 'vault.charityActual' | translate }}:
+                <span class="num-va">{{ vault.charityActual }}&nbsp;</span>
+                <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+              </div>
+              <div class="separator"></div>
+              <div class="text-va">
+                {{ 'vault.charityTotal' | translate }}:
+                <span class="num-va">{{ vault.charityTotal }}&nbsp;</span>
+                <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+              </div>
+              <div class="separator-big"></div>
+              <mat-list-item class="text-va">
+                <a [href]="charityLink" target="_blank" style="width: 100%">
+                  <button mat-flat-button color="primary" class="btn-va">{{ 'vault.pandaweb' | translate }}</button>
+                </a>
+              </mat-list-item>
+            </mat-list>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="item-va">
+        <mat-card class="mat-elevation-z4">
+          <mat-card-title>{{ 'vault.burned' | translate }}</mat-card-title>
+          <mat-card-content>
+            <div>
+              <img src="/assets/bambooflame.png" class="img-va">
+            </div>
+            <div class="separator"></div>
+            <div class="text-va">
+              {{ 'vault.burnedTotal' | translate }}:
+              <span class="num-va">{{ vault.burnedTotal }}&nbsp;</span>
+              <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+            </div>
+            <div>
+              <img src="/assets/comming-soon-transparent.png" alt="Comming Soon" width="120px" style="margin-top: 15px;">
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="item-va">
+        <mat-card class="mat-elevation-z4">
+          <mat-card-title>{{ 'vault.developers' | translate }}</mat-card-title>
+          <mat-card-content>
+            <div>
+              <img src="/assets/vault.png" class="img-va" height="auto">
+            </div>
+            <div class="separator"></div>
+            <div class="text-va">
+              {{ 'vault.developersActual' | translate }}:
+              <span class="num-va">{{ vault.developersTotal }}&nbsp;</span>
+              <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

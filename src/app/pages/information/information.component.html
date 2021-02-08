@@ -1,0 +1,103 @@
+<div class="content-class">
+  <div class="item-class">
+    <app-sumary></app-sumary>
+  </div>
+
+  <!-- Balance -->
+  <div class="item-class">
+    <app-balance></app-balance>
+  </div>
+
+  <!-- Announcements -->
+  <div class="item-class">
+    <mat-card class="mat-elevation-z6 card-list-in" style="margin-top: 35px; overflow: overlay;">
+      <mat-card-title>
+        {{ 'information.announcements' | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <mat-tab-group mat-align-tabs="start" class="feed-total">
+          <mat-tab label="{{ 'information.announcements' | translate }}">
+            <ng-container *ngFor="let feed of feeds | slice:0:4">
+              <mat-card class="medium-content">
+                <div class="feed-container">
+                  <div class="feed-item feed-content">
+                    <div class="feed-title">
+                      {{ feed.title }}
+                    </div>
+                    <div class="separator" [innerHTML]=" feed.description | slice:0:240"></div>
+                  </div>
+                  <div class="feed-item feed-thumb">
+                    <div class="">
+                      <img src="{{ feed.thumbnail }}" alt="Medium Image" class="feed-img">
+                    </div>
+                    <div class="feed-btn separator" style="display: flex; justify-content: center;">
+                      <a href="{{feed.link}}" target="_blank">
+                        <button mat-flat-button color="primary" class="btn-title">{{ 'Read more' | translate }}</button>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </mat-card>
+            </ng-container>
+          </mat-tab>
+          <mat-tab label="Twitter">
+            <img src="/assets/Twitter_Logo_Blue.png" width="60" height="auto" alt="Twitter">
+            <a class="twitter-timeline" data-height="300" href="{{linkTwitter}}">Tweets by FiBamboo</a>
+          </mat-tab>
+          <mat-tab label="Telegram">
+            <div class="separator"></div>
+            <div>
+              <mat-nav-list>
+                <mat-list-item *ngFor="let tel of telegram">
+                  <a href="{{tel.link}}" target="_blank">
+                    <button mat-flat-button>
+                      <img src="/assets/telegram.png" width="30" height="auto" alt="telegram"> {{tel.name}}
+                    </button>
+                  </a>
+                </mat-list-item>
+              </mat-nav-list>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Resources -->
+  <div class="item-class">
+    <mat-card class="mat-elevation-z6 card-list-in" style="margin-top: 35px; overflow: overlay;">
+      <mat-card-title>
+        {{ 'information.resources' | translate }}
+      </mat-card-title>
+      <mat-card-content>
+        <mat-tab-group mat-align-tabs="start">
+          <mat-tab label="{{ 'information.faqs' | translate }}">
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let faq of faqs">
+                <mat-expansion-panel-header>
+                  <mat-panel-title [innerHTML]="'information.' + faq.title | translate">
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p [innerHTML]="'information.' + faq.response | translate"></p>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </mat-tab>
+          <mat-tab label="{{ 'information.guides' | translate }}">
+            <div class="separator"></div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/LpBgYHP3UDo" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            <div class="separator"></div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/HwKarjDkQps" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+            <div class="separator"></div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/7seiwsYVeMA" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

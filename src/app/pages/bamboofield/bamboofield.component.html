@@ -1,0 +1,101 @@
+<div *ngIf="isWait">
+  <div>
+    <img src="/assets/bamboodefi.png" width="200" height="auto">
+  </div>
+  <div>
+    <mat-progress-bar
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-bar>
+  </div>
+</div>
+<div *ngIf="!isWait">
+  <div class="container">
+    <div class="separator-big item-field">
+      <mat-card class="mat-elevation-z5">
+        <mat-card-title>
+          {{ 'field.seeds' | translate }}
+        </mat-card-title>
+        <mat-card-content>
+          <div *ngIf="seeds.seeds; else noSeed" class="separator-big"
+               style="display: flex; align-items: center; justify-content: center;">
+            <span class="form-big">{{seeds.seeds}} </span><img src="assets/semillas.png" width="60px" height="auto">
+          </div>
+          <ng-template #noSeed>
+            <div class="separator-big">
+              <span class="form-big">0.0 </span><img src="assets/semillas.png" width="60px" height="auto">
+            </div>
+          </ng-template>
+          <div class="separator-big">
+            <button mat-flat-button color="primary" class="btn-field" [disabled]="!seeds.seedsToHarvest"
+                    (click)="harvest()">{{ 'field.harvest' | translate }}</button>
+          </div>
+
+          <div class="separator-big" *ngIf="seeds.stake">
+            <button mat-flat-button color="primary" class="btn-field"
+                    (click)="getMoreSeeds()">{{ 'field.getMore' | translate }}</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="separator-big item-field">
+      <mat-card class="mat-elevation-z5">
+        <mat-card-title>
+          {{ 'field.field' | translate }}
+        </mat-card-title>
+        <mat-card-content>
+          <div class="separator-big tex-big" *ngIf="bambooRegistered; else noStaked" style="height: auto">
+            {{seeds.stake}} <img src="assets/bamboo-head.png" width="60px" height="60px">
+          </div>
+          <ng-template #noStaked>
+            <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && stakeNew>=2000 && registerBamboo()">
+              <div style="display: flex;  align-items: center; justify-content: center;">
+                <div>
+                  <input matInput
+                         name="toStakeFieldAmount"
+                         #toStakeFieldAmount="ngModel"
+                         [(ngModel)]="stakeNew"
+                         placeholder="0000"
+                         autocomplete="off"
+                         (change)="$event ? isError() : null"
+                         [minlength]="3"
+                         [maxlength]="10"
+                         style="text-align:center;"
+                         class="form-big"
+                         type="number"
+                         required>
+                </div>
+                <div>
+                  <img matSuffix src="assets/bamboo-head.png" width="60px" height="60px">
+                </div>
+              </div>
+              <div class="separator"></div>
+              <div class="select-container">
+                <mat-label>{{ 'field.selectPool' | translate }}</mat-label>
+                <mat-select [(ngModel)]="pool" name="pool">
+                  <mat-option *ngFor="let pool of pools" [value]="pool">
+                    <img src="{{pool.logoTokenFirst}}" alt="pool.logoTokenFirst" width="25px" height="auto">
+                    <img src="{{pool.logoTokenSecond}}" alt="pool.logoTokenSecond" width="25px"
+                         height="auto"> {{pool.underlyingTokenFirst}}/{{pool.underlyingTokenSecond}}
+                  </mat-option>
+                </mat-select>
+              </div>
+              <div class="separator-big">
+                <button mat-flat-button color="primary" class="btn-field" type="submit"
+                        [disabled]="!f.valid || stakeNew<=2000 || !pool || isConnect=='disconnected' || error">{{ 'field.approve' | translate }}</button>
+                <div *ngIf="error" color="warn" class="error-field"
+                     type="error">{{ 'field.youNeedMore' | translate }}</div>
+              </div>
+            </form>
+          </ng-template>
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div class="separator-big" style="text-align: center;">
+    <button mat-flat-button color="primary" class="btn-field" [disabled]="!couldWithdraw"
+            (click)="withdrawBamboo()">{{ 'field.withdraw' | translate }}</button>
+  </div>
+</div>

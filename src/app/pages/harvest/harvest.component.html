@@ -1,0 +1,47 @@
+<div style="text-align: center;">
+  <form name="form" #g="ngForm" (ngSubmit)="g.form.valid && harvestSeeds()">
+
+    <div>
+      {{ 'harvest.maxAmmount' | translate }}:
+      <span>{{data.seedsToHarvest}}</span>
+    </div>
+    <div style="display: flex;  align-items: center; justify-content: center;" class="separator-big">
+      <div class="form-inline">
+        <input matInput
+               name="seedsToHarvest"
+               #seedsToHarvest="ngModel"
+               [(ngModel)]="setSeedsToHarvest"
+               placeholder="{{'harvest.placeSeeds' | translate}}"
+               autocomplete="off"
+               (input)="$event ? setSeedToBamboo() : null"
+               class="form-big-ha"
+               style="text-align:center;"
+               type="number"
+               required>
+      </div>
+      <div>
+        <button mat-flat-button type="button" (click)="setMaxSeeds()">Max</button>
+      </div>
+
+      <div>
+        <img src="assets/semillas.png" width="60px" height="60px">
+      </div>
+    </div>
+    <div class="separator"></div>
+    <div class="separator-big medium-text">
+      {{ 'harvest.newBambooReceived' | translate }} :
+      <span *ngIf="!bambooReceived"> 0.0</span>
+      <span *ngIf="bambooReceived" class="tex-med">{{bambooReceived}}</span>&nbsp;
+      <img src="assets/bamboo-head.png" width="30px" height="auto">
+      <br>
+    </div>
+    <div class="separator-big">
+      <button
+        mat-flat-button
+        color="primary"
+        class="btn-field"
+        type="submit"
+        [disabled]="!g.valid || setSeedsToHarvest>data.seedsToHarvest">{{ 'field.harvest' | translate }}</button>
+    </div>
+  </form>
+</div>

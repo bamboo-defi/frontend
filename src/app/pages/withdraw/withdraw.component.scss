@@ -1,0 +1,26 @@
+.form-big{
+  height: 35px;
+  color:  rgba(47, 79, 79, 0.829)!important;
+  font-size: 40px;
+  width: 250px;
+  text-align: center;
+}
+.content-card-confirm{
+  display: flex;
+  flex-direction: row;
+}
+.inline{
+  justify-content: space-between;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

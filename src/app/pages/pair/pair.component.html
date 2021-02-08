@@ -1,0 +1,92 @@
+<div class="container-pa">
+  <div class="item-70">
+    <div class="mat-elevation-z4 frame-info">
+      <div class="item-card-info">1 <img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto">&nbsp;{{pair.pairTokenNameFirst}}: {{pair.pairFirstEqualSecond}}
+        {{pair.pairTokenNameSecond}}<img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto"></div>
+      <div class="item-card-info">1 <img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto">&nbsp; {{pair.pairTokenNameSecond}}: {{pair.pairSecondEqualFirst}}
+        {{pair.pairTokenNameFirst}}<img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto"></div>
+    </div>
+    <div class="separator"></div>
+
+    <div class="mat-elevation-z4 frame-info">
+      <div class="item-card-info">
+        <img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto">&nbsp;
+        {{pair.ammountFirst}} {{pair.pairTokenNameFirst}}
+      </div>
+      <div class="item-card-info">
+        <img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto">&nbsp;
+        {{pair.ammountSecond}} {{pair.pairTokenNameSecond}}
+      </div>
+    </div>
+    <div class="separator"></div>
+
+    <!-- <div class="mat-elevation-z4 frame-info">
+      <mat-label>{{ 'pairs.totalLiquidity' | translate }}</mat-label>
+      <div class="item-card-info font-big-pa">{{pair.liquidity | currency:'USD'}}
+        <span>{{pair.liquidityPercentaje | percent:'3.2-5'}}</span></div>
+      <div class="separator"></div>
+      <mat-label>{{ 'pairs.volume24' | translate }}</mat-label>
+      <div class="item-card-info font-big-pa">{{pair.volume24}} <span>{{pair.volume24Percentaje | percent:'3.2-5'}}</span>
+      </div>
+      <div class="separator"></div>
+      <mat-label>{{ 'pairs.volume7' | translate }}</mat-label>
+      <div class="item-card-info font-big-pa">{{pair.volume7}} <span>{{pair.volume7Percentaje | percent:'3.2-5'}}</span>
+      </div>
+      <div class="separator"></div>
+      <mat-label>{{ 'pairs.fees24' | translate }}</mat-label>
+      <div class="item-card-info font-big-pa">{{pair.fees24}} <span>{{pair.fees24Percentaje | percent:'3.2-5'}}</span>
+      </div>
+    </div> -->
+
+    <div class="separator "></div>
+    <!-- Chart -->
+    <!-- <mat-card class="graph mat-elevation-z4 frame-info">
+      <div class="flex">
+        <div class="flex-item">
+          <div style="display: block;">
+            <canvas baseChart width="400" height="400" [datasets]="lineChartData" [labels]="lineChartLabels"
+              [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+              [chartType]="lineChartType" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
+              (chartClick)="chartClicked($event)"></canvas>
+          </div>
+        </div>
+        <div class="flex-item">
+          <table class="table table-responsive table-condensed">
+            <tr>
+              <th *ngFor="let label of lineChartLabels">{{label}}</th>
+            </tr>
+            <tr *ngFor="let d of lineChartData; let i=index" [class]="'line-'+i">
+              <td *ngFor="let label of lineChartLabels; let j=index">{{d && d.data[j]}}</td>
+            </tr>
+          </table>
+          <button mat-button mat-raised-button color="primary" (click)="randomize()">Randomize</button>
+          <button mat-button mat-raised-button color="primary" (click)="pushOne()">Push</button>
+          <button mat-button mat-raised-button color="primary" (click)="changeColor()">Recolor</button>
+          <button mat-button mat-raised-button color="primary" (click)="hideOne()">Toggle Series B</button>
+          <button mat-button mat-raised-button color="primary" (click)="changeLabel()">Change Label</button>
+        </div>
+      </div>
+
+    </mat-card> -->
+
+  </div>
+
+  <div class="item-pa">
+
+    <app-wallet></app-wallet>
+
+  </div>
+</div>
+
+<!-- Transactions table -->
+
+<div>
+  <app-pair-transactions [pairId]="pair.id" [pairAddress]="pair.pairAddress"></app-pair-transactions>
+</div>
+
+<div class="separator-big">
+  <button mat-flat-button color="accent" (click)="back()" style="border-radius: 30px;">
+    <mat-icon>arrow_back</mat-icon>
+    Back
+  </button>
+</div>

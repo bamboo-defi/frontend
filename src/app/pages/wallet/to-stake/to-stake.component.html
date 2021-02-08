@@ -1,0 +1,132 @@
+<div style="width: 100%;">
+  <form class="separator" name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()">
+    <div class="container-st">
+      <div>{{ 'to-stake.yourbamboo' | translate }}</div>
+      <div class="form-big-st separator">{{ ownWallet.unstaked }}<img src="/assets/bamboo-head.png" class="logotoken-st">
+      </div>
+    </div>
+    <div class="container-st separator-big">
+      <div>{{ 'to-stake.totaltostake' | translate}}</div>
+      <div class="container-row-st separator">
+
+        <mat-select class="ammount-select-st" [(ngModel)]="bambooToStake" #ammountToStake name="ammountToStake"
+          (selectionChange)="$event ? setMultiplier() : null" placeholder="{{ 'to-stake.ammountBamboo' | translate}}"
+          required>
+          <!-- <mat-option>{{ 'to-stake.yourbamboo' | translate }}</mat-option> -->
+          <mat-option *ngFor="let bamboo of bambooAmmount" [value]="bamboo" class="tex-select-st">
+            {{bamboo.bambooSelect}}
+          </mat-option>
+        </mat-select>
+
+        <img matSuffix src="/assets/bamboo-head.png" class="logotoken-st">
+      </div>
+    </div>
+    <div class="container-st separator-big">
+      <div>{{ 'to-stake.time' | translate}}</div>
+      <div class="separator">
+        <mat-select class="tex-select-st" [(ngModel)]="toStake.timeToStake" #timeToStake name="timeToStake"
+          (selectionChange)="$event ? setMultiplier() : null" placeholder="{{ 'to-stake.selectTime' | translate }}"
+          required>
+          <mat-option *ngFor="let time of timeValue" [value]="time">
+            {{time.text}}
+          </mat-option>
+        </mat-select>
+
+      </div>
+    </div>
+    <div *ngIf="multiplier" class="separator-big">{{ 'to-stake.multiplier' | translate }}: <span
+        class="form-medium">x{{multiplier}}</span></div>
+    <div class="container-st separator-big">
+      <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="primary" type="submit"
+        [disabled]="!f.valid || toStake.toStakeAmmount>ownWallet.unstaked || toStake.toStakeAmmount<500" *ngIf="!error">
+        <mat-icon>create</mat-icon> {{ 'to-stake.stakenow' | translate }}
+      </button>
+      <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="warn" [disabled]="!f.valid"
+        *ngIf="error">
+        <mat-icon>create</mat-icon> {{ 'to-stake.errorAmmount' | translate }}
+      </button>
+    </div>
+  </form>
+
+  <div class="separator-big"></div>
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ 'to-stake.viewstakes' | translate }}
+        </mat-panel-title>
+
+      </mat-expansion-panel-header>
+
+      <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+        <ng-container matColumnDef="ammount" sticky>
+          <!-- <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell> -->
+          <mat-cell *matCellDef="let stake">
+            <span class="mobile-label-st">{{ 'to-stake.ammount' | translate }}</span>
+            {{stake.ammount}}
+            <img src="/assets/bamboo-head.png" width="25px" height="25px">&nbsp;
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="time">
+
+          <mat-cell *matCellDef="let stake">
+            <span class="mobile-label-st">{{ 'to-stake.time' | translate }}</span>
+            {{stake.time}}
+            {{ 'to-stake.timeUnit' | translate }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="daysTo">
+
+          <mat-cell *matCellDef="let stake">
+            <span class="mobile-label-st">{{ 'to-stake.daysTo' | translate }}</span>
+            {{stake.daysTo}}
+            {{ 'to-stake.timeUnit' | translate }}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="roi">
+
+          <mat-cell *matCellDef="let stake">
+            <span class="mobile-label-st">{{ 'to-stake.roi' | translate }}</span>
+            {{stake.roi}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="acumulated">
+
+          <mat-cell *matCellDef="let stake">
+            <span class="mobile-label-st">{{ 'to-stake.acumulated' | translate }}</span>
+            {{stake.acumulated}}&nbsp;
+            <img src="/assets/bamboo-head.png" width="25px" height="25px">&nbsp;
+            <button mat-flat-button class="btn-title" style="float: inherit;" color="primary"
+              [disabled]="stake.timeLeft >= 0 && stake.ammount > 0" (click)="withdrawAcumulatedRoi(stake)">{{
+              'to-stake.claim' | translate }}</button>
+          </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef="withdraw">
+
+          <mat-cell *matCellDef="let stake" style="width: 100%;">
+            <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="primary"
+              [disabled]="stake.timeLeft >= 0" (click)="withdrawStake(stake)">{{ 'to-stake.withdraw' | translate
+              }}</button>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container>
+
+          <mat-row *matRowDef="let stake; columns: displayedColumns;" class="stake-row"></mat-row>
+        </ng-container>
+
+      </mat-table>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+
+
+</div>
+<div class="separator-big"></div>

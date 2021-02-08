@@ -1,0 +1,81 @@
+<div *ngIf="isWait">
+  <div>
+    <img src="/assets/bamboo_logo_raindrops_final.png" width="200" height="auto">
+  </div>
+  <div>
+    <mat-progress-bar
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-bar>
+  </div>
+</div>
+<div *ngIf="!isWait">
+  <!-- Pairs table -->
+  <div>
+    <h1>{{ 'pairs.tradingPairs' | translate }}</h1>
+  </div>
+  <div>
+    <mat-form-field>
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ETH" #input>
+    </mat-form-field>
+    <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows>
+      <ng-container matColumnDef="title" sticky>
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pairs.name' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let pair" [routerLink]="'../pair/' + pair.id" class="font-big point-cursor over-green">
+          <span class="mobile-label">{{ 'pairs.name' | translate }}:</span>
+          <img src="{{pair.logoTokenFirst}}" alt="LogoToken" width="30px" height="auto">
+          <img src="{{pair.logoTokenSecond}}" alt="LogoToken" style="margin-left: -7px;" width="30px"
+               height="auto">  {{pair.pairTokenNameFirst}}-{{pair.pairTokenNameSecond}}
+          <mat-icon>login</mat-icon>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="liquidity">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pairs.liquidity' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let pair">
+          <span class="mobile-label">{{ 'pairs.liquidity' | translate }}:</span>
+          {{ pair.liquidity | currency:'USD'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="volume24">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pairs.volume24' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let pair">
+          <span class="mobile-label">{{ 'pairs.volume24' | translate }}:</span>
+          {{ pair.volume24 | currency:'USD'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="volume7">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pairs.volume7' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let pair">
+          <span class="mobile-label">{{ 'pairs.volume7' | translate }}:</span>
+          {{ pair.volume7 | currency:'USD'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="fees24">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pairs.fees24' | translate }}</mat-header-cell>
+        <mat-cell *matCellDef="let pair">
+          <span class="mobile-label">{{ 'pairs.fees24' | translate }}:</span>
+          {{ pair.fees24 | currency:'USD'}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="yearFees">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pairs.yearFees' | translate }}</mat-header-cell>
+        <mat-cell [class.green]="pair.feesYearPercentaje > 0" [class.red]="pair.feesYearPercentaje < 0"
+                  *matCellDef="let pair">
+          <span class="mobile-label">{{ 'pairs.yearFees' | translate }}:</span>
+          {{ pair.feesYearPercentaje | number }}%
+        </mat-cell>
+      </ng-container>
+
+      <ng-container>
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let pair; columns: displayedColumns;" class="pair-row"></mat-row>
+      </ng-container>
+    </mat-table>
+  </div>
+</div>

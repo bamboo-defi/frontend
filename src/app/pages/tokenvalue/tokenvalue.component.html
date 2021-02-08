@@ -1,0 +1,55 @@
+<div class="content-card">
+  <div class="item-card-token">
+
+    <div class="info-btn mat-elevation-z4" style="background-color: #8ed164;">
+      <div class="item-card-info-btn" (click)="tradeWindow(tokenValues.symbol)"><span>{{ 'tokens.trade' | translate }}
+          <mat-icon>help_outline</mat-icon></span><img class="img-small" src="/assets/bamboo-head.png">
+      </div>
+    </div>
+
+    <div class="info-btn mat-elevation-z4">
+      <label>{{ 'tokens.price' | translate }} {{ tokenValues.symbol | uppercase }}/USDT</label>
+      <div class="item-card-info">{{tokenValues.market_data.current_price.usd | currency:'USD'}} <img
+          src="{{tokenValues.image.small}}">
+      </div>
+    </div>
+
+    <div class="info-btn mat-elevation-z4">
+      <label>{{ 'tokens.high24h' | translate }}</label>
+      <div class="item-card-info">{{tokenValues.market_data.high_24h.usd | currency:'USD'}}</div>
+    </div>
+
+    <div class="info-btn mat-elevation-z4">
+      <label>{{ 'tokens.low24h' | translate }}</label>
+      <div class="item-card-info">{{tokenValues.market_data.low_24h.usd | currency:'USD'}}</div>
+    </div>
+
+    <div class="info-btn mat-elevation-z4">
+      <label>{{ 'tokens.pricechange' | translate }}</label>
+      <div class="item-card-info" [ngClass]="{
+      'positive' : tokenValues.market_data.market_cap_change_percentage_24h > 0,
+      'negative' : tokenValues.market_data.market_cap_change_percentage_24h < 0
+   }">{{tokenValues.market_data.price_change_24h | number:'0.1-2'}} USDT/
+        {{tokenValues.market_data.market_cap_change_percentage_24h | number:'0.1-2'}}%</div>
+    </div>
+
+    <div class="info-btn mat-elevation-z4">
+      <label>{{ 'tokens.volumeUSDT' | translate }}</label>
+      <div class="item-card-info">{{tokenValues.tickers[1].converted_volume.usd | currency:'USD'}} </div>
+    </div>
+
+    <div class="info-btn mat-elevation-z4">
+      <label>{{ 'tokens.volume' | translate }}</label>
+      <div class="item-card-info">{{tokenValues.tickers[1].volume | number:'0.1-2'}} <span
+          style="font-size: 15px; font-weight: 400;">{{tokenValues.symbol}}</span> </div>
+    </div>
+
+  </div>
+
+  <div id="technical-analysis" style="height: 800px; width: 100%;"></div>
+
+</div>
+
+<div class="separator">
+  <button mat-flat-button color="primary" class="btn-title" (click)="goBack()">{{ 'goback' | translate }}</button>
+</div>

@@ -1,0 +1,131 @@
+// .container-ra{
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-around;
+//   text-align: center;
+//   align-items: center;
+// }
+// // .img-logo{
+// //   width: 250px;
+// //   height: auto;
+// //   margin-top: 45px;
+// // }
+// // .tex-raindrop-title{
+// //   font-size: 30px;
+// //   font-family: 'Architects Daughter', cursive;
+// //   font-weight: 500;
+// //   line-height: 25px;
+// // }
+// .reward{
+//   font-size: 20px;
+//   font-weight: 800;
+// }
+// .reward-frame{
+//   color: white;
+//   background-color: #8ed164;
+//   border-radius: 50px;
+//   margin: 10px;
+//   padding: 20px;
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+// }
+// .logotoken{
+//   width: 100px;
+//   height: auto;
+// }
+// .logobamboo{
+//   width: 50px;
+//   height: auto;
+// }
+// .medium-text{
+//   font-size: 15px;
+//   font-weight: 600;
+//   line-height: 25px;
+// }
+// .big-text-ra{
+//   font-size: 25px;
+//   font-weight: 800;
+//   line-height: 35px;
+// }
+// .input-form{
+//   font-size: 20px;
+//   font-weight: 600;
+//   line-height: 40px;
+//   border: 1px solid #8ed164;
+//   border-radius: 50px;
+//   margin-bottom: 15px;
+//   margin-top: 15px;
+// }
+// .date-raindrop{
+//   color: white;
+//   background-color: #af64d1;
+//   border-radius: 50px;
+//   margin: 10px;
+//   padding: 20px;
+
+// }
+// .buy-block{
+//   margin-top: 50px;
+//   margin-bottom: 80px;
+//   padding: 20px;
+// }
+// .block-raindrop{
+//   margin: 15px;
+//   max-width: 300px;
+// }
+
+// .ticket-bamboo{
+//   width: auto;
+//   height: 70px;
+// }
+
+// /* Chrome, Safari, Edge, Opera */
+// input::-webkit-outer-spin-button,
+// input::-webkit-inner-spin-button {
+//   -webkit-appearance: none;
+//   margin: 0;
+// }
+
+// /* Firefox */
+// input[type=number] {
+//   -moz-appearance: textfield;
+// }
+
+// @media only screen and (min-width: 800px) {
+//   .container-ra{
+//     flex-direction: row;
+//     align-items: start;
+//   }
+//   .block-raindrop{
+//     margin: 15px;
+//     max-width: 300px;
+//   }
+//   .medium-text{
+//     font-size: 15px;
+//     font-weight: 600;
+//     line-height: 30px;
+//   }
+//   .big-text-ra{
+//     font-size: 40px;
+//     font-weight: 800;
+//     line-height: 50px;
+//   }
+// }
+
+// @media only screen and (min-width: 1350px) {
+//   .container-ra{
+//     flex-direction: row;
+//     align-items: start;
+//   }
+//   .block-raindrop{
+//     margin: 15px;
+//     max-width: 400px;
+//   }
+//   .big-text-ra{
+//     font-size: 50px;
+//     font-weight: 800;
+//     line-height: 60px;
+//   }
+// }

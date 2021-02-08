@@ -1,0 +1,25 @@
+<mat-card class="mat-elevation-z6 card-list">
+  <mat-card-title>
+    {{ 'information.sumary' | translate }}
+  </mat-card-title>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item>
+        <img mat-list-icon style="width: 50px; height: auto;" src="/assets/bamboo-head.png">
+        <div mat-line>Bamboo</div>
+        <div mat-line><span class="tex-medium-left"> {{bamboo.valor | currency:'USD'}}</span></div>
+      </mat-list-item>
+      <mat-list-item>
+        <img mat-list-icon style="width: 50px; height: auto;" src="/assets/wallet.png">
+        <div mat-line>{{ 'information.liquidity' | translate }} (USDT)</div>
+        <div mat-line><span class="tex-medium-left">{{bamboo.liquidity | currency:'USD'}}</span> </div>
+      </mat-list-item>
+      <mat-list-item>
+        <img mat-list-icon style="width: 50px; height: auto;" src="/assets/vault.png">
+        <div mat-line>{{ 'information.fees' | translate }}</div>
+        <div mat-line><span class="tex-medium-left"> {{ bamboo.fees | currency:'USD'}}</span> </div>
+        <div mat-line>{{ 'information.feescollected' | translate }}</div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

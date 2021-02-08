@@ -1,0 +1,83 @@
+<div class="example-container-pa">
+  <mat-toolbar color="primary" class="bamboo-toolbar">
+    <button mat-icon-button (click)="snav.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <a [routerLink]="['/home']" class="link-no-under">
+      <h1 class="example-app-name">BambooDeFi</h1>
+    </a>
+    <button mat-flat-button color="none" class="btn-title-nav" (click)="openDialog()">{{ 'wallet' | translate
+      }}</button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="bamboo-sidenav-container">
+
+    <mat-sidenav #snav position="end" mode="over" fixedTopGap="56">
+
+      <div class="lang-separator">
+        <mat-form-field class="selector" appearance="standard">
+          <mat-label>{{ 'selectlanguage' | translate }}</mat-label>
+          <mat-select (selectionChange)="useLanguage($event.value)">
+            <mat-option *ngFor="let language of languagesList" [value]="language.languageSet">{{language.languageName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-nav-list>
+        <a *ngFor="let list of linkToPages" mat-list-item (click)="snav.toggle()" [routerLink]='list.link'>{{ list.text
+          | translate}}</a>
+      </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav opened mode="side" class="side-nav" disableClose>
+      <div class="container">
+        <div class="item">
+          <a [routerLink]="['/home']" class="link-no-under"><img class="row-img" src="{{assetsLink}}bamboo-head.png"></a>
+        </div>
+        <div class="item">
+          <a [routerLink]="['/home']" class="link-no-under"><span class="bamboo-title">BambooDeFi</span><br />Bamboo
+            Ecosystem</a>
+        </div>
+      </div>
+
+      <div class="lang-separator">
+        <mat-form-field class="selector" appearance="standard">
+          <mat-label>{{ 'selectlanguage' | translate }}</mat-label>
+          <mat-select (selectionChange)="useLanguage($event.value)">
+            <mat-option *ngFor="let language of languagesList" [value]="language.languageSet">{{language.languageName}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-selection-list #links [multiple]="false">
+        <mat-list-option *ngFor="let link of linkToPages" class="nav-item" [value]="link" [routerLink]="link.link"
+          [routerLinkActive]="['is-active']" (click)="setImage(link.image, link.text)">
+          <img [src]="assetsLink + link.image" mat-list-icon class="icon-img"> {{link.text | translate}}
+        </mat-list-option>
+      </mat-selection-list>
+      <div class="img-nav-botton">
+        <a href="https://nexxyolabs.com" target=”_blank”><img src="assets/nexxyo-labs.png" alt="Nexxyolabs"
+            class="img-nexxyo"></a>
+      </div>
+      <div class="img-nav-botton button-partner">
+        <button mat-flat-button class="nav-item item-card" routerLink="about" (click)="setImage('about.png', 'About')"
+          [routerLinkActive]="['is-active']">Partners</button>
+      </div>
+
+    </mat-sidenav>
+    <mat-sidenav-content class="right-content">
+
+      <alert></alert>
+      <mat-card class="card-first">
+        <mat-card-title class="card-title-home ">{{titlePage | translate}} <button mat-flat-button color="primary"
+            class="btn-title" (click)="openDialog()">{{ message }}</button></mat-card-title>
+        <mat-card-content>
+          <router-outlet></router-outlet>
+        </mat-card-content>
+      </mat-card>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

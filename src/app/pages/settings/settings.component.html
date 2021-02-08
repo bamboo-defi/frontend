@@ -1,0 +1,55 @@
+<form name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()" style="margin-bottom: 15px;">
+
+  <mat-expansion-panel (opened)="openSettings()">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <span style="margin-right: 15px; color: #8ed164; font-size: 30px;">
+          <mat-icon>settings</mat-icon>
+        </span> {{ 'settings.setting' | translate }}
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div class="separator-big">{{ 'settings.slippageTolerance' | translate }}<span
+        matTooltip="{{ 'settings.slippageExplain' | translate }}">
+        <mat-icon style="font-size: 16px;">help_outline</mat-icon>
+      </span></div>
+    <div class="separator container-between">
+      <div>
+        <mat-chip-list aria-label="selection" #slip>
+          <mat-chip *ngFor="let slippage of slippages" selected (click)="loadSlip(slippage.value)">
+            {{slippage.value | number:'0.1-2'}}%
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+      <div>
+        <mat-form-field appearance="standard">
+          <input matInput #slippage="ngModel" type="number" maxlength="3" id="slippage"
+            (change)="$event ? maxCien() : null" [(ngModel)]="settings.slipTolerance" name="slippage"
+            class="right-align" required>
+          <span matSuffix>%</span>
+        </mat-form-field>
+      </div>
+    </div>
+    <div>
+      <div class="separator-big">{{ 'settings.transactionDeadline' | translate }}<span
+          matTooltip="{{ 'settings.slippageDeadExplain' | translate }}">
+          <mat-icon style="font-size: 16px;">help_outline</mat-icon>
+        </span></div>
+      <div class="container-start">
+        <mat-form-field appearance="standard" style="width: 20%;">
+          <input matInput type="number" id="transTime" [(ngModel)]="settings.transDeadLine" name="transtime"
+            class="right-align" required>
+        </mat-form-field>
+        &nbsp;&nbsp;&nbsp;{{ 'settings.minutes' | translate }}
+      </div>
+      <div *ngIf="error" class="error separator">{{ 'settings.errorDeadCero' | translate }}</div>
+
+    </div>
+    <div class="separator-big">
+      <button mat-flat-button *ngIf="!error" class="btn-title btn-100" color="primary" type="submit"
+        [disabled]="!f.valid">{{ 'settings.ok' | translate}}</button>
+      <button mat-flat-button *ngIf="error" class="btn-title btn-100" color="warn">{{ 'settings.ok' |
+        translate}}</button>
+    </div>
+  </mat-expansion-panel>
+
+</form>

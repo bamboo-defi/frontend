@@ -1,0 +1,47 @@
+<div style="overflow: auto; height: 450px;">
+  <div mat-dialog-title>{{ 'tokens.selectToken' | translate }}</div>
+  <mat-form-field>
+    <mat-label>{{ 'tokens.search' | translate }}</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="{{ 'tokens.search' | translate }}">
+  </mat-form-field>
+
+  <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+    <ng-container matColumnDef="logo">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.tokenName' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let token">
+        <img src="{{token.logoURI}}" alt="" srcset="" style="width: 20px; height: 20px; margin-right: 20px;">
+        {{token.symbol | uppercase}} &nbsp; {{token.name | uppercase}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="tokenName">
+      <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+      <mat-cell *matCellDef="let token">
+        {{token.name | uppercase}}
+      </mat-cell>
+    </ng-container>
+
+
+    <ng-container matColumnDef="ammount">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.tokenAmmount' | translate }}</mat-header-cell>
+      <mat-cell *matCellDef="let token">
+        <ng-container *ngFor="let walletAmmount of wallet">
+          {{walletAmmount.ammount}}
+        </ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let token; columns: displayedColumns;" class="client-row" [mat-dialog-close]="token"
+        (click)="$event.stopPropagation()" (change)="$event ? data.token : null" cdkFocusInitial></mat-row>
+    </ng-container>
+
+
+  </mat-table>
+
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()">{{ 'tokens.cancel' | translate }}</button>
+  </div>
+</div>

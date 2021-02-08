@@ -1,0 +1,16 @@
+{
+  "Bamboo Home": "Bamboo Home",
+  "Information": "Información",
+  "Wallet": "Cartera",
+  "Pools": "Pools",
+  "Raindrop":"Lluvia",
+  "Tokens":"Tokens",
+  "Pairs":"Pares",
+  "Governance":"Govierno",
+  "About":"Acerca de",
+  "Docs":"Documentos",
+  "home": {
+    "make": "!Haz crecer tu panda interior!",
+    "wallet": "Conectar a la cartera"
+  }
+}

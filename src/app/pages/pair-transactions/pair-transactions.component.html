@@ -1,0 +1,71 @@
+<div>
+  <h2>{{ 'pair.transactionTable' | translate }}</h2>
+</div>
+<div>
+  {{ 'pair.selectType' | translate }}
+  <button mat-flat-button color="primary" class="btn-title"
+          (click)="getTransactions('')">{{ 'pair.all' | translate }}</button>
+  <button mat-flat-button color="primary" class="btn-title"
+          (click)="getTransactions('SWAP')">{{ 'pair.swaps' | translate }}</button>
+  <button mat-flat-button color="primary" class="btn-title"
+          (click)="getTransactions('ADD')">{{ 'pair.adds' | translate }}</button>
+  <button mat-flat-button color="primary" class="btn-title"
+          (click)="getTransactions('REMOVE')">{{ 'pair.removes' | translate }}</button>
+</div>
+<div>
+  <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows>
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'pair.transactions' | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let pair">
+        {{pair.type}} {{ pair.name }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="totalValue">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'pair.totalValue' | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let pair">
+        {{ pair.totalValue | currency:'USD'}}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="tokenAmmount1">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'pair.tokenAmmount' | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let pair">
+        {{ pair.tokenAmmount1 }}  {{ pair.tokenName1 }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="tokenAmmount2">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'pair.tokenAmmount' | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let pair">
+        {{ pair.tokenAmmount2 }} {{ pair.tokenName2 }}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="account">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'pair.account' | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let pair">
+        <a href="https://etherscan.io/tx/{{pair.account}}" target="_blank">{{ pair.account }}</a>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="timeStamp" style="display: flex; justify-content: end;">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ 'pair.timeStamp' | translate }}
+      </mat-header-cell>
+      <mat-cell *matCellDef="let pair">
+        {{ pair.timeStamp * 1000 | date }}
+      </mat-cell>
+    </ng-container>
+    <ng-container>
+      <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="width: 100%;"></mat-header-row>
+      <mat-row *matRowDef="let pair; columns: displayedColumns;" class=""></mat-row>
+    </ng-container>
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

@@ -1,0 +1,41 @@
+<div style="text-align: center;">
+  <form name="form" #g="ngForm" (ngSubmit)="g.form.valid && setNewSeedsAmount()">
+
+    <div style="display: flex;  align-items: center; justify-content: center;">
+      <div class="form-inline">
+        <input matInput
+               name="toAddSeedsAmount"
+               #toAddSeedsAmount="ngModel"
+               [(ngModel)]="seedsNew"
+               placeholder="{{'field.enterBambooAmmount' | translate}}"
+               autocomplete="off"
+               [minlength]="1"
+               [maxlength]="10"
+               (input)="$event ? setSeedChange() : null"
+               class="form-big"
+               style="text-align:center;"
+               type="number"
+               required>
+      </div>
+      <div>
+        <img src="assets/bamboo-head.png" width="60px" height="60px">
+      </div>
+    </div>
+    <div class="separator"></div>
+    <div class="separator-big medium-text">
+      {{ 'field.newSeedAmmount' | translate }} : {{newSeedsAmmount}} <img src="assets/semillas.png" width="30px"
+                                                                          height="auto"><br>
+      {{ 'field.newSeedTotalAmmount' | translate }} : <span *ngIf="totalSeeds; else plusSeeds">{{totalSeeds}}</span>
+      <ng-template #plusSeeds>{{this.data.seedsInitial}}</ng-template>
+      <img src="assets/semillas.png" width="30px" height="auto">
+    </div>
+    <div class="separator-big">
+      <button
+        mat-flat-button
+        color="primary"
+        class="btn-field"
+        type="submit"
+        [disabled]="!g.valid || this.ownWallet.unstaked <= seedsNew">{{ 'field.approveExtraSeeds' | translate }}</button>
+    </div>
+  </form>
+</div>

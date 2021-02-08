@@ -1,0 +1,123 @@
+// .content-class{
+//   display: flex;
+//   flex-direction: column;
+//   flex-wrap: wrap;
+//   align-content: stretch;
+//   justify-content: center;
+// }
+// .item-class{
+//   padding-top: 10px;
+//   width: 100%;
+// }
+// .item-class-100{
+//   margin-top: 2em;
+// }
+// .card-list-in{
+//   height: auto;
+// }
+// .tex-medium{
+//   height: 35px;
+//   color:  rgba(47, 79, 79, 0.829)!important;
+//   font-size: 25px;
+//   text-align: center;
+// }
+// .tex-medium-left{
+//   font-size: 35px;
+//   line-height: 35px;
+//   height: 35px;
+//   color:  rgba(47, 79, 79, 0.829)!important;
+//   font-size: 25px;
+// }
+// .medium-content{
+//   border-left: 4px solid #8ed164;
+//   margin-top: 20px;
+// }
+// .feed-total{
+//   overflow: hidden;
+// }
+// .feed-container{
+//   display: flex;
+//   flex-direction: column;
+//   align-content: center;
+//   flex-wrap: wrap;
+// }
+// .feed-item{
+//   display: flex;
+//   flex-direction: column;
+// }
+// .feed-content{
+//   width: 100%;
+// }
+// .feed-title{
+//   font-size: 24px;
+//   color: #8ed164;
+//   font-weight: 600;
+// }
+// .feed-thumb{
+//   text-align: center;
+// }
+// .feed-img{
+//   border-radius: 5px;
+//   width: 150px;
+//   height: auto;
+// }
+// .feed-btn{
+//   display: flex;
+//   justify-content: center;
+// }
+// .font-big{
+//   font-size: 18px;
+//   font-weight: 600;
+// }
+// .over-green:hover{
+//   color:  rgba(39, 66, 66, 0.829);
+//   font-weight: 600;
+// }
+
+// @media only screen and (min-width: 600px) {
+//   .feed-container{
+//     display: flex;
+//     flex-direction: row;
+//     align-content: center;
+//     flex-wrap: wrap;
+//   }
+//   .feed-btn{
+//     text-align: right;
+
+//   }
+//   .feed-thumb{
+//     width: 100%;
+//    // text-align: right;
+//     display: flex;
+//     align-items: center;
+//   }
+// }
+
+
+
+@media only screen and (min-width: 1350px) {
+  // .content-class{
+  //   flex-direction: row;
+  // }
+  .feed-container{
+    display: flex;
+    justify-content: space-between;
+  }
+  .feed-content{
+    width: 60%;
+  }
+  // .item-class{
+  //   padding: 10px;
+  //   width: 48%;
+  // }
+  .feed-btn{
+    text-align: right;
+
+  }
+  .feed-thumb{
+    width: 25%;
+    text-align: right;
+    display: flex;
+    align-items: flex-end;
+  }
+}

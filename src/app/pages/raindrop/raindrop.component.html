@@ -1,0 +1,127 @@
+<div *ngIf="isWait">
+  <div>
+    <img src="/assets/bamboo_logo_raindrops_final.png" width="200" height="auto">
+  </div>
+  <div *ngIf="isConnect === 'disconnected'" class="await-connect">
+    {{ 'raindrop.connectYourWallet' | translate}}
+  </div>
+  <div>
+    <mat-progress-bar color="primary" mode="indeterminate">
+    </mat-progress-bar>
+  </div>
+</div>
+<div class="container-ra" *ngIf="!isWait">
+
+  <!-- Bamboo Raindrop-->
+
+  <div class="block-raindrop">
+    <mat-card class="mat-elevation-z5">
+      <mat-card-content>
+        <div class="tex-raindrop-title">Bamboo <br> Raindrop</div>
+        <div> <img src="/assets/bamboo_logo_raindrops_final.png" class="img-logo"></div>
+        <div class="separator"></div>
+        <div class="reward-frame mat-elevation-z6">
+          <div class="medium-text">{{ 'raindrop.reward' | translate }}<br></div>
+          <div class="separator"></div>
+          <div class="big-text-ra">{{ raindrop.reward }} </div>
+          <div><img src="/assets/bamboo-head.png" class="logotoken"></div>
+        </div>
+        <div class="separator-big"></div>
+        <div>
+          <div class="medium-text">{{ 'raindrop.yourtickets' | translate }}</div>
+          <div class="big-text-ra">
+            {{ raindrop.totalUserTikets }}
+            <br>
+            <img src="/assets/ticketbamboo.png" class="ticket-bamboo">
+          </div>
+        </div>
+        <div>
+        </div>
+        <div class="separator-big"></div>
+        <div class="buy-block">
+          <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && raindrop.tiketsToBuy > 0 && onSubmit()">
+            <div matTooltip="{{ 'raindrop.buyExplain' | translate }}" class="medium-text">{{ 'raindrop.buytokens' |
+              translate }}</div>
+            <div class="separator" style="display: flex; align-items: center;justify-content: center;">
+              <span class="medium-text">100&nbsp;</span><img src="/assets/bamboo-head.png" width="30px"
+                alt="Bamboo">&nbsp;<mat-icon>arrow_forward</mat-icon> &nbsp;<span class="medium-text">1&nbsp;</span>
+              <img src="/assets/ticketbamboo.png" width="50px" alt="Ticket">
+            </div>
+            <div class="input-form">
+              <input matInput type="buy" #buy="ngModel" name="buy" [(ngModel)]="raindrop.tiketsToBuy" [maxlength]="2"
+                placeholder="0" (change)="$event ? setValidValue() : null" required>
+            </div>
+            <div *ngIf="!error"><button mat-flat-button color="primary" class="btn-action btn-title medium-text"
+                type="submit" [disabled]="!f.valid">{{ 'raindrop.buyTickesNow' | translate }}</button></div>
+            <div *ngIf="error"><button mat-flat-button color="warn" class="btn-action btn-title medium-text"
+                type="submit">{{ error | translate }}</button></div>
+          </form>
+        </div>
+        <div class="separator-big"></div>
+        <div class="medium-text">{{ 'raindrop.nextLottery' | translate }}</div>
+        <div class="big-text-ra date-raindrop">{{ raindrop.timeToNextLottery | date: 'short'}}</div>
+        <div class="separator-big"></div>
+        <div>
+          <div *ngIf="!raindrop.lastNumber" class="medium-text">{{ 'raindrop.lastTickets' | translate }}</div>
+          <div *ngFor="let wallet of raindrop.lastNumber" class="big-text-ra date-raindrop">{{ wallet }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <!-- Bamboo Burn Yearly Party-->
+  <div class="block-raindrop">
+    <mat-card class="mat-elevation-z5">
+      <mat-card-content>
+        <div class="tex-raindrop-title">Bamboo <br>Burn Yearly Party</div>
+        <div> <img src="/assets/bamboo_logo_BBYP.png" class="img-logo"></div>
+        <div class="separator"></div>
+        <div class="reward-frame mat-elevation-z6">
+          <div class="medium-text">{{ 'raindrop.reward' | translate }}<br></div>
+          <div class="separator"></div>
+          <div class="big-text-ra">{{ bbyp.reward }} </div>
+          <div><img src="/assets/bamboo-head.png" class="logotoken"></div>
+        </div>
+        <div class="separator-big"></div>
+        <div>
+          <div class="medium-text">{{ 'raindrop.yourtickets' | translate }}</div>
+          <div class="big-text-ra">
+            {{ bbyp.totalUserTikets }}
+            <br>
+            <img src="/assets/ticketbamboo.png" class="ticket-bamboo">
+          </div>
+        </div>
+        <div>
+
+        </div>
+        <div class="separator-big"></div>
+        <div class="buy-block">
+          <form name="form" #d="ngForm" (ngSubmit)="d.form.valid && bbyp.tiketsToBurn > 0 && onSubmitBbyp()">
+            <div matTooltip="{{ 'raindrop.buyExplain' | translate }}" class="medium-text">{{ 'raindrop.burntokens' |
+              translate }}</div>
+            <div class="separator" style="display: flex; align-items: center;justify-content: center;">
+              <span class="medium-text">10&nbsp;</span><img src="/assets/bamboo-head.png" width="30px"
+                alt="Bamboo">&nbsp;<mat-icon>arrow_forward</mat-icon> &nbsp;<span class="medium-text">1&nbsp;</span>
+              <img src="/assets/ticketbamboo.png" width="50px" alt="Ticket">
+            </div>
+            <div class="input-form">
+              <input matInput type="buy" #buy="ngModel" name="buy" [maxlength]="2" [(ngModel)]="bbyp.tiketsToBurn"
+                placeholder="0" autocomplete="off" (change)="$event ? setValidBbypValue() : null" required>
+            </div>
+            <div *ngIf="!errorBbyp"><button mat-flat-button color="primary" class="btn-action btn-title medium-text"
+                type="submit" [disabled]="!d.valid">{{ 'raindrop.buyTickesNow' | translate }}</button></div>
+            <div *ngIf="errorBbyp"><button mat-flat-button color="warn" class="btn-action btn-title medium-text"
+                type="submit">{{ errorBbyp | translate }}</button></div>
+          </form>
+        </div>
+        <div class="separator-big"></div>
+        <div class="medium-text">{{ 'raindrop.nextBurningParty' | translate }}</div>
+        <div class="big-text-ra date-raindrop">{{ bbyp.timeToNextLottery | date: 'short'}}</div>
+        <div class="separator-big"></div>
+        <div *ngIf="bbyp.lastNumber">
+          <div class="medium-text">{{ 'raindrop.lastTicket' | translate }}</div>
+          <div class="big-text-ra date-raindrop">{{ bbyp.lastNumber}}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

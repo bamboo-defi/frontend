@@ -1,0 +1,84 @@
+<div *ngIf="isWait">
+  <div>
+    <img src="/assets/bamboo_logo_tokens_final.png" width="200" height="auto">
+  </div>
+  <div>
+    <mat-progress-bar color="primary" mode="indeterminate">
+    </mat-progress-bar>
+  </div>
+</div>
+<div *ngIf="!isWait">
+  <mat-card>
+    <mat-card-content>
+
+      <mat-form-field MatFormFieldControl="search">
+        <mat-label>{{ 'tokens.search' | translate }}</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="{{ 'tokens.searchpool' | translate }}">
+      </mat-form-field>
+
+      <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.name' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            <span class="mobile-label">
+              <img src="{{token.image}}" alt="token.name" width="30px" height="30px">&nbsp;{{token.name}}
+            </span>
+            <span class="screen-label">
+              <img src="{{token.image}}" alt="token.name" width="30px" height="30px">&nbsp;{{token.name}}
+            </span>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="symbol">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.symbol' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            <span class="mobile-label">{{ 'tokens.symbol' | translate }}:</span>
+            {{token.symbol | uppercase}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="liquidity">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.liquidity' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            <span class="mobile-label">{{ 'tokens.liquidity' | translate }}:</span>
+            {{token.circulating_supply}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="volume">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.volume' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            <span class="mobile-label">{{ 'tokens.volume' | translate }}:</span>
+            {{token.total_volume | currency:'USD'}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.price' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            <span class="mobile-label">{{ 'tokens.price' | translate }}:</span>
+            {{token.current_price | currency:'USD'}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="pricechange">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.pricechange' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token" [ngClass]="{
+          'positive' : token.price_change_percentage_24h_in_currency > 0,
+          'negative' : token.price_change_percentage_24h_in_currency < 0
+       }"><span class="mobile-label">{{ 'tokens.pricechange' | translate }}:</span>
+            {{token.price_change_percentage_24h_in_currency | number:'0.1-2'}}%
+          </mat-cell>
+        </ng-container>
+
+        <ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let token; columns: displayedColumns;" class="pool-row"
+            [routerLink]="'../tokenvalue/'+ token.symbol + '/' + token.id"></mat-row>
+        </ng-container>
+
+      </mat-table>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,16 @@
+{
+  "Bamboo Home": "Bamboo Home",
+  "Information": "Information",
+  "Wallet": "Wallet",
+  "Pools": "Pools",
+  "Raindrop":"Raindrop",
+  "Tokens":"Tokens",
+  "Pairs":"Pairs",
+  "Governance":"Governance",
+  "About":"About",
+  "Docs":"Documents",
+  "home": {
+    "make": "Make your inner panda grow!",
+    "wallet": "Connect to wallet"
+  }
+}

@@ -1,0 +1,48 @@
+<mat-card class="mat-elevation-z6 card-list">
+  <mat-card-title style="display: flex;justify-content:space-between">
+    {{ 'information.balance' | translate }}
+    <span><mat-icon (click)="refreshWallet()" style="cursor: pointer;scale: 1.4;">cached</mat-icon></span>
+  </mat-card-title>
+  <div *ngIf="isWait">
+    <div>
+      <img src="/assets/bamboo_logo_wallet_final.png" width="200" height="auto">
+    </div>
+    <div>
+      <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
+    </div>
+  </div>
+  <mat-card-content *ngIf="!isWait">
+    <div class="content-class">
+      <div>
+        <img style="width: 150px; height: auto;" src="/assets/bamboo_logo_wallet_final.png">
+      </div>
+      <div>
+        <div class="separator">
+          <strong>{{ 'information.unstaked' | translate }}:</strong>
+          <span class="tex-medium"> {{ownWallet.unstaked}}</span>
+          <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+        </div>
+        <div class="separator">
+          <strong>{{ 'information.staked' | translate }}:</strong>
+          <span class="tex-medium"> {{ownWallet.staked}}</span>
+          <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+        </div>
+        <div class="separator">
+          <strong>{{ 'information.bambooField' | translate }}:</strong>
+          <span class="tex-medium"> {{ownWallet.bambooField}}</span>
+          <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+        </div>
+        <div class="separator">
+          <strong>{{ 'information.toHarvest' | translate }}:</strong>
+          <span class="tex-medium"> {{ownWallet.toHarvest}}</span>
+          <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboos.png">
+        </div>
+        <div class="separator">
+          <strong>{{ 'information.totalBamboo' | translate }}:</strong>
+          <span class="tex-medium"> {{ownWallet.totalBamboo}}</span>
+          <img mat-list-icon style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,291 @@
+<div style="overflow: auto; height: 450px;">
+  <div mat-dialog-title class="item-center">{{ 'confirm.validate' | translate }}</div>
+  <div class="item-center">{{ 'confirm.explain' | translate }}</div>
+
+  <!--To trade-->
+  <div *ngIf="toTrade" class="separator item-center font-med">
+    <div>{{ 'confirm.buy' | translate }}</div>
+    <div class="content-card-confirm inline separator">
+      <div>{{ 'confirm.from' | translate }}</div>
+      <div>{{ 'confirm.to' | translate }}</div>
+    </div>
+
+    <div class="content-card-confirm inline separator">
+      <div class="form-big-co">
+        {{data.fromAmmount}}
+      </div>
+      <div>
+        <span style="color: #8ed164; font-size: 30px;">
+          <mat-icon>arrow_forward</mat-icon>
+        </span>
+      </div>
+      <div class="form-big-co">
+        {{data.toAmmount}}
+      </div>
+    </div>
+
+    <div class="content-card-confirm inline">
+      <div>
+        <img src="{{data.fromIcon}}" alt="" srcset="" style="width: 25px; height: 25px; margin-right: 5px;">
+        <span class="font-med"> {{data.fromName | uppercase}}</span>
+      </div>
+      <div>
+        <img src="{{data.toIcon}}" alt="" srcset="" style="width: 25px; height: 25px; margin-right: 5px;">
+        <span class="font-med">{{data.toName | uppercase}}</span>
+      </div>
+    </div>
+
+    <div *ngIf="data.recipient" class="separator-big item-center">
+      {{ 'confirm.wallet' | translate }}<br>
+      <span class="font-med">{{ data.recipient }}</span>
+    </div>
+
+    <div class="separator-big"></div>
+    <div class="container-between">
+      <div>{{ 'to-trade.minimunReceived' | translate}}:</div>
+      <div>{{ data.minimunReceived }}</div>
+    </div>
+    <div class="container-between">
+      <div>{{ 'to-trade.priceImpact' | translate }}:</div>
+      <div>{{ data.priceImpact }}</div>
+    </div>
+    <div class="container-between">
+      <div>{{ 'to-trade.liqProviderFee' | translate }}:</div>
+      <div>{{ data.liqProviderFee }}</div>
+    </div>
+    <div class="separator-big"></div>
+
+    <!--Show route on better deal-->
+
+    <div>{{ 'to-trade.route' | translate }}</div>
+    <img src="{{ data.fromIcon }}" width="25px" height="auto">{{ data.fromName }}
+    <ng-container *ngIf="data.routeToken != null">
+      <span *ngFor="let token of data.tokenIntermediate">
+        -<img src="{{token.icon}}" width="25px" height="25px"> {{ token.name }}
+      </span>
+    </ng-container>
+    -<img src="{{ data.toIcon }}" width="25px" height="auto"> {{ data.toName }}
+  </div>
+
+  <!--Liquidity Plus-->
+
+  <div *ngIf="liquidityPlus">
+    <div class="separator item-center font-med">{{ 'confirm.createPool' | translate }}</div>
+    <div class="content-card-confirm inline separator">
+      <div>{{ 'confirm.firtToken' | translate }}</div>
+      <div>{{ 'confirm.secondToken' | translate }}</div>
+    </div>
+
+    <div class="content-card-confirm inline separator">
+      <div class="form-big-co">
+        {{data.liquidityPlus.inputFirst}}
+      </div>
+      <div>
+        <span style="color: #8ed164; font-size: 30px;">
+          <mat-icon>add</mat-icon>
+        </span>
+      </div>
+      <div class="form-big-co">
+        {{data.liquidityPlus.inputSecond}}
+      </div>
+    </div>
+
+    <div class="content-card-confirm inline">
+      <div>
+        <img src="{{data.liquidityPlus.tokenFirst.icon}}" alt="" srcset=""
+             style="width: 25px; height: 25px; margin-right: 5px;">
+        <span class="font-med"> {{data.liquidityPlus.tokenFirst.name | uppercase}}</span>
+      </div>
+      <div>
+        <img src="{{data.liquidityPlus.tokenSecond.icon}}" alt="" srcset=""
+             style="width: 25px; height: 25px; margin-right: 5px;">
+        <span class="font-med">{{data.liquidityPlus.tokenSecond.name | uppercase}}</span>
+      </div>
+    </div>
+  </div>
+
+  <!--Liquidity minus-->
+  <div *ngIf="liquidityMinus">
+    <div class="separator-big">{{ 'confirm.reward' | translate }}</div>
+    <!-- Pool-->
+    <div class="separator"></div>
+
+    <div>
+      <img src="{{data.pool.logoTokenFirst}}" width="30px" height="auto">&nbsp;
+      <span class="font-med">{{ data.pool.underlyingTokenFirst}}</span>
+      <mat-icon style="margin: 5px;">add</mat-icon>
+      <img src="{{data.pool.logoTokenSecond}}" width="30px">&nbsp;
+      <span class="font-med">{{data.pool.underlyingTokenSecond}}</span>
+    </div>
+    <!--Rewards-->
+    <div class="separator"></div>
+    <div>
+      <mat-icon>arrow_downward</mat-icon>
+    </div>
+    <div class="separator">
+      <span class="font-med">{{ data.ammountBamboo }}</span>&nbsp;&nbsp;
+      <img src="/assets/bamboo-head.png" alt="bamboo" style="width: 25px; height: 25px; margin-right: 5px;">
+      <span class="font-med"> BAMBOO</span>
+    </div>
+    <div class="separator">
+      <span class="font-med">{{ data.reward.tokenFirst }}</span>&nbsp;&nbsp;
+      <img src="{{data.pool.logoTokenFirst}}" alt="" srcset="" style="width: 25px; height: 25px; margin-right: 5px;">
+      <span class="font-med"> {{data.pool.underlyingTokenFirst | uppercase}}</span>
+    </div>
+    <div>
+      <span class="font-med">{{ data.reward.tokenSecond }}&nbsp;&nbsp;</span>
+      <img src="{{data.pool.logoTokenSecond}}" alt="" srcset="" style="width: 25px; height: 25px; margin-right: 5px;">
+      <span class="font-med"> {{data.pool.underlyingTokenSecond | uppercase}}</span>
+    </div>
+  </div>
+
+  <!--To stake-->
+  <div *ngIf="toStake">
+    <div class="separator item-center font-med">{{ 'confirm.toStake' | translate }}</div>
+    <div class="item-center separator-big">
+      {{ 'confirm.ammount' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">{{data.ammount}}</span>
+      <img src="assets/bamboo-face256.png" style="width: 35px; height: auto;">
+    </div>
+    <div class="item-center separator">
+      {{ 'confirm.time' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">{{ data.time}} {{ 'confirm.days' | translate }}</span>
+    </div>
+    <div class="item-center separator">
+      {{ 'confirm.stakeMultiplier' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">x{{ data.multiplier}}</span>
+    </div>
+  </div>
+
+  <!--Raindrop-->
+  <div *ngIf="raindrop">
+    <div class="separator item-center font-med">{{ 'confirm.raindrop' | translate }}</div>
+    <div class="item-center separator-big">
+      {{ 'confirm.ammountwaste' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">{{data.bambooAmount}}</span>
+      <img src="assets/bamboo-face256.png" style="width: 35px; height: auto;">
+    </div>
+    <div class="item-center separator-big">
+      {{ 'confirm.raindropreceived' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">{{data.tikets}}</span>
+      <img src="assets/ticketbamboo.png" style="width: auto; height: 30px; margin-left: 10px;">
+    </div>
+  </div>
+
+  <!--BBYP-->
+  <div *ngIf="bbyp">
+    <div class="separator item-center font-med">{{ 'confirm.bbyp' | translate }}</div>
+    <div class="item-center separator-big">
+      {{ 'confirm.ammountBurned' | translate }
+      }<br>
+      <span class="form-big-co" style="line-height: 50px;">{{data.bambooAmount}}</span>
+      <img src="assets/bamboo-face256.png" style="width: 35px; height: auto;">
+    </div>
+    <div class="item-center separator-big">
+      {{ 'confirm.bbypTiketsReceived' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">{{data.tikets}}</span>
+      <img src="assets/ticketbamboo.png" style="width: auto; height: 30px; margin-left: 10px;">
+    </div>
+  </div>
+
+  <!--bambooField-->
+  <div *ngIf="bambooField">
+    <div class="separator item-center font-med">{{ 'confirm.bambooField' | translate }}</div>
+    <div class="item-center separator-big">
+      {{ 'confirm.createField' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">{{data.stake}}</span>
+      <img src="assets/bamboo-face256.png" style="width: 35px; height: auto;">
+    </div>
+    <div class="item-center separator-big">
+      {{ 'confirm.pool' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">
+        <img src="{{data.pool.logoTokenFirst}}" width="25px" height="auto">
+        <img src="{{data.pool.logoTokenSecond}}" width="25px" height="auto">
+        {{data.pool.underlyingTokenFirst}}/{{data.pool.underlyingTokenSecond}}
+      </span>
+    </div>
+    <div class="item-center separator-big">
+      {{ 'confirm.seeds' | translate }}
+      <br>
+      <span class="form-big-co" style="line-height: 50px;">{{data.seeds}}</span>
+      <img src="assets/semillas.png" style="width: 45px; height: auto;">
+    </div>
+  </div>
+
+  <!--Claim-->
+  <div *ngIf="claim">
+    <div class="separator item-center font-med">{{ 'confirm.claim' | translate }}</div>
+    <div class="item-center separator-big">{{ 'confirm.yourBambooReward' | translate}}:</div>
+    <div class="item-center separator-big">
+      <span class="form-big-co" style="line-height: 50px;">{{data.row.reward}}</span>&nbsp;
+      <img src="/assets/bamboo-head.png" alt="bamboo" style="width: 45px; margin-right: 5px;">
+    </div>
+  </div>
+
+  <!--withdraw-->
+  <div *ngIf="withdraw">
+    <div class="separator item-center font-med">{{ 'confirm.fieldClaim' | translate }}</div>
+    <div class="item-center separator-big">
+      <span class="form-big-co" style="line-height: 50px;">{{data.seed}}</span>&nbsp;
+      <img src="/assets/semillas.png" alt="bamboo" style="width: 25px; height: 25px; margin-right: 5px;">
+    </div>
+    <div class="item-center separator-big">
+      <span class="form-big-co" style="line-height: 50px;">{{data.stake}}</span>&nbsp;
+      <img src="/assets/bamboo-head.png" alt="bamboo" style="width: 25px; height: 25px; margin-right: 5px;">
+    </div>
+  </div>
+
+  <!--withdraw Stake ROI-->
+  <div *ngIf="withdrawAcumulated">
+    <div class="separator item-center font-med">{{ 'confirm.claim' | translate }}</div>
+    <div class="item-center separator-big">{{ 'confirm.yourBambooReward' | translate}}:</div>
+    <div class="item-center separator-big">
+      <span class="form-big-co" style="line-height: 50px;">{{data.stake.acumulated}}</span>&nbsp;
+      <img src="/assets/bamboo-head.png" alt="bamboo" style="width: 25px; height: 25px; margin-right: 5px;">
+    </div>
+  </div>
+
+  <!--withdraw accumulated-->
+  <div *ngIf="withdrawStaking">
+    <div class="separator item-center font-med">{{ 'confirm.claim' | translate }}</div>
+    <div class="item-center separator-big">{{ 'confirm.yourBambooReward' | translate}}:</div>
+    <div class="item-center separator-big">
+      <span class="form-big-co" style="line-height: 50px;">{{data.stake.acumulated}}</span>&nbsp;
+      <img src="/assets/bamboo-head.png" alt="bamboo" style="width: 25px; height: 25px; margin-right: 5px;">
+    </div>
+    <div class="item-center separator-big">{{ 'confirm.yourBambooRewardStake' | translate}}:</div>
+    <div class="item-center separator-big">
+      <span class="form-big-co" style="line-height: 50px;">{{data.stake.ammount}}</span>&nbsp;
+      <img src="/assets/bamboo-head.png" alt="bamboo" style="width: 25px; height: 25px; margin-right: 5px;">
+    </div>
+  </div>
+
+  <!--Buttons to validate-->
+  <div class="content-card-confirm inline separator-big">
+    <div
+      *ngIf="toTrade || liquidityPlus || toStake || liquidityMinus || raindrop || bbyp || bambooField || withdraw || claim || withdrawStaking || withdrawAcumulated">
+      <button mat-button [mat-dialog-close]="ok" color="primary" class="btn-confirm">
+        <span style="vertical-align: sub;">
+          <mat-icon>check</mat-icon>
+        </span>
+        {{ 'confirm.okValidate' | translate }}
+      </button>
+    </div>
+    <div>
+      <button type="button" mat-button [mat-dialog-close]="noDeal" color="warn" class="btn-cancel">
+        <span style="vertical-align: sub;">
+          <mat-icon>clear</mat-icon>
+        </span>
+        {{ 'confirm.noValidate' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

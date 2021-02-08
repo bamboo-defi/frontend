@@ -1,0 +1,176 @@
+<form class="separator-big" name="form" #f="ngForm"
+  (ngSubmit)="f.form.valid &&  wallet.from>0 && wallet.to>0 && wallet.tokenFrom.name && wallet.tokenTo.name">
+
+  <div class="separator-big"></div>
+
+  <div class="container-colum">
+
+    <!-- From -->
+
+    <div class="container-between">
+      <div>{{'to-trade.from' | translate }}
+        <span *ngIf="estimatedFrom">{{'to-trade.estimated' | translate }}</span>
+      </div>
+      <div class="container-end">
+        <input matInput #balanceFrom="ngModel" name="balanceFrom" class="form-control right-align" style="width: 40%;"
+          [(ngModel)]="wallet.balanceFrom" placeholder="{{wallet.balanceFrom}}" disabled autocomplete="off"
+          required />&nbsp;
+        <span matPreffix>{{ 'to-trade.balanceFrom' | translate }}</span>
+      </div>
+    </div>
+    <div class="separator"></div>
+    <div class="container-between">
+      <div>
+        <input matInput #from="ngModel" name="from" class="form-control form-big-bu" [(ngModel)]="wallet.from"
+          placeholder="0.0" autocomplete="off" (change)="$event ? setValues(1) : null" type="number"
+          [disabled]="!wallet.tokenFrom.name" required />
+      </div>
+
+      <div class="container-end">
+        <div>
+          <mat-chip-list aria-label="selection" #slip>
+            <mat-chip *ngFor="let percentajeFrom of fromValuePercentaje" selected
+              (click)="loadPercentajeFrom(percentajeFrom.value)">
+              {{percentajeFrom.value }}%
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+        <div>
+          <button mat-flat-button color="primary" (click)="selectTokenFromList()" *ngIf="wallet.tokenFrom.name"
+            class="select-token"><img src="{{wallet.tokenFrom.icon}}" style="width: 35px; height: 35px; margin: 10px;">
+            {{ wallet.tokenFrom.name }}</button>
+          <button mat-flat-button color="accent" (click)="selectTokenFromList()" *ngIf="!wallet.tokenFrom.name"
+            class="select-token">{{ 'to-trade.select' | translate }}</button>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Add wallet send / Change direcction-->
+    <div class="separator-big"></div>
+    <div class="container-between">
+      <div class="point-cursor positive" (click)="changeDirection()">
+        <mat-icon>arrow_downward</mat-icon>
+      </div>
+      <div><button mat-flat-button class="tex-opcional" (click)="addSend()" *ngIf="addSendWallet === false">
+          <mat-icon>expand_more</mat-icon>{{ 'to-trade.addSend' | translate }}
+        </button> </div>
+    </div>
+    <!-- To -->
+
+    <div class="separator-big"></div>
+
+    <div class="container-between">
+      <div>{{'to-trade.to' | translate }}
+        <span *ngIf="estimatedTo">{{'to-trade.estimated' | translate }}</span>
+      </div>
+      <div class="container-end">
+
+        <input matInput #balanceTo="ngModel" name="balanceTo" class="form-control right-align" style="width: 40%;"
+          [(ngModel)]="wallet.balanceTo" placeholder="0" disabled required />&nbsp;
+        <span matPreffix>{{ 'to-trade.balanceTo' | translate }}</span>
+
+      </div>
+    </div>
+
+    <div class="container-between">
+      <div>
+        <input matInput #to="ngModel" name="to" class="form-control form-big-bu" [(ngModel)]="wallet.to" placeholder="0.0"
+          autocomplete="off" (change)="$event ? setValues(2) : null" type="number" [disabled]="!wallet.tokenTo.name"
+          required />
+      </div>
+
+      <div class="container-end">
+        <div>
+          <!-- <input matInput #nameTo="ngModel" name="nameTo" class="form-control" [(ngModel)]="wallet.tokenTo.name" placeholder="0" (click)="selectTokenToList()" required/> -->
+          <button mat-flat-button color="primary" (click)="selectTokenToList()" *ngIf="wallet.tokenTo.name"
+            class="select-token"><img src="{{wallet.tokenTo.icon}}" style="width: 35px; height: 35px; margin: 10px;">
+            {{wallet.tokenTo.name}}</button>
+          <button mat-flat-button color="accent" (click)="selectTokenToList()" *ngIf="!wallet.tokenTo.name"
+            class="select-token">{{ 'to-trade.select' | translate }}</button>
+        </div>
+      </div>
+    </div>
+
+
+    <ng-container *ngIf="addSendWallet === true">
+
+      <!-- Disabled wallet send -->
+
+      <div class="separator-big"></div>
+      <div class="container-between">
+        <div>
+          <mat-icon>arrow_downward</mat-icon>
+        </div>
+        <div>
+          <div mat-flat-button class="tex-opcional" (click)="addSend()">
+            <mat-icon>expand_less</mat-icon>{{ 'to-trade.removeSend' | translate }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Add a Send Wallet-->
+
+      <div class="separator-big"></div>
+
+      <div class="container-colum-right">
+        <div>{{ 'to-trade.recipient' | translate }}</div>
+        <div class="separator"></div>
+        <div>
+          <input matInput #recipient="ngModel" name="recipient" class="form-control form-big-bu"
+            [(ngModel)]="wallet.recipient" (change)="$event ? validateAddress() : null"
+            placeholder="{{ 'to-trade.walletAddress' | translate }}" autocomplete="off" required />
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Submit button-->
+
+    <div class="separator-big"></div>
+    <button *ngIf="!error" mat-flat-button class="btn-title" color="primary" type="submit" (click)="onSubmit()"
+      [disabled]="!f.valid || wallet.balanceFrom == '0' || wallet.balanceTo == '0'">{{ tradeOk | translate}}</button>
+    <button *ngIf="error" mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="warn"
+      [disabled]="!f.valid">
+      <mat-icon>create</mat-icon> {{ errorText | translate}}
+    </button>
+
+  </div>
+
+  <!-- AMM is Better -->
+  <div class="separator"></div>
+
+  <div *ngIf="betterDealBlock === true" (click)="showBetterDeal()"><button mat-flat-button class="better-deal"
+      [disabled]="true">
+      <!--[disabled]="!f.valid || wallet.balanceFrom == 0 || wallet.balanceTo == 0"-->{{ 'to-trade.betterDeal' |
+      translate }}<img src="assets/comming-soon-transparent.png" class="better-deal-img">
+    </button></div>
+  <div class="separator"></div>
+
+  <mat-card *ngIf="betterDealBlock === true">
+    <div class="container-between">
+      <div>{{ 'to-trade.minimunReceived' | translate}}: </div>
+      <div>{{ minimunReceived }}</div>
+    </div>
+    <div class="container-between">
+      <div>{{ 'to-trade.priceImpact' | translate }}: </div>
+      <div>{{ priceImpact }}</div>
+    </div>
+    <div class="container-between">
+      <div>{{ 'to-trade.liqProviderFee' | translate }}: </div>
+      <div>{{ liqProviderFee }}</div>
+    </div>
+    <div class="separator-big"></div>
+
+    <!--Show route on better deal - DESCOMENTAR CUANDO ESTE FUNCIONANDO BETTER DEAL, DE MOMENTO COMING SOON!!!
+  <div *ngIf="showBetterDealBlock === true">
+    <div>{{ 'to-trade.route' | translate }}</div>
+    <img src="{{ wallet.tokenFrom.icon }}" width="25px" height="auto">{{ wallet.tokenFrom.name }}
+    <ng-container *ngIf="wallet.tokenIntermediate != null"><span *ngFor="let token of wallet.tokenIntermediate">-<img src="{{token.icon}}" width="25px" height="25px"> {{ token.name }}</span></ng-container>
+    -<img src="{{wallet.tokenTo.icon }}" width="25px" height="auto"> {{ wallet.tokenTo.name }}
+  </div>-->
+    <div *ngIf="showBetterDealBlock === true">
+      <img src="assets/comming-soon.png" width="50%" height="auto">
+    </div>
+  </mat-card>
+
+</form>

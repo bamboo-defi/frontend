@@ -1,0 +1,35 @@
+<mat-card-title>{{ 'withdraw.withdraw' | translate }} {{ data.row.underlyingTokenFirst }}/{{ data.row.underlyingTokenSecond }} LP Token</mat-card-title>
+<mat-card-content>
+  <div>{{ available }} {{data.row.underlyingTokenFirst}} - {{data.row.underlyingTokenSecond}} Seeds {{ 'withdraw.available' | translate }}</div>
+
+  <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && withdrawSlp()">
+    <div style="display: flex;  align-items: center; justify-content: center;">
+      <div>
+        <input matInput
+          name="toStakeFieldAmount"
+          #toStakeFieldAmount="ngModel"
+          [(ngModel)]="unstakeAmmount"
+          placeholder="0"
+          autocomplete="off"
+          type="number"
+          [minlength]="1"
+          [maxlength]="20"
+          style="text-align:center;"
+          class="form-big"
+          required>
+      </div>
+      <div>
+        <button mat-flat-button type="button" (click)="setMaxSeeds()">Max</button>
+      </div>
+      <div>
+        <img matSuffix src="assets/bamboos.png" width="60px" height="60px">
+      </div>
+    </div>
+
+  <!--Buttons to validate-->
+  <div class="content-card-confirm inline separator-big">
+    <div><button mat-button color="primary" class="btn-confirm" type="submit" [disabled]="!f.valid"><span style="vertical-align: sub;"><mat-icon>check</mat-icon></span>{{ 'confirm.okValidate' | translate }}</button></div>
+    <div><button mat-button [mat-dialog-close]="noDeal" color="warn" class="btn-cancel"><span style="vertical-align: sub;"><mat-icon>clear</mat-icon></span>{{ 'confirm.noValidate' | translate }}</button></div>
+  </div>
+</form>
+</mat-card-content>

@@ -1,0 +1,121 @@
+<form class="separator" name="form" #f="ngForm"
+  (ngSubmit)="f.form.valid && liquidityPlus.inputFirst>0 && liquidityPlus.inputSecond>0 && liquidityPlus.tokenFirst.name && liquidityPlus.tokenSecond.name">
+  <div class="container-lp">
+    <div>{{'liquidityPlus.input' | translate }}</div>
+    <div class="item-inline">{{'liquidityPlus.balance' | translate }}:
+      <input matInput name="inputBalanceFirst" class="right-align" #inputBalanceFirst="ngModel"
+        [(ngModel)]="liquidityPlus.inputBalanceFirst" placeholder="{{liquidityPlus.inputBalanceFirst}}" />
+    </div>
+  </div>
+
+  <div class="container-lp separator">
+    <div>
+      <input matInput name="inputFirst" class="form-big-lp" #inputFirst="ngModel"
+        [disabled]="!liquidityPlus.tokenFirst.name" [(ngModel)]="liquidityPlus.inputFirst" placeholder="0.0"
+        (change)="$event ? setValues(1) : null" autocomplete="off" type="number" required />
+    </div>
+    <div class="item-inline">
+      <button mat-flat-button color="primary" class="select-token" (click)="selectFirstTokenFromList()"
+        *ngIf="liquidityPlus.tokenFirst.name" class="select-token"><img src="{{liquidityPlus.tokenFirst.icon}}"
+          style="width: 35px; height: 35px; margin: 10px;"> {{ liquidityPlus.tokenFirst.name }}</button>
+      <button mat-flat-button color="accent" class="select-token" (click)="selectFirstTokenFromList()"
+        *ngIf="!liquidityPlus.tokenFirst.name" class="select-token">{{ 'liquidityPlus.select' | translate }}</button>
+    </div>
+  </div>
+
+  <div class="container-center separator-big">
+    <mat-icon style="color: #50e95d; font-size: 45px; font-weight: 900;">add</mat-icon>
+  </div>
+
+  <div class="container-lp separator-big">
+    <div>{{'liquidityPlus.input' | translate }}</div>
+    <div class="item-inline">{{'liquidityPlus.balance' | translate }}:
+      <input matInput name="inputBalanceSecond" class="right-align" #inputBalanceSecond="ngModel"
+        [(ngModel)]="liquidityPlus.inputBalanceSecond" placeholder="{{liquidityPlus.inputBalanceSecond}}" />
+    </div>
+  </div>
+
+  <div class="container-lp separator">
+    <div>
+      <input matInput name="inputSecond" class="form-big-lp" #inputSecond="ngModel"
+        [disabled]="!liquidityPlus.tokenSecond.name" [(ngModel)]="liquidityPlus.inputSecond" placeholder="0.0"
+        (change)="$event ? setValues(2) : null" autocomplete="off" type="number" required />
+
+    </div>
+    <div class="item-inline">
+      <button mat-flat-button color="primary" class="select-token" (click)="selectSecondTokenFromList()"
+        *ngIf="liquidityPlus.tokenSecond.name" class="select-token"><img src="{{liquidityPlus.tokenSecond.icon}}"
+          style="width: 35px; height: 35px; margin: 10px;"> {{ liquidityPlus.tokenSecond.name }}</button>
+      <button mat-flat-button color="accent" class="select-token" (click)="selectSecondTokenFromList()"
+        *ngIf="!liquidityPlus.tokenSecond.name" class="select-token">{{ 'liquidityPlus.select' | translate }}</button>
+
+    </div>
+  </div>
+
+  <!--pool explain-->
+  <div class="container-start-lp separator-big">
+    <div>
+      <mat-label>{{ liquidityPlus.tokenFirst.name }} {{ 'liquidityPlus.per' | translate }} {{
+        liquidityPlus.tokenSecond.name }} </mat-label>
+      <input matInput name="firstPerSecond" class="tex-grey" #firstPerSecond="ngModel"
+        [(ngModel)]="liquidityPlus.firstPerSecond" placeholder="{{liquidityPlus.firstPerSecond}}" required />
+    </div>
+    <div>
+      <mat-label>{{ liquidityPlus.tokenSecond.name }} {{ 'liquidityPlus.per' | translate }} {{
+        liquidityPlus.tokenFirst.name }} </mat-label>
+      <input matInput name="secondPerFirst" class="tex-grey" #secondPerFirst="ngModel"
+        [(ngModel)]="liquidityPlus.secondPerFirst" placeholder="{{liquidityPlus.secondPerFirst}}" required />
+    </div>
+    <div>
+      <mat-label>{{'liquidityPlus.shareOfPool' | translate }}</mat-label>
+      <input matInput name="shareOfPool" class="tex-grey" #shareOfPool="ngModel" [(ngModel)]="liquidityPlus.shareOfPool"
+        placeholder="{{liquidityPlus.shareOfPool}}" required />
+    </div>
+  </div>
+
+  <!--Supply Button-->
+  <div class="separator-big container-colum">
+    <button *ngIf="!error" mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="primary"
+      type="submit"
+      [disabled]="!f.valid || liquidityPlus.inputBalanceSecond == '0' || liquidityPlus.inputBalanceFirst == '0'"
+      (click)="submit()">
+      <mat-icon>create</mat-icon> {{ 'liquidityPlus.trade' | translate}}
+    </button>
+    <button *ngIf="error" mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="warn"
+      type="submit" [disabled]="!f.valid">
+      <mat-icon>create</mat-icon> {{ errorText | translate}}
+    </button>
+  </div>
+
+  <!--Alert first Poll-->
+
+  <div *ngIf="firstPool" class="first-pool">
+    <strong>{{ 'liquidityPlus.firstPoolStrong' | translate }}</strong><br>
+    {{ 'liquidityPlus.firstPool' | translate }}
+  </div>
+
+  <!--position resume-->
+  <div class="separator-big" *ngIf="pairData && !firstPool">
+    <div>
+      {{ 'liquidityPlus.position' | translate }}
+    </div>
+    <div class="display: flex; align-items: center;">
+      <img src="{{liquidityPlus.tokenFirst.icon}}" style="width: 20px; height: 20px; margin-right: 5px;">{{
+      liquidityPlus.tokenFirst.name }} / <img src="{{liquidityPlus.tokenSecond.icon}}"
+        style="width: 20px; height: 20px; margin-right: 5px;">{{ liquidityPlus.tokenSecond.name }}
+      <input matInput name="position" class="tex-grey" #position="ngModel" [(ngModel)]="liquidityPlus.position"
+        placeholder="{{liquidityPlus.position}}" />
+    </div>
+    <div>
+      {{ liquidityPlus.tokenFirst.name }}
+      <input matInput name="positionFirst" class="tex-grey" #positionFirst="ngModel"
+        [(ngModel)]="liquidityPlus.positionFirst" placeholder="{{liquidityPlus.positionFirst}}" />
+    </div>
+    <div>
+      {{ liquidityPlus.tokenSecond.name }}
+      <input matInput name="positionSecond" class="tex-grey" #positionSecond="ngModel"
+        [(ngModel)]="liquidityPlus.positionSecond" placeholder="{{liquidityPlus.positionSecond}}" />
+    </div>
+  </div>
+
+</form>
