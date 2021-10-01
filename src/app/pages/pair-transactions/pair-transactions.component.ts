@@ -1,11 +1,13 @@
-import {trigger, state, style, transition, animate} from '@angular/animations';
-import {SelectionModel} from '@angular/cdk/collections';
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {PairTransaction} from 'src/app/interfaces/pair-transaction';
-import {ContractService} from '../../services/contracts/contract.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { PairTransaction } from 'src/app/interfaces/pair-transaction';
+import { ContractService } from '../../services/contracts/contract.service';
+import { environment } from 'src/environments/environment';
+import { CoreEnvironment } from '@angular/compiler/src/compiler_facade_interface';
 
 @Component({
   selector: 'app-pair-transactions',
@@ -35,56 +37,68 @@ import {ContractService} from '../../services/contracts/contract.service';
 })
 export class PairTransactionsComponent implements OnInit {
 
-  // pairTransaction = [{
-  //   id: 'Id transaction',
-  //   name: 'BAMBOO-POLIS',
-  //   type: 'REMOVE',
-  //   totalValue: 0.0,
-  //   tokenName1: 'BAMBOO',
-  //   tokenAmmount1: 0,
-  //   tokenName2: 'POLIS',
-  //   tokenAmmount2: 0,
-  //   account: 'Account Example',
-  //   timeStamp: 'Time Stamp'
-  // }];
-
-  dataSource;
+  link = environment.linkNetwork;
+  logoNetwork = environment.tokenNetwork;
+  dataSource: MatTableDataSource<PairTransaction>;
+  dataWallet: MatTableDataSource<PairTransaction>;
   selection;
   displayedColumns: string[] = [
     'name',
-    'totalValue',
+    // 'totalValue',
     'tokenAmmount1',
+    'sign',
     'tokenAmmount2',
     'account',
     'timeStamp',
   ];
 
+  displayedWalletColumns: string[] = [
+    'name',
+    // 'totalValue',
+    'tokenAmmount1',
+    'sign',
+    'tokenAmmount2',
+    'timeStamp',
+    'account'
+  ];
+
+  buys: number;
+  sells: number;
+  totalBuys: number;
+  totalSells: number;
+
   @Input() pairId;
   @Input() pairAddress;
+  @Input() token1;
+  @Input() token2;
+  @Input() tokenLogo1;
+  @Input() tokenLogo2;
+
+  private sort: MatSort;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true})
-  sort: MatSort;
+  @ViewChild(MatSort) set matSort(mp: MatSort){
+    this.sort = mp;
+    this.dataSource.sort = this.sort;
+  }
   pairTransaction: PairTransaction[];
-
-  constructor(private contractService: ContractService) {
+  expandedClient: PairTransaction | null;
+  constructor(private contractService: ContractService,
+    ) {
   }
 
   ngOnInit(): void {
-
+    this.sort = new MatSort();
+    this.dataSource = new MatTableDataSource<PairTransaction>();
+    this.dataWallet = new MatTableDataSource<PairTransaction>();
     this.initData();
-    console.log(this.pairAddress);
   }
 
   /**
    * Initializes data
    */
   async initData(): Promise<void> {
-    if (!this.contractService.isConnection()) {
-      return;
-    }
-    this.pairTransaction = await this.contractService.getPairTxList(this.pairAddress);
-    console.log('transacciones ' , this.pairTransaction);
+    this.pairTransaction = await this.contractService.getPairTxAddressDBList(this.pairAddress);
     this.getTransactionsData(this.pairTransaction);
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -105,7 +119,6 @@ export class PairTransactionsComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
@@ -114,4 +127,34 @@ export class PairTransactionsComponent implements OnInit {
   getTransactions(data): void {
     this.dataSource.filter = data;
   }
+
+  getFromInformation(wallet, token1, tokenName1, type): void{
+    this.sells = 0;
+    this.buys = 0;
+    this.totalSells = 0;
+    this.totalBuys = 0;
+
+    console.log('wallet', wallet);
+
+    this.pairTransaction.forEach(element => {
+      if (element.from === wallet && element.type === 'SWAP' && element.tokenName1 === token1){
+        console.log('elementsell', element.tokenAmmount1, '/', element.type);
+        this.sells++;
+        this.totalSells += element.tokenAmmount1;
+      }
+      if (element.from === wallet && element.type === 'SWAP' && element.tokenName1 !== token1){
+        console.log('elementbuy', element.tokenAmmount2);
+        this.buys++;
+        this.totalBuys += element.tokenAmmount2;
+      }
+    });
+    console.log(this.buys + '-' + this.totalBuys + '/' + this.sells + '-' + this.totalSells);
+
+    // Nueva tabla transacciones
+    this.dataWallet = new MatTableDataSource<PairTransaction>(this.pairTransaction);
+    const filterWallet = wallet;
+    this.dataWallet.filter = filterWallet.trim().toLowerCase();
+    console.log('datawallet', this.dataWallet);
+  }
+
 }

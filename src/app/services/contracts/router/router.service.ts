@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ConnectionService} from '../../contract-connection/connection.service';
-import {router_address, weth_address} from '../../contract-connection/tools/addresses';
+import {NetworkService} from 'src/app/services/contract-connection/network.service';
 import BigNumber from 'bignumber.js';
 import {LiquidityValue, TokenData} from 'src/app/interfaces/contracts';
 import {UtilService} from '../utils/util.service';
@@ -13,17 +13,23 @@ const RouterAbi = require('../abi/UniswapV2Router02.json');
 
 export class RouterService {
 
-  constructor(private connService: ConnectionService,
-              private utils: UtilService
-              ) { }
+  addresses;
+
+  constructor(
+    private connService: ConnectionService,
+    private utils: UtilService,
+    private networkService: NetworkService
+  ) {
+    this.addresses = networkService.getAddressNetwork();
+  }
 
   // Add liquidity to pool. If pool has ether set isETH=true, and one of the tokens should be the weth address
   public async addLiquidityAny(tokenA: TokenData, tokenB: TokenData, amountA: BigNumber, amountB: BigNumber, slippage: number,
                                deadline: number, isETH: boolean): Promise<any> {
     await this.connService.syncAccount();
-    const router  = new this.connService.web3js.eth.Contract(RouterAbi, router_address);
-    const minA = this.utils.fromBNtoWei((amountA.times((1000 - slippage)).dividedBy(1000)), tokenA.decimals);
-    let minB =   this.utils.fromBNtoWei((amountB.times((1000 - slippage)).dividedBy(1000)), tokenB.decimals);
+    const router  = new this.connService.web3js.eth.Contract(RouterAbi, this.addresses.router_address);
+    const minA = this.utils.fromBNtoWei((amountA.times((100 - slippage)).dividedBy(100)), tokenA.decimals);
+    let minB =   this.utils.fromBNtoWei((amountB.times((100 - slippage)).dividedBy(100)), tokenB.decimals);
     const timestamp = (await this.connService.lastBlockTimestamp()) + deadline;
 
     if (isETH){
@@ -31,7 +37,7 @@ export class RouterService {
       let tA = tokenA;
       let aA = amountA;
       let mA = minA;
-      if (this.utils.compareEthAddr(tokenA.addr, weth_address)) {
+      if (this.utils.compareEthAddr(tokenA.addr, this.addresses.weth_address)) {
         tA = tokenB;
         aA = amountB;
         mA = minB;
@@ -52,7 +58,7 @@ export class RouterService {
   // Given an output asset amount and an array of token addresses, calculates all preceding minimum input token amounts
   public async estimateAmountsIn(amountOut: BigNumber, tokenOut: TokenData, path: string[]): Promise<string[]> {
     await this.connService.syncAccount();
-    const router  = new this.connService.web3js.eth.Contract(RouterAbi, router_address);
+    const router  = new this.connService.web3js.eth.Contract(RouterAbi, this.addresses.router_address);
     try {
       return await router.methods.getAmountsIn(this.utils.fromBNtoWei(amountOut, tokenOut.decimals),
         path).call({from: this.connService.accounts[0]});
@@ -65,7 +71,7 @@ export class RouterService {
   // Given an input asset amount and an array of token addresses, calculates all subsequent maximum output token amounts
   public async estimateAmountsOut(amountIn: BigNumber, tokenIn: TokenData, path: string[]): Promise<string[]> {
     await this.connService.syncAccount();
-    const router  = new this.connService.web3js.eth.Contract(RouterAbi, router_address);
+    const router  = new this.connService.web3js.eth.Contract(RouterAbi, this.addresses.router_address);
     try{
       return await router.methods.getAmountsOut(this.utils.fromBNtoWei(amountIn, tokenIn.decimals), path)
         .call({from: this.connService.accounts[0]});
@@ -80,7 +86,7 @@ export class RouterService {
   public async removeLiquidityAny(liquidityAddr: string, liquidityAmount: BigNumber, slippage: number, deadline: number,
                                   liquidityValue: LiquidityValue, isETH: boolean): Promise<any> {
     await this.connService.syncAccount();
-    const router  = new this.connService.web3js.eth.Contract(RouterAbi, router_address);
+    const router  = new this.connService.web3js.eth.Contract(RouterAbi, this.addresses.router_address);
     const minA = this.utils.fromBNtoWei(liquidityValue.amountA.times((1000 - slippage)).dividedBy(1000), liquidityValue.tokenA.decimals);
     const minB = this.utils.fromBNtoWei(liquidityValue.amountB.times((1000 - slippage)).dividedBy(1000), liquidityValue.tokenB.decimals);
     const timestamp = (await this.connService.lastBlockTimestamp()) + deadline;
@@ -89,7 +95,7 @@ export class RouterService {
       let minETH = minB;
       let token = liquidityValue.tokenA.addr;
       let minToken = minA;
-      if (this.utils.compareEthAddr(liquidityValue.tokenA.addr, weth_address)) {
+      if (this.utils.compareEthAddr(liquidityValue.tokenA.addr, this.addresses.weth_address)) {
         token = liquidityValue.tokenB.addr;
         minETH = minA;
         minToken = minB;
@@ -113,16 +119,16 @@ export class RouterService {
     }
     await this.connService.syncAccount();
     const inmax = amountInMax.times((1000 + slippage)).dividedBy(1000);
-    const router  = new this.connService.web3js.eth.Contract(RouterAbi, router_address);
+    const router  = new this.connService.web3js.eth.Contract(RouterAbi, this.addresses.router_address);
     const timestamp = (await this.connService.lastBlockTimestamp()) + deadline;
     if (isETH){
       // If A is ETH
-      if (this.utils.compareEthAddr(tokenIn.addr, weth_address)){
+      if (this.utils.compareEthAddr(tokenIn.addr, this.addresses.weth_address)){
         return await router.methods.swapETHForExactTokens(this.utils.fromBNtoWei(amountOutExact, tokenOut.decimals),
           [tokenIn.addr, tokenOut.addr], to, timestamp)
           .send({from: this.connService.accounts[0] , value: this.utils.fromBNtoWei(inmax)});
       }
-      else if (this.utils.compareEthAddr(tokenOut.addr, weth_address)){
+      else if (this.utils.compareEthAddr(tokenOut.addr, this.addresses.weth_address)){
         // If B is ETH
         return await router.methods.swapTokensForExactETH(this.utils.fromBNtoWei(amountOutExact, tokenOut.decimals),
           this.utils.fromBNtoWei(inmax, tokenIn.decimals), [tokenIn.addr, tokenOut.addr], to, timestamp)
@@ -146,17 +152,17 @@ export class RouterService {
       to = this.connService.accounts[0];
     }
     await this.connService.syncAccount();
-    const router  = new this.connService.web3js.eth.Contract(RouterAbi, router_address);
+    const router  = new this.connService.web3js.eth.Contract(RouterAbi, this.addresses.router_address);
     const outmin = amountOutMin.times((1000 - slippage)).dividedBy(1000);
     const timestamp = (await this.connService.lastBlockTimestamp()) + deadline;
     if (isETH){
       // If A is ETH
-      if (this.utils.compareEthAddr(tokenIn.addr, weth_address)){
+      if (this.utils.compareEthAddr(tokenIn.addr, this.addresses.weth_address)){
         return await router.methods.swapExactETHForTokens(this.utils.fromBNtoWei(outmin, tokenOut.decimals),
           [tokenIn.addr, tokenOut.addr], to, timestamp)
           .send({from: this.connService.accounts[0] , value: this.utils.fromBNtoWei(amountInExact)});
       }
-      else if (this.utils.compareEthAddr(tokenOut.addr, weth_address)) {
+      else if (this.utils.compareEthAddr(tokenOut.addr, this.addresses.weth_address)) {
        // If B is ETH
         return await router.methods.swapExactTokensForETH(this.utils.fromBNtoWei(amountInExact, tokenIn.decimals),
           this.utils.fromBNtoWei(outmin), [tokenIn.addr, tokenOut.addr], to, timestamp)

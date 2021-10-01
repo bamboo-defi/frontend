@@ -1,0 +1,1865 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// **Be sure that you only ever include this mixin once!**
+@include mat-core();
+
+
+// Tema Bamboo
+
+$mat-bamboo: (
+  50 : #fbf6e7,
+  100 : #f4e8c3,
+  200 : #edd99c,
+  300 : #e5ca74,
+  400 : #e0be56,
+  500 : #dab338,
+  600 : #d6ac32,
+  700 : #d0a32b,
+  800 : #cb9a24,
+  900 : #c28b17,
+  A100 : #fffbf5,
+  A200 : #ffeac2,
+  A400 : #ffd88f,
+  A700 : #ffcf75,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $dark-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $dark-primary-text,
+  )
+);
+
+$mat-bamboo-secondary: (
+    50 : #fffbec,
+    100 : #fff5ce,
+    200 : #ffeeae,
+    300 : #ffe78e,
+    400 : #ffe275,
+    500 : #ffdd5d,
+    600 : #ffd955,
+    700 : #ffd44b,
+    800 : #ffcf41,
+    900 : #ffc730,
+    A100 : #fffbf5,
+    A200 : #ffeac2,
+    A400 : #ffd88f,
+    A700 : #ffcf75,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $dark-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $dark-primary-text,
+  )
+);
+
+$mat-bamboo-alert: (
+    50 : #fffbec,
+    100 : #fff5ce,
+    200 : #ffeeae,
+    300 : #ffe78e,
+    400 : #ffe275,
+    500 : #ffdd5d,
+    600 : #ffd955,
+    700 : #ffd44b,
+    800 : #ffcf41,
+    900 : #ffc730,
+    A100 : #fffbf5,
+    A200 : #ffeac2,
+    A400 : #ffd88f,
+    A700 : #ffcf75,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $dark-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $dark-primary-text,
+  )
+);
+
+
+// Define the default theme (same as the example above).
+$candy-app-primary: mat-palette($mat-bamboo);
+$candy-app-bsc: mat-palette($mat-bamboo, A200);
+$candy-app-secondary: mat-palette($mat-bamboo-secondary);
+$candy-app-accent: mat-palette($mat-bamboo-secondary, A200, A100, A400);
+$candy-app-theme: mat-light-theme((
+  color: (
+    primary: $candy-app-primary,
+    accent: $candy-app-accent,
+    bsc: $candy-app-bsc
+  )
+));
+
+// Include the default theme styles (color and default density)
+@include angular-material-theme($candy-app-theme);
+
+
+// Define an alternate dark theme.
+
+$dark-primary: mat-palette($mat-blue-grey);
+$dark-accent: mat-palette($mat-amber, A200, A100, A400);
+$dark-warn: mat-palette($mat-deep-orange);
+$dark-theme: mat-dark-theme((
+  color: (
+    primary: $dark-primary,
+    accent: $dark-accent,
+    warn: $dark-warn,
+  )
+));
+
+// Include the dark color styles inside of a block with a CSS class. You can make this
+// CSS class whatever you want. In this example, any component inside of an element with
+// `.unicorn-dark-theme` will be affected by this alternate dark theme instead of the default theme.
+.darkMode {
+  @include angular-material-color($dark-theme);
+}
+
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+mat-card {
+  border-radius: 15px !important;
+}
+
+.mat-card{
+  color: #545454;
+}
+
+.disclaimer {
+  overflow: auto;
+  max-height: 400px;
+}
+
+.card-first {
+  // background-color: aliceblue;
+  margin: 1em;
+  height: 90%;
+}
+
+.item-center {
+  text-align: center;
+}
+
+.btn-title {
+  float: right;
+  border-radius: 50px !important;
+}
+
+.content-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-card {
+  margin: 10px;
+  text-align: center;
+  // width: 180px;
+}
+
+.item-card-token {
+  display: flex;
+  margin-right: 25px;
+  margin-top: 15px;
+  margin-bottom: 25px;
+  //text-align: center;
+  flex-direction: column;
+}
+
+.btn-action {
+  width: 100%;
+  border-radius: 50px;
+}
+
+.card-round {
+  border-radius: 15px;
+}
+
+.img-content {
+  display: flex;
+  height: 150px;
+}
+
+.mat-dialog-container {
+  border-radius: 15px !important;
+}
+
+.content-card-home {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.tex-home {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 2em;
+  line-height: 1.2em;
+}
+
+.img-resp {
+  width: 100%;
+  height: auto;
+}
+
+.home-card {
+  width: 100%;
+  margin: 1em;
+  text-align: center;
+}
+
+.home-card-resume {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.resume {
+  margin: 1em 1em 1em 0em;
+  padding: 1em 1em 1em 0;
+  font-size: 17px;
+}
+
+.separator {
+  margin-top: 15px;
+}
+
+.separator-big {
+  margin-top: 45px;
+}
+
+.info-btn {
+  margin-top: 10px;
+  padding: 10px;
+  height: fit-content;
+  border-radius: 15px;
+  margin-right: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+input:-internal-autofill-selected {
+  appearance: menulist-button;
+  background-color: rgb(255, 255, 255) !important;
+  background-image: none !important;
+  color: -internal-light-dark(black, white) !important;
+}
+
+.point-cursor {
+  cursor: pointer;
+}
+
+.mat-tab-labels {
+  display: flex;
+  width: 350px;
+}
+
+.await-connect {
+  width: 220px;
+  padding: 15px;
+  background-color: #edd99c;
+  margin-bottom: 30px;
+  border-radius: 15px;
+  text-align: center;
+  font-size: 18px;
+}
+
+// About
+.img-logos {
+  width: 200px;
+  height: auto;
+  margin-bottom: 30px;
+}
+
+.img-logo-panda {
+  width: 250px;
+  height: auto;
+  display: flex;
+  align-self: center;
+}
+
+.content {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  flex-direction: column;
+}
+
+.item {
+  margin-top: 40px;
+}
+
+.item a {
+  margin-top: 10px;
+  font-size: 18px;
+  text-decoration: none;
+  color: #c28b17;
+}
+
+.footer {
+  margin: 30px;
+}
+
+.right-margin {
+  margin-left: 20px;
+}
+
+// Add-seeds Deposit
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+// Balance
+.card-list {
+  height: 100%;
+}
+
+.tex-medium {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 25px;
+  text-align: center;
+}
+
+.content-class {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: stretch;
+  justify-content: center;
+}
+
+// Bamboofield
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  align-items: center;
+}
+
+.form-big {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px;
+  // width: 250px;
+  text-align: center;
+  border: none;
+}
+
+.form-big:focus {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px;
+  // width: 250px;
+  text-align: center;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.tex-big {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px;
+  text-align: center;
+}
+
+// harvest included
+.medium-text {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 25px;
+}
+
+.form-inline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.item-field {
+  width: 90%;
+  margin: 1em;
+}
+
+.btn-field {
+  border-radius: 30px;
+  padding: 5px;
+  width: 40%;
+}
+
+.select-container {
+  padding: 15px;
+  border-radius: 15px;
+  background-color: #F2F2E1;
+}
+
+.list-pool {
+  display: flex;
+  justify-content: center;
+}
+
+.error-field {
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  padding: 15px;
+  width: 80%;
+  background-color: #f2e1e9;
+  border-radius: 15px;
+  margin: auto;
+  margin-top: 20px;
+}
+
+// BambooVault
+.container-column-va {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.container-row-va {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.item-va {
+  padding: 5px;
+  text-align: center;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.img-va {
+  width: 120px;
+  height: 120px;
+  margin-top: 20px;
+}
+
+.text-va {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.num-va {
+  font-size: 20px;
+  font-weight: 500;
+  color: rgba(66, 66, 66, 0.829);
+}
+
+.img-big-va {
+  width: 200px;
+  height: auto;
+}
+
+.btn-va {
+  border-radius: 30px;
+  width: 100%;
+}
+
+// Confirm
+.inline {
+  justify-content: space-between;
+}
+
+.form-big-co {
+  height: 30px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 30px;
+}
+
+.content-card-confirm {
+  display: flex;
+  flex-direction: row;
+}
+
+.btn-confirm {
+  color: white!important;
+  background-color: #e0be56!important;
+}
+.btn-confirm:hover{
+  background-color: #f9fff4!important;
+  color: #dda600!important;
+}
+
+.btn-cancel {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 50px;
+}
+
+// Deposit
+.form-big-de {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px;
+  width: 250px;
+  text-align: center;
+}
+
+// Docs
+.btn-title-100 {
+  width: 100%;
+  border-radius: 50px !important;
+}
+
+.tex-home-do {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 2em;
+  line-height: 1.2em;
+}
+
+// Governance
+.panda-image {
+  background-image: url('/assets/bamboo_logo_governance_final.png');
+  background-size: cover;
+  width: 175px;
+  height: auto;
+}
+
+.prop-card {
+  border-left: 4px solid #e0be56;
+  margin-top: 15px;
+  width: 100%;
+  height: auto!important;
+  border-radius: 10px;
+}
+
+.prop-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.prop-tile {
+  height: auto;
+}
+.prop-body{
+  font-size: 14px;
+}
+
+.prop-tex {
+  padding: 5 5 15 15;
+  width: inherit;
+  height: auto;
+}
+.prop-link{
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  // padding: 10px;
+}
+.prop-votes {
+  width: 100%;
+}
+
+.prop-slider {
+  width: 100%;
+}
+
+.vote-ok {
+  color: #e0be56;
+}
+
+.vote-no {
+  color: red;
+}
+
+.prop-btn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.prop-legend {
+  display: flex;
+  justify-content: center;
+  padding: 15px;
+}
+
+.new-prop {
+  border-radius: 30px;
+  margin: 15px
+}
+
+.val-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 10px;
+}
+
+.val-pending {
+  width: 40%;
+  border-radius: 15px;
+  background: #edd99c;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  padding: 25px;
+}
+
+.val-rejected {
+  width: 40%;
+  border-radius: 15px;
+  background: #f1604d;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  padding: 25px;
+}
+
+.val-approved {
+  width: 40%;
+  border-radius: 15px;
+  background: #e0be56;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  padding: 25px;
+}
+
+.btn-pending{
+  color: white!important;
+  border-radius: 15px!important;
+  background: grey!important;
+}
+.btn-active{
+  color: white!important;
+  border-radius: 15px!important;
+  background-color: #37B66F!important;
+}
+.btn-closed{
+  color: white!important;
+  border-radius: 15px!important;
+  background-color: #6F42C1!important;
+}
+
+// Harvest
+
+.form-big-ha {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 30px;
+  width: 250px;
+  text-align: center;
+}
+
+.tex-med {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 20px;
+  text-align: center;
+}
+
+// Home
+.content-class-ho {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: stretch;
+  justify-content: center;
+}
+
+.item-class-ho {
+  padding-top: 10px;
+  width: 100%;
+}
+
+.home-card-ho {
+  margin: 1em;
+}
+
+.tex-home-ho {
+  font-family: 'Architects Daughter', cursive;
+  font-size: 2em;
+  line-height: 1.2em;
+}
+
+.img-resp-ho {
+  width: 70%;
+  height: auto;
+  padding-top: 40px
+}
+
+.mat-home-bottom {
+  padding-bottom: 0px !important;
+  height: 100%;
+}
+
+.item-ho-center {
+  text-align: center;
+}
+
+// Information
+.item-class {
+  padding-top: 10px;
+  width: 100%;
+}
+
+.item-class-100 {
+  margin-top: 2em;
+}
+
+.card-list-in {
+  height: auto;
+}
+
+.tex-medium-left {
+  font-size: 35px;
+  line-height: 35px;
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 25px;
+}
+
+.medium-content {
+  border-left: 4px solid #e0be56;
+  margin-top: 20px;
+}
+
+.feed-total {
+  overflow: hidden;
+}
+
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.feed-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.feed-content {
+  width: 100%;
+}
+
+.feed-title {
+  font-size: 24px;
+  color: #dab338;
+  font-weight: 600;
+}
+
+.feed-thumb {
+  text-align: center;
+}
+
+.feed-img {
+  border-radius: 5px;
+  width: 150px;
+  height: auto;
+}
+
+.feed-btn {
+  display: flex;
+  justify-content: center;
+}
+
+.font-big {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.over-green:hover {
+  color: rgba(39, 66, 66, 0.829);
+  font-weight: 600;
+}
+
+// PAIR
+.container-pa {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-pa {
+  width: 100%;
+  margin-top: 25px;
+}
+
+.font-big-pa {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.frame-info {
+  padding: 20px;
+  background-color: #fbf6e7;
+  width: auto;
+  border-radius: 15px;
+}
+
+// PAIRS
+.green {
+  color: #5db531;
+  font-weight: 500;
+}
+
+.red {
+  color: #b53131;
+  font-weight: 500;
+}
+
+.mobile-label {
+  display: none;
+}
+
+// Panda Spinner
+.title {
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+  background-color: #e0be56;
+  border-radius: 50px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-panda {
+  width: 100%;
+  //height: 75%;
+  //margin-left: -25px;
+  //margin-top: 25%;
+}
+
+.close {
+  scale: 1.5;
+  cursor: pointer;
+  margin-left: 25px;
+}
+
+// Pool
+.cont-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.green {
+  background-color: #a2dfa5;
+}
+
+.grey {
+  background-color: #e0e0e0;
+}
+
+.reward {
+  border-radius: 15px;
+  padding: 5px 15px;
+}
+
+.separator-lite {
+  margin-top: 10px;
+}
+
+.font-big-pool {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.font-grey {
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(66, 66, 66, 0.829);
+}
+
+.content-buttons {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  font-size: 10px;
+}
+
+.item-pool {
+  margin: 5px;
+}
+
+.mat-table {
+  overflow: auto;
+}
+
+mat-cell div {
+  font-size: 12px;
+}
+
+// Raindrop
+.img-logo {
+  width: 250px;
+  height: auto;
+  margin-top: 45px;
+}
+
+.tex-raindrop-title {
+  font-size: 30px;
+  font-family: 'Architects Daughter', cursive;
+  font-weight: 500;
+  line-height: 25px;
+}
+
+.reward-frame {
+  color: white;
+  background-color: #e0be56;
+  border-radius: 50px;
+  margin: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.logotoken {
+  width: 100px;
+  height: auto;
+}
+
+.logobamboo {
+  width: 50px;
+  height: auto;
+}
+
+.big-text {
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 35px;
+}
+
+.input-form {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 40px;
+  border: 1px solid #e0be56;
+  border-radius: 50px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.date-raindrop {
+  color: white;
+  background-color: #af64d1;
+  border-radius: 50px;
+  margin: 10px;
+  padding: 20px;
+
+}
+
+.buy-block {
+  margin-top: 50px;
+  margin-bottom: 80px;
+  padding: 20px;
+}
+
+.block-raindrop {
+  margin: 15px;
+  max-width: 300px;
+}
+
+.ticket-bamboo {
+  width: auto;
+  height: 70px;
+}
+
+.container-ra {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  text-align: center;
+  align-items: center;
+}
+
+.big-text-ra {
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 35px;
+}
+
+// Settings
+.container-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-align {
+  text-align: right !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: rgba(47, 79, 79, 0.829) !important;
+}
+
+.container-start {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.btn-100 {
+  width: 100%;
+}
+
+.error {
+  text-align: center;
+  border-radius: 15px;
+  padding: 15px;
+  background-color: #F2F2E1;
+}
+
+// Tokens
+.positive {
+  color: rgb(0, 207, 0) !important;
+}
+
+.negative {
+  color: red !important;
+}
+
+.mobile-label {
+  display: none;
+}
+
+.screen-label {
+  display: block;
+}
+
+// Token Value
+.item-card-info {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(47, 79, 79, 0.829);
+  padding: 5px;
+  margin-top: 10px;
+  display: flex;
+  place-content: start;
+  align-items: center;
+}
+
+.item-card-info-btn {
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 600;
+  padding: 5px;
+  margin-top: 10px;
+  color: white;
+  display: flex;
+  place-content: space-between;
+  align-items: center;
+
+}
+
+.img-small {
+  width: 60px;
+  height: auto;
+}
+
+// Liquidity minus
+.form-big-lm {
+  height: 2.5em;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 2em;
+}
+
+.form-medium {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 20px;
+}
+
+.input-percent {
+  width: 100px;
+}
+
+.right {
+  text-align: right !important;
+}
+
+.content-pool {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.select-token {
+  padding: 8px !important;
+  // margin: 5px !important;
+  // font-size: 18px !important;
+  border-radius: 30px !important;
+}
+
+.token-equal {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 15px;
+  font-size: 14px;
+  background-color: #F2F2E1;
+  text-align: center;
+}
+
+.token-ammount {
+  padding: 15px;
+  border-radius: 15px;
+  background-color: #fbf6e7;
+  text-align: center;
+}
+
+.display-liquidity {
+  display: flex;
+  align-items: center;
+}
+
+.mat-chip-list-minus{
+  display: flex;
+  justify-content: center;
+}
+
+
+// Liquidity Plus
+.container-lp {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-inline {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 200px;
+}
+
+.container-center {
+  display: flex;
+  justify-content: center;
+}
+
+.form-big-lp {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px !important;
+}
+
+.tex-grey {
+  font-size: 18px;
+  font-weight: 500;
+  color: inherit!important;
+  //color: rgba(47, 79, 79, 0.829);
+}
+
+.container-start-lp {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+// Stake
+
+
+
+.container-row-st {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  max-width: 300px !important;
+}
+
+.tex-select-st {
+  font-size: 20px;
+  width: 200px !important;
+  text-align: left;
+}
+
+.ammount-select-st {
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px;
+  width: 250px !important;
+  text-align: center;
+  line-height: normal;
+}
+
+.form-big-st {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px;
+  width: 80%;
+  text-align: center;
+}
+
+.logotoken-st {
+  width: 50px;
+  height: auto;
+}
+
+.mat-expansion-panel-body {
+  padding: 0px;
+}
+
+.mobile-label-st {
+  width: 100px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+// .container-st {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+//   align-items: center;
+// }
+
+// .container-st {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+//   align-items: center;
+// }
+
+// .container-row-st {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+//   align-items: center;
+//   max-width: 300px !important;
+// }
+
+// .tex-select-st {
+//   font-size: 20px;
+//   width: 200px !important;
+//   text-align: center;
+// }
+
+// .ammount-select-st {
+//   color: rgba(47, 79, 79, 0.829) !important;
+//   font-size: 40px;
+//   width: 250px !important;
+//   text-align: center;
+//   line-height: normal;
+// }
+
+// .form-big-st {
+//   height: 35px;
+//   color: rgba(47, 79, 79, 0.829) !important;
+//   font-size: 40px;
+//   width: 80%;
+//   text-align: center;
+// }
+
+// .logotoken-st {
+//   width: 50px;
+//   height: auto;
+// }
+
+// .mat-expansion-panel-body {
+//   padding: 0px;
+// }
+
+// .mobile-label-st {
+//   width: 100px;
+//   display: inline-block;
+//   font-weight: bold;
+// }
+
+// Buy
+.container-end {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.container-colum {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-colum-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-big-bu {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px !important;
+}
+
+.tex-opcional {
+  color: #d6ac32 !important;
+}
+
+.better-deal {
+  width: 100%;
+  padding: 15px;
+  border-radius: 15px;
+  font-size: 15px;
+  text-align: center;
+  background-color: #fbf6e7;
+}
+
+.better-deal-img {
+  width: 150px;
+  height: auto;
+  margin-left: 30px;
+}
+
+// Wallet
+.content-card-home-left {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 15px;
+  width: auto;
+}
+
+.buy-box {
+  width: 300px;
+}
+
+.container-wallet {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-wallet {
+  margin: 15px;
+  padding: 10px;
+}
+
+.panda-spinner > mat-dialog-container {
+  overflow: hidden;
+  padding-bottom: 0;
+}
+
+.panda-spinner {
+  width: 450px;
+}
+
+//Alert popups
+.alert {
+  position: fixed;
+  padding: 0 20px 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 15px;
+  margin: 5px;
+  z-index: 99;
+  bottom: 0;
+}
+.alert-danger {
+   color: #721c24;
+   background-color: #f8d7da;
+   border-color: #f5c6cb;
+ }
+.alert-success {
+  color: #574d15;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+.alert-info {
+  color: #60500c;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+.alert-warning {
+  color: #853e04;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+.close {
+   float: right;
+   font-size: 1.5rem;
+   font-weight: 700;
+   line-height: 1;
+   color: #000;
+   text-shadow: 0 1px 0 #fff;
+   opacity: .5;
+ }
+.alert img, a:not([href]) {
+  position: relative;
+  top: 10px;
+}
+
+// Branding
+.brand-title{
+  font-size: 24px;
+  color: #e0be56;
+  font-weight: 600;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.brand-container{
+  display: flex;
+  // flex-direction: column;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+}
+.brand-item{
+  margin: 10px;
+  text-align: center;
+  display: grid!important;
+}
+.brand-img{
+  width: 180px;
+  height: auto;
+}
+.brand-img:hover{
+  transform: scale(1.2);
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.brand-text{
+  margin-bottom: 5px;
+  color: #979797;
+}
+
+// Guide
+
+.container-gu{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: flex-start;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.item-gu{
+  flex-grow: 1;
+}
+.item-gu img{
+  min-width: 200px;
+  max-width: 250px;
+  border-radius: 5px;
+  border: 1px solid #fbf6e7;
+}
+.item-gu p {
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  padding: 10px;
+  background-color: #fbf6e7;
+}
+
+.center-align-bridge {
+  text-align: center !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: rgba(47, 79, 79, 0.829) !important;
+  border: none;
+}
+
+.center-align-bridge:focus {
+  text-align: center !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: rgba(47, 79, 79, 0.829) !important;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .tex-home {
+    font-size: 3em;
+  }
+
+}
+
+@media only screen and (min-width: 600px) {
+  .content-card-home {
+    flex-direction: column;
+  }
+  .tex-home {
+    font-size: 3.5em;
+    line-height: 1em;
+    // width: 100%;
+  }
+  .tex-home-do {
+    font-size: 3.5em;
+    line-height: 1em;
+    width: 100%;
+  }
+  .img-resp-ho {
+    width: 70%;
+    height: auto;
+  }
+  .feed-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    flex-wrap: wrap;
+  }
+  .feed-btn {
+    text-align: right;
+
+  }
+  .feed-thumb {
+    width: 100%;
+    // text-align: right;
+    display: flex;
+    align-items: center;
+  }
+
+
+}
+
+@media only screen and (min-width: 800px) {
+  .content-card-home {
+    flex-direction: row;
+    text-align: left;
+  }
+  .home-card {
+    margin: 1em;
+  }
+  .tex-home {
+    font-size: 3.5em;
+    line-height: 1em;
+  }
+  .info-btn {
+    margin-top: 10px;
+    padding: 10px;
+    width: 50%;
+    height: fit-content;
+    border-radius: 15px;
+    margin-right: 20px;
+  }
+  .home-card-do {
+    width: 50%;
+    margin: 1em;
+  }
+  .tex-home-do {
+    font-size: 3.5em;
+    line-height: 1em;
+    width: 100%;
+  }
+  .content-card-home {
+    flex-direction: row;
+    text-align: left;
+  }
+  .home-card-ho {
+    width: 50%;
+    margin: 1em;
+  }
+  .tex-home-ho {
+    font-size: 3.5em;
+    line-height: 1em;
+  }
+  // Raindrop
+  .container-ra {
+    flex-direction: row;
+    align-items: start;
+  }
+  .block-raindrop {
+    margin: 15px;
+    max-width: 300px;
+  }
+  .big-text-ra {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 50px;
+  }
+  .screen-label {
+    display: block;
+  }
+  //Home
+  .img-resp-ho {
+    width: 70%;
+    height: auto;
+  }
+
+  // Branding
+  .brand-container{
+    flex-direction: row;
+  }
+}
+
+@media(max-width: 1200px) {
+  .mobile-label {
+    width: 100px;
+    display: inline-block;
+    font-weight: bold;
+  }
+
+  .mat-header-row {
+    display: none;
+  }
+
+  .mat-row {
+    flex-direction: column;
+    align-items: start;
+    padding: 8px 24px;
+    min-height: auto;
+  }
+  .mat-cell {
+    margin-top: 10px;
+  }
+  .mat-cell:first-of-type {
+    padding-left: 0px;
+  }
+  .content-buttons {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    font-size: 10px;
+    align-items: flex-start;
+  }
+  .mat-cell:first-of-type {
+    padding-left: 0px;
+  }
+  .screen-label {
+    display: none;
+  }
+  .div-display-liquidity {
+    margin: 0 20px;
+  }
+}
+
+@media only screen and (min-width: 1350px) {
+  .home-card {
+    margin: 2em 1em 2em 0.1em;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .tex-home {
+    font-size: 5em;
+    line-height: 1.2em;
+    // width: 50%;
+  }
+  .item-card-info {
+    font-size: 22px;
+    font-weight: 600;
+    color: rgba(47, 79, 79, 0.829);
+    padding: 5px;
+    margin-top: 10px;
+    display: flex;
+    place-content: start;
+    align-items: center;
+  }
+  .img-resp {
+    width: 100%;
+    height: auto;
+  }
+  .content-card {
+    display: flex;
+    flex-direction: row;
+  }
+  .item-card-token {
+    display: flex;
+    margin-top: 15px;
+    margin-right: 25px;
+    text-align: left;
+    flex-direction: column;
+  }
+  .info-btn {
+    margin-top: 10px;
+    padding: 10px;
+    width: 250px;
+    height: fit-content;
+    border-radius: 15px;
+    margin-right: 20px;
+  }
+
+  // About
+  .content {
+    flex-direction: row;
+  }
+
+  // Balance
+  .content-class {
+    flex-direction: row;
+  }
+  .item-class {
+    padding: 10px;
+    width: 48%;
+  }
+  // Bamboofield
+  .container {
+    flex-direction: row;
+    align-items: start;
+  }
+  .container-row-va {
+    flex-direction: row;
+  }
+  .item-va {
+    padding: 15px;
+  }
+  // Docs
+  .home-card-do {
+    width: 50%;
+    margin: 2em 1em 2em 0.1em;
+    display: flex;
+    justify-content: center;
+  }
+  .tex-home-do {
+    font-size: 5em;
+    line-height: 1.2em;
+    width: 50%;
+  }
+  // Governance
+  .prop-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .prop-votes {
+    padding: 15px;
+    width: 40%;
+  }
+  // Home
+  .home-card-ho {
+    width: 50%;
+    margin: 2em 1em 2em 0.1em;
+    display: flex;
+    justify-content: center;
+  }
+  .tex-home-ho {
+    font-size: 5em;
+    line-height: 1.2em;
+  }
+  .item-class-ho {
+    padding: 10px;
+    width: 48%;
+    margin-top: 2em;
+  }
+  .content-class-ho {
+    flex-direction: row;
+  }
+  .img-resp-ho {
+    width: 70%;
+    height: auto;
+  }
+
+  // PAIR
+  .container-pa {
+    display: flex;
+    flex-direction: row;
+  }
+  .frame-info {
+    width: auto;
+    margin-right: 25px;
+  }
+  .item-70 {
+    width: 70%;
+    margin-top: 25px;
+  }
+  // Raindrop
+  .container-ra {
+    flex-direction: row;
+    align-items: start;
+  }
+  .block-raindrop {
+    margin: 15px;
+    max-width: 400px;
+  }
+  .big-text-ra {
+    font-size: 50px;
+    font-weight: 800;
+    line-height: 60px;
+  }
+  // Wallet
+  .container-wallet {
+    display: flex;
+    flex-direction: row;
+  }
+  .buy-box {
+    width: 400px;
+  }
+  // GOVERNANCE
+  .val-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 10px;
+  }
+  .prop-link{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+
+  // Guide
+  .container-gu{
+    flex-direction: row;
+  }
+}

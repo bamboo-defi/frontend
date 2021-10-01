@@ -1,83 +1,63 @@
-<div *ngIf="!liquidTool">{{ 'liquidityMinus.selectPool' | translate }}</div>
-<div class="content-pool">
-  <div>
-    <button mat-flat-button color="primary" (click)="selectTokenFromList()" *ngIf="pool.underlyingTokenFirst"
-      class="select-token"><img src="{{pool.logoTokenFirst}}" style="width: 35px; height: 35px; margin: 10px;"> {{
-      pool.underlyingTokenFirst }}</button>
-    <button mat-flat-button color="accent" (click)="selectTokenFromList()" *ngIf="!pool.underlyingTokenFirst"
-      class="select-token">{{ 'to-trade.select' | translate }}</button>
+<div style="text-align: center;"><h2>{{ 'liquidityMinus.yourLiquidity' | translate }}</h2></div>
+
+  <!-- Add liquidity -->
+  <div class="separator-big mat-elevation-z6" style="text-align: center; border-radius: 10px; width: 100%; padding:10px; margin-left:-10px;margin-top: 30px; margin-bottom: 30px;">
+    <p>{{ 'liquidityMinus.doYouLikeAddLiquidity' | translate }}</p>
+    <button mat-flat-button color="primary" (click)="goToLiquidityPlus()" style="border-radius: 15px; width: 100%;">{{ 'liquidityMinus.goToLiquidityPlus' | translate }}</button>
   </div>
-  <div>
-    <mat-icon>add</mat-icon>
+
+<div *ngIf="dataSource" style="text-align: center;"><strong>{{ 'liquidityMinus.selectPool' | translate }}</strong></div>
+<div *ngIf="!dataSource" style="text-align: center;"><strong>{{ 'liquidityMinus.noLiquidityOrConnect' | translate }}</strong></div>
+<div *ngIf="this.isConnect !== 'connected'" style="text-align: center;"><strong>{{ 'liquidityMinus.noConnexion' | translate }}</strong></div>
+
+
+
+  <!-- Pools with liquidity   -->
+<div class="content-pool separator" style="margin: 10px;">
+
+
+  <div *ngIf="!pairsLoaded && !noPairs">
+    <img class="image-panda" src="/assets/Pandapensando.gif"/>
   </div>
-  <div>
-    <button mat-flat-button color="primary" (click)="selectTokenToList()" *ngIf="pool.underlyingTokenSecond"
-      class="select-token"><img src="{{pool.logoTokenSecond}}" style="width: 35px; height: 35px; margin: 10px;">
-      {{pool.underlyingTokenSecond}}</button>
-    <button mat-flat-button color="accent" (click)="selectTokenToList()" *ngIf="!pool.underlyingTokenSecond"
-      class="select-token">{{ 'to-trade.select' | translate }}</button>
-  </div>
+
+
+
+  <!--Available BLp pairs-->
+
+  <mat-table *ngIf="availablePairs" [dataSource]="dataSource" matSort multiTemplateDataRows style="width: 100%;">
+
+    <ng-container matColumnDef="pair" sticky>
+      <!-- <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell> -->
+      <mat-cell *matCellDef="let pair" style="display: flex; justify-content: center;">
+        <button mat-flat-button color="accent">
+          <img src="{{pair.logoTokenFirst}}" width="25px" height="25px">
+          <img src="{{pair.logoTokenSecond}}" width="25px" height="25px">
+          {{pair.pairTokenNameFirst}}/{{pair.pairTokenNameSecond}}
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container>
+      <mat-row *matRowDef="let stake; columns: displayedColumns;" class="stake-row"
+      (click)="getSelectedPair(stake)"></mat-row>
+    </ng-container>
+
+  </mat-table>
 </div>
-<!-- If pool doesnt exist on selected tokens-->
-<div *ngIf="errorNoPool" class="token-equal">{{ 'liquidityMinus.noPoolsAvailable' | translate}}</div>
 
-<!--If tokens are equal -->
-<div *ngIf="tokenEqual" class="token-equal">{{ 'liquidityMinus.sameToken' | translate }}</div>
-
-<!--Pool selected-->
-<div *ngIf="liquidTool">
-
-  <form class="separator" name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()">
-
-    <div class="separator">{{ 'liquidityMinus.lpTokenBalance' | translate }}:
-      <span class="form-medium">{{pool.reward}}</span>
-    </div>
-    <div class="separator">{{ 'liquidityMinus.ammount' | translate}}</div>
-    <div class="form-big-lm separator display-liquidity div-display-liquidity">
-
-      <input matInput #ammount="ngModel" type="ammountPercentaje" name="ammountPercentaje" maxlength="3"
-        [(ngModel)]="ammountPercentaje" id="ammountPercentaje" class="from-big input-percent right"
-        (change)="$event ? maxCien() : null" required>
-      <span style="vertical-align: text-top;">%</span>
-      <span class="token-ammount display-liquidity span-display-liquidity">&nbsp;&nbsp;
-        <input matInput #balance="ngModel" type="number" name="ammountBalance" [(ngModel)]="ammountBalance"
-          id="ammountBalance" class="input-percent right " (change)="$event ? maxBalance() : null" placeholder="0.0"
-          required>
-        <img src="/assets/bamboo-head.png" style="width: 35px; height: auto; margin-left: 5px;">
-      </span>
-    </div>
-
-    <div class="separator"></div>
-    <mat-slider class="slider form-big-lm" [max]="max" [min]="min" [step]="step" (change)="$event?setRewards(): null"
-      name="ammount" [thumbLabel]="thumbLabel" [(ngModel)]="ammountPercentaje">
-    </mat-slider>
-    <div>
-      <mat-chip-list class="mat-chip-list-minus" aria-label="selection" #slip>
-        <mat-chip *ngFor="let percent of percents" selected (click)="setPercent(percent)">
-          {{percent}} %
-        </mat-chip>
-      </mat-chip-list>
-    </div>
-
-    <!--Resume-->
-    <div *ngIf="ammountPercentaje" class="separator">
-      <div class="separator">
-        <mat-icon>arrow_downward</mat-icon>
-      </div>
-
-      <div class="separator"><span class="form-medium">{{ reward.tokenFirst }}</span>&nbsp; <img
-          src="{{pool.logoTokenFirst}}" alt="" srcset="" style="width: 25px; height: 25px; margin-right: 5px;"><span
-          class="font-med"> {{pool.underlyingTokenFirst | uppercase}}</span></div>
-      <div><span class="form-medium">{{ reward.tokenSecond }}</span>&nbsp; <img src="{{pool.logoTokenSecond}}" alt=""
-          srcset="" style="width: 25px; height: 25px; margin-right: 5px;"><span class="font-med">
-          {{pool.underlyingTokenSecond | uppercase}}</span></div>
-    </div>
-    <div class="separator">
-      <button mat-flat-button color="accent" class="btn-title" style="width: 100%;"
-        [disabled]="ammountPercentaje==0 || ammountBalance==0" type="submit">{{ 'liquidityMinus.approve' | translate
-        }}</button>
-      <button mat-flat-button color="warn" *ngIf="error" class="btn-title" style="width: 100%;">{{ errorAmmount |
-        translate }}</button>
-    </div>
-  </form>
+<div>
+  <app-minus-liquidity-pair *ngIf="poolSelected" [pairSelected]="poolSelected"></app-minus-liquidity-pair>
 </div>
+
+<div *ngIf="!availablePairs">
+  No liquidity available, please connect your wallet.
+</div>
+<div style="text-align: center; margin-top: 80px;">
+  <div>
+    {{'liquidityMinus.seePoolJoined' | translate }}
+  </div>
+  <div class="separator"></div>
+  <button mat-flat-button color="accent" (click)="goToSearchPair()" style="border-radius: 15px;">Find other BLp Tokens</button>
+</div>
+
+

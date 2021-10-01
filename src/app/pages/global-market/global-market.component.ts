@@ -29,19 +29,19 @@ export class GlobalMarketComponent implements OnInit {
   ngOnInit(): void {
     this.service.getBambooGlobalMarket().subscribe(
       res => {
-        this.globalMarket.currentPrice = res.market_data.current_price.usd;
-        this.globalMarket.ath = res.market_data.ath.usd;
-        this.globalMarket.athPercentage = res.market_data.ath_change_percentage.usd;
-        this.globalMarket.atl = res.market_data.atl.usd;
-        this.globalMarket.atlPercentage = res.market_data.atl_change_percentage.usd;
-        this.globalMarket.marketCap = res.market_data.market_cap.usd;
-        this.globalMarket.totalVolume = res.market_data.total_volume.usd;
-        this.globalMarket.high24 = res.market_data.high_24h.usd;
-        this.globalMarket.low24 = res.market_data.low_24h.usd;
-        this.globalMarket.priceChange24 = res.market_data.price_change_24h_in_currency.usd;
-        this.globalMarket.priceChange24Percentage = res.market_data.price_change_percentage_24h;
-        this.globalMarket.totalSupply = res.market_data.total_supply;
-        this.globalMarket.circulatingSupply = res.market_data.circulating_supply;
+        this.globalMarket.currentPrice = res.market.cgCurrentPrice;
+        this.globalMarket.ath = res.market.cgATH;
+        this.globalMarket.athPercentage = res.market.cgATHPercentage;
+        this.globalMarket.atl = res.market.cgATL;
+        this.globalMarket.atlPercentage = res.market.cgATLPercentage;
+        this.globalMarket.marketCap = res.market.cgMarketCap;
+        this.globalMarket.totalVolume = res.market.cgTotalVolume;
+        this.globalMarket.high24 = res.market.cg24High;
+        this.globalMarket.low24 = res.market.cg24Low;
+        this.globalMarket.priceChange24 = res.market.cg24Change;
+        this.globalMarket.priceChange24Percentage = res.market.cg24ChangePercentage;
+        this.globalMarket.totalSupply = res.market.bambooTotalSupply;
+        this.globalMarket.circulatingSupply = res.market.cgCirculatingSupply;
       }
     );
   }

@@ -10,7 +10,7 @@
   height: 35px;
   color:  rgba(47, 79, 79, 0.829)!important;
   font-size: 40px;
-  //width: 250px;
+  width: 200px;
   text-align: center;
 }
 .tex-big{
@@ -38,7 +38,13 @@
 .btn-field{
   border-radius: 30px;
   padding: 5px;
-  width: 40%;
+  width: 125px;
+}
+
+.btn-field-100{
+  border-radius: 30px;
+  padding: 5px;
+  width: 50%;
 }
 
 .select-container{
@@ -62,7 +68,18 @@
   margin: auto;
   margin-top: 20px;
 }
-
+.notRow{
+  display: none;
+}
+.rowSelect{
+  border-radius: 10px;
+  padding: 5px;
+  border-bottom-width: 0px;
+  cursor: pointer;
+}
+.rowSelect:hover{
+  background-color: rgba(224, 224, 224, 0.788);
+}
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

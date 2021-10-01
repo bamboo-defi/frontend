@@ -14,9 +14,11 @@ import {BambooStakeBonus, DepositInfo, TokenData} from 'src/app/interfaces/contr
 import BigNumber from 'bignumber.js';
 import {KeeperService} from 'src/app/services/contracts/keeper/keeper.service';
 import {ContractService} from 'src/app/services/contracts/contract.service';
-import {zooKeeper_address} from 'src/app/services/contract-connection/tools/addresses';
+import {NetworkService} from 'src/app/services/contract-connection/network.service';
 import {PandaspinnerComponent} from '../../pandaspinner/pandaspinner.component';
 import {AlertService} from '../../../_alert';
+import { PandaSpinnerService } from '../../pandaspinner/pandaspinner.service';
+import { UtilService } from 'src/app/services/contracts/utils/util.service';
 
 const SHOW_DECIMALS = 3;
 
@@ -26,6 +28,8 @@ const SHOW_DECIMALS = 3;
   styleUrls: ['./to-stake.component.scss']
 })
 export class ToStakeComponent implements OnInit {
+
+  addresses;
 
   ownWallet: OwnWallet = {
     unstaked: 0,
@@ -44,20 +48,18 @@ export class ToStakeComponent implements OnInit {
     totalBambooToStake: null
   };
 
-  amounts = [500, 5000, 10000, 50000, 100000, 500000, 5000000, 25000000, 50000000, 100000000];
+  amounts = [50, 100, 200, 500, 1000, 2000, 5000, 10000];
 
   // Set bamboo ammount
   bambooAmmount: Ammount[] = [
-    {bamboo: 500, ind: 0, bambooSelect: '500'},
-    {bamboo: 5000, ind: 1, bambooSelect: '5.000'},
-    {bamboo: 10000, ind: 2, bambooSelect: '10.000'},
-    {bamboo: 50000, ind: 3, bambooSelect: '50.000'},
-    {bamboo: 100000, ind: 4, bambooSelect: '100.000'},
-    {bamboo: 500000, ind: 5, bambooSelect: '500.000'},
-    {bamboo: 5000000, ind: 6, bambooSelect: '5.000.000'},
-    {bamboo: 25000000, ind: 7, bambooSelect: '25.000.000'},
-    {bamboo: 50000000, ind: 8, bambooSelect: '50.000.000'},
-    {bamboo: 100000000, ind: 9, bambooSelect: '100.000.000'}
+    {bamboo: 50, ind: 0, bambooSelect: '50'},
+    {bamboo: 100, ind: 1, bambooSelect: '100'},
+    {bamboo: 200, ind: 2, bambooSelect: '200'},
+    {bamboo: 500, ind: 3, bambooSelect: '500'},
+    {bamboo: 1000, ind: 4, bambooSelect: '1000'},
+    {bamboo: 2000, ind: 5, bambooSelect: '2000'},
+    {bamboo: 5000, ind: 6, bambooSelect: '5000'},
+    {bamboo: 10000, ind: 7, bambooSelect: '10000'}
   ];
 
   bambooToStake: Ammount;
@@ -70,11 +72,7 @@ export class ToStakeComponent implements OnInit {
     {text: '60 days', value: 60, ind: 4},
     {text: '90 days', value: 90, ind: 5},
     {text: '180 days', value: 180, ind: 6},
-    {text: '1 year', value: 365, ind: 7},
-    {text: '2 year', value: 730, ind: 8},
-    {text: '3 years', value: 1095, ind: 9},
-    {text: '4 years', value: 1460, ind: 10},
-    {text: '5 years', value: 1825, ind: 11},
+    {text: '1 year', value: 365, ind: 7}
   ];
 
   lockedCapital = [
@@ -82,16 +80,14 @@ export class ToStakeComponent implements OnInit {
   ];
 
   temporalityStake: number[][] = [
-    [1.0001, 1.0008, 1.0016, 1.005, 1.03, 1.05, 1.1, 1.5, 2, 2.3, 4.6, 5],
-    [1.0004, 1.003, 1.008, 1.03, 1.05, 1.06, 1.15, 1.7, 2.5, 3.1, 6.2, 7],
-    [1.0006, 1.0045, 1.01, 1.06, 1.08, 1.09, 1.2, 1.9, 2.9, 3.9, 7.8, 8],
-    [1.0008, 1.006, 1.013, 1.09, 1.12, 1.13, 1.25, 2.1, 3.3, 4.7, 9.4, 10],
-    [1.001, 1.008, 1.017, 1.12, 1.16, 1.17, 1.3, 2.3, 3.7, 5, 10, 11],
-    [1.0011, 1.0081, 1.018, 1.15, 1.2, 1.25, 1.4, 2.5, 4.1, 5.5, 11, 12],
-    [1.0012, 1.0082, 1.0185, 1.18, 1.24, 1.3, 1.5, 2.6, 4.7, 6, 12, 13],
-    [1.0013, 1.0095, 1.02, 1.21, 1.3, 1.4, 1.6, 2.7, 6, 10, 20, 30],
-    [1.0014, 1.01, 1.03, 1.25, 1.33, 1.5, 1.7, 2.8, 7, 15, 30, 35],
-    [1.0015, 1.011, 1.05, 1.3, 1.5, 1.55, 1.95, 3, 8, 20, 35, 40]
+    [1.0004,1.005,1.006,1.008,1.028,1.1,1.12,1.2],
+    [1.0005,1.0059,1.0092,1.011,1.03,1.15,1.2,1.3],
+    [1.0007,1.0066,1.0117,1.015,1.035,1.2,1.3,1.4],
+    [1.0010,1.0073,1.013,1.018,1.04,1.22,1.42,1.6],
+    [1.0011,1.0078,1.016,1.02,1.05,1.24,1.5,1.7],
+    [1.0012,1.0084,1.019,1.03,1.065,1.26,1.68,2],
+    [1.0013,1.009,1.025,1.035,1.07,1.28,1.8,3],
+    [1.0015,1.01,1.03,1.04,1.08,1.3,2,4]
   ];
 
   stakings: Staking[] = [{
@@ -129,8 +125,12 @@ export class ToStakeComponent implements OnInit {
     private keeperService: KeeperService,
     private tokenService: TokenService,
     private contractService: ContractService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pandaSpinnerService: PandaSpinnerService,
+    private networkService: NetworkService,
+    private utilService: UtilService
   ) {
+    this.addresses = networkService.getAddressNetwork();
   }
 
   ngOnInit(): void {
@@ -171,12 +171,8 @@ export class ToStakeComponent implements OnInit {
     for (const depositId of deposits) {
       const depositInfo: DepositInfo = await this.keeperService.getDepositInfo(depositId);
       const timestamp = Math.floor(Date.now() / 1000);
-      let daysLeft;
-      if (timestamp >= depositInfo.withdrawTime) {
-        daysLeft = 0;
-      } else {
-        daysLeft = Math.round(((depositInfo.withdrawTime - timestamp) / 86400) * 10) / 10;
-      }
+      let daysLeft = timestamp >= depositInfo.withdrawTime ? 0 : Math.round(((depositInfo.withdrawTime - timestamp) / 86400) * 10) / 10;
+      daysLeft = depositInfo.withdrawTime;
       const ammountToMultiply = Number(depositInfo.amount);
       const tempToMultiply = Math.floor((depositInfo.withdrawTime - Number(depositId)) / 86400);
       this.roiReturned = this.setRoiMultiplier(ammountToMultiply, tempToMultiply);
@@ -186,7 +182,6 @@ export class ToStakeComponent implements OnInit {
       // Amount should match table
       const lockTime = depositInfo.withdrawTime - Number(depositId);
       const roiS = await this.keeperService.getStakeMultiplier(depositInfo.amount, lockTime);
-
       this.stakings.push({
         ammount: depositInfo.amount.toFixed(0),
         time: Math.floor((depositInfo.withdrawTime - Number(depositId)) / 86400), // Full locktime in days
@@ -203,20 +198,15 @@ export class ToStakeComponent implements OnInit {
 
   // Set multiplier like Temporality Stake Bamboo System table
   setMultiplier(): any {
-    if (!this.contractService.isConnection()) {
-      return;
+    this.error = this.bambooData && this.bambooData.balance.isLessThan(this.bambooToStake.bamboo) ? 'error' : null;
+    if(this.bambooToStake){
+      this.toStake.toStakeAmmount = this.bambooToStake.bamboo;
+      const time = this.toStake.timeToStake.ind;
+      const ammount = this.bambooToStake.ind;
+      this.multiplier = this.temporalityStake[ammount][time];
+      return this.multiplier;
     }
-    if (this.bambooData.balance.isLessThan(this.bambooToStake.bamboo)) {
-      this.error = 'error';
-    } else {
-      this.error = null;
-    }
-    this.toStake.toStakeAmmount = this.bambooToStake.bamboo;
-    const time = this.toStake.timeToStake.ind;
-    const ammount = this.bambooToStake.ind;
-    this.multiplier = this.temporalityStake[ammount][time];
-    return this.multiplier;
-
+    return 0;
   }
 
   setRoiMultiplier(ammount, time): number {
@@ -227,10 +217,10 @@ export class ToStakeComponent implements OnInit {
 
   // Set new stake
   onSubmit(): string {
-    if (this.toStake.toStakeAmmount <= 499) {
+    if (this.toStake.toStakeAmmount <= 49) {
       return this.error = 'error';
     }
-    if (this.toStake.toStakeAmmount >= 499 && this.toStake.timeToStake) {
+    if (this.toStake.toStakeAmmount >= 49 && this.toStake.timeToStake) {
       const operationData = {
         name: 'toStake',
         ammount: this.bambooToStake.bambooSelect,
@@ -254,11 +244,12 @@ export class ToStakeComponent implements OnInit {
 
   // Create Stake to user, need apropiate Service
   async assignStakeToUser(): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     try {
       const amount = this.toStake.toStakeAmmount.toString();
       // Approve
-      await this.contractService.validateAllowance(this.bambooData, zooKeeper_address, new BigNumber(amount));
+      console.log(this.addresses.zooKeeper_address);
+      await this.contractService.validateAllowance(this.bambooData, this.addresses.zooKeeper_address, new BigNumber(amount));
       // Get stake time in days
       const time = Number(this.toStake.timeToStake.value) * 86400;
       const receipt = await this.keeperService.depositBamboo(new BigNumber(amount), time);
@@ -274,7 +265,7 @@ export class ToStakeComponent implements OnInit {
     } catch (error) {
       this.alertService.error('Error: ' + error.message);
     } finally {
-      dialogPandaSpinner.close();
+      this.pandaSpinnerService.close();
     }
   }
 
@@ -309,7 +300,7 @@ export class ToStakeComponent implements OnInit {
 
   // Withdraw confirmed
   async withdrawStakeTotal(data): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     try {
       const receipt = await this.keeperService.withdrawBamboo(data.id.toString());
       await this.getData();
@@ -317,7 +308,7 @@ export class ToStakeComponent implements OnInit {
     } catch (error) {
       this.alertService.error('Error: ' + error.message);
     } finally {
-      dialogPandaSpinner.close();
+      this.pandaSpinnerService.close();
     }
   }
 
@@ -344,7 +335,7 @@ export class ToStakeComponent implements OnInit {
 
   // Withdraw acumulated Ammount confirmed
   async withdrawAcumulatedAmmount(data: Staking): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     try {
       const receipt = await this.keeperService.withdrawDailyBamboo(data.id.toString());
       await this.getData();
@@ -352,19 +343,7 @@ export class ToStakeComponent implements OnInit {
     } catch (error) {
       this.alertService.error('Error: ' + error.message);
     } finally {
-      dialogPandaSpinner.close();
+      this.pandaSpinnerService.close();
     }
   }
-
-  /**
-   * PandaSpinner Dialog
-   */
-  private getDialogPandaSpinner(): any {
-    return this.dialog.open(PandaspinnerComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      panelClass: 'panda-spinner'
-    });
-  }
-
 }

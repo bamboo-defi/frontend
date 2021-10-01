@@ -1,16 +1,4 @@
-<div *ngIf="isWait">
-  <div>
-    <img src="/assets/bamboo_logo_raindrops_final.png" width="200" height="auto">
-  </div>
-  <div *ngIf="isConnect === 'disconnected'" class="await-connect">
-    {{ 'raindrop.connectYourWallet' | translate}}
-  </div>
-  <div>
-    <mat-progress-bar color="primary" mode="indeterminate">
-    </mat-progress-bar>
-  </div>
-</div>
-<div class="container-ra" *ngIf="!isWait">
+<div class="container-ra">
 
   <!-- Bamboo Raindrop-->
 
@@ -43,16 +31,25 @@
             <div matTooltip="{{ 'raindrop.buyExplain' | translate }}" class="medium-text">{{ 'raindrop.buytokens' |
               translate }}</div>
             <div class="separator" style="display: flex; align-items: center;justify-content: center;">
-              <span class="medium-text">100&nbsp;</span><img src="/assets/bamboo-head.png" width="30px"
+              <span class="medium-text">{{ ticketPrice }}&nbsp;</span><img src="/assets/bamboo-head.png" width="30px"
                 alt="Bamboo">&nbsp;<mat-icon>arrow_forward</mat-icon> &nbsp;<span class="medium-text">1&nbsp;</span>
               <img src="/assets/ticketbamboo.png" width="50px" alt="Ticket">
             </div>
-            <div class="input-form">
+            <div class="separator">
               <input matInput type="buy" #buy="ngModel" name="buy" [(ngModel)]="raindrop.tiketsToBuy" [maxlength]="2"
-                placeholder="0" (change)="$event ? setValidValue() : null" required>
+                placeholder="0" (change)="$event ? setValidValue() : null" class="input-form"
+                style="padding-left: 15px; width: 100%;" required>
             </div>
-            <div *ngIf="!error"><button mat-flat-button color="primary" class="btn-action btn-title medium-text"
-                type="submit" [disabled]="!f.valid">{{ 'raindrop.buyTickesNow' | translate }}</button></div>
+            <div *ngIf="!error">
+              <button mat-flat-button color="primary" class="btn-action btn-title medium-text" type="submit"
+                [disabled]="!f.valid || isConnect === 'disconnected'">
+                <span *ngIf="isConnect === 'disconnected'">{{ 'raindrop.connectYourWallet' | translate}}<br></span>
+                <span *ngIf="isConnect === 'disconnected'"
+                  style="display: block; line-height: 10px; padding-bottom: 10px;">{{ 'raindrop.buyTickesNow' |
+                  translate }}</span>
+                <span *ngIf="isConnect !== 'disconnected'">{{ 'raindrop.buyTickesNow' | translate }}</span>
+              </button>
+            </div>
             <div *ngIf="error"><button mat-flat-button color="warn" class="btn-action btn-title medium-text"
                 type="submit">{{ error | translate }}</button></div>
           </form>
@@ -68,7 +65,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-  <!-- Bamboo Burn Yearly Party-->
+  <!-- Bamboo Burn Yearly Party BBYP-->
   <div class="block-raindrop">
     <mat-card class="mat-elevation-z5">
       <mat-card-content>
@@ -99,16 +96,26 @@
             <div matTooltip="{{ 'raindrop.buyExplain' | translate }}" class="medium-text">{{ 'raindrop.burntokens' |
               translate }}</div>
             <div class="separator" style="display: flex; align-items: center;justify-content: center;">
-              <span class="medium-text">10&nbsp;</span><img src="/assets/bamboo-head.png" width="30px"
-                alt="Bamboo">&nbsp;<mat-icon>arrow_forward</mat-icon> &nbsp;<span class="medium-text">1&nbsp;</span>
+              <span class="medium-text">{{ bbypTicketPrice }}&nbsp;</span><img src="/assets/bamboo-head.png"
+                width="30px" alt="Bamboo">&nbsp;<mat-icon>arrow_forward</mat-icon> &nbsp;<span
+                class="medium-text">1&nbsp;</span>
               <img src="/assets/ticketbamboo.png" width="50px" alt="Ticket">
             </div>
-            <div class="input-form">
+            <div class="separator">
               <input matInput type="buy" #buy="ngModel" name="buy" [maxlength]="2" [(ngModel)]="bbyp.tiketsToBurn"
-                placeholder="0" autocomplete="off" (change)="$event ? setValidBbypValue() : null" required>
+                placeholder="0" autocomplete="off" (change)="$event ? setValidBbypValue() : null" class="input-form"
+                style="padding-left: 15px; width: 100%;" required>
             </div>
-            <div *ngIf="!errorBbyp"><button mat-flat-button color="primary" class="btn-action btn-title medium-text"
-                type="submit" [disabled]="!d.valid">{{ 'raindrop.buyTickesNow' | translate }}</button></div>
+            <div *ngIf="!errorBbyp">
+              <button mat-flat-button color="primary" class="btn-action btn-title medium-text" type="submit"
+                [disabled]="!d.valid || isConnect === 'disconnected'">
+                <span *ngIf="isConnect === 'disconnected'">{{ 'raindrop.connectYourWallet' | translate}}</span>
+                <span *ngIf="isConnect === 'disconnected'"
+                  style="display: block; line-height: 10px; padding-bottom: 10px;">{{ 'raindrop.buyTickesNow' |
+                  translate }}</span>
+                <span *ngIf="isConnect !== 'disconnected'">{{ 'raindrop.buyTickesNow' | translate }}</span>
+              </button>
+            </div>
             <div *ngIf="errorBbyp"><button mat-flat-button color="warn" class="btn-action btn-title medium-text"
                 type="submit">{{ errorBbyp | translate }}</button></div>
           </form>

@@ -1,24 +1,26 @@
-import {animate, state, style, transition, trigger} from '@angular/animations';
-import {SelectionModel} from '@angular/cdk/collections';
-import {Token} from '@angular/compiler/src/ml_parser/lexer';
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {Slippage} from 'src/app/interfaces/slippage';
-import {ToTrade} from 'src/app/interfaces/to-trade';
-import {ServiceService} from 'src/app/services/service.service';
-import {environment} from 'src/environments/environment';
-import {ConfirmComponent} from '../../confirm/confirm.component';
-import {TokenService} from 'src/app/services/contracts/token/token.service';
-import {RouterService} from 'src/app/services/contracts/router/router.service';
-import {UtilService} from 'src/app/services/contracts/utils/util.service';
-import {PairData, TokenData} from 'src/app/interfaces/contracts';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Token } from '@angular/compiler/src/ml_parser/lexer';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Slippage } from 'src/app/interfaces/slippage';
+import { ToTrade } from 'src/app/interfaces/to-trade';
+import { ServiceService } from 'src/app/services/service.service';
+import { environment } from 'src/environments/environment';
+import { ConfirmComponent } from '../../confirm/confirm.component';
+import { TokenService } from 'src/app/services/contracts/token/token.service';
+import { RouterService } from 'src/app/services/contracts/router/router.service';
+import { UtilService } from 'src/app/services/contracts/utils/util.service';
+import { PairData, TokenData } from 'src/app/interfaces/contracts';
 import BigNumber from 'bignumber.js';
-import {ContractService} from 'src/app/services/contracts/contract.service';
-import {router_address, weth_address} from 'src/app/services/contract-connection/tools/addresses';
-import {PandaspinnerComponent} from '../../pandaspinner/pandaspinner.component';
-import {AlertService} from '../../../_alert';
+import { ContractService } from 'src/app/services/contracts/contract.service';
+import {NetworkService} from 'src/app/services/contract-connection/network.service';
+import { AlertService } from '../../../_alert';
+import { PandaSpinnerService } from '../../pandaspinner/pandaspinner.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import { concatMap } from 'rxjs/operators';
 
 const SHOW_DECIMALS = 5;
 const FLOOR_DECIMALS = 1000000;
@@ -29,6 +31,11 @@ const FLOOR_DECIMALS = 1000000;
   styleUrls: ['./to-trade.component.scss']
 })
 export class ToTradeComponent implements OnInit {
+
+  addresses;
+  pairAddressToken1: string = this.route.snapshot.paramMap.get('id1');
+  pairAddressToken2: string = this.route.snapshot.paramMap.get('id2');
+  net: string = environment.net;
 
   token: Token;
   wallet: ToTrade = {
@@ -66,20 +73,19 @@ export class ToTradeComponent implements OnInit {
     ],
   };
   slippages: Slippage[] = [
-    {value: 0.1},
-    {value: 0.5},
-    {value: 1},
+    { value: 0.1 },
+    { value: 0.5 },
+    { value: 1 },
   ];
 
   fromValuePercentaje = [
-    {value: 25},
-    {value: 50},
-    {value: 100},
+    { value: 25 },
+    { value: 50 },
+    { value: 100 },
   ];
 
   listToken = [];
   tokenList: JSON[];
-  tokenLogo = environment.tokenLogo;
 
   // 0 is false, 1 ETH is From, 2 ETH is To
   isEth = 0;
@@ -116,18 +122,22 @@ export class ToTradeComponent implements OnInit {
     private routerService: RouterService,
     private utilsService: UtilService,
     private contractService: ContractService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pandaSpinnerService: PandaSpinnerService,
+    private networkService: NetworkService,
+    private route: ActivatedRoute,
   ) {
+    this.addresses = networkService.getAddressNetwork();
   }
 
   ngOnInit(): void {
+    console.log(this.pairAddressToken2);
     // Set valid token list
     this.getTokenList();
   }
 
   // On change form value. One of the values will be exact and the other will be estimated
   setValues(type: number): void {
-    console.log('setValues');
     let input: BigNumber;
     // Exact From and estimated To
     if (type === 1 && this.utilsService.validateInput(this.wallet.from) && this.tokenDataFrom) {
@@ -143,8 +153,6 @@ export class ToTradeComponent implements OnInit {
       this.longInputFrom = input;
       // Autocomplete if token was defined
       if (this.tokenDataTo) {
-        console.log(this.longInputTo);
-        console.log(this.pairData);
         this.longInputTo = this.utilsService.getAmountOut(input, this.tokenDataFrom, this.pairData);
         if (this.longInputFrom.isZero()) {
           // TODO: error msg for insufficient liquidity
@@ -198,7 +206,6 @@ export class ToTradeComponent implements OnInit {
 
   // On change address
   async validateAddress(): Promise<void> {
-    console.log('validateAddress');
     if (!(await this.contractService.validateAddress(this.wallet.recipient))) {
       // TODO: error msg for invalid address
       this.error = true;
@@ -211,7 +218,6 @@ export class ToTradeComponent implements OnInit {
 
   // tslint:disable-next-line:typedef
   onSubmit() {
-    console.log('onSubmit');
     // If no token selected
     if (!this.wallet.tokenTo.name || !this.wallet.tokenFrom.name) {
       this.error = true;
@@ -253,7 +259,6 @@ export class ToTradeComponent implements OnInit {
 
   // Set percentaje ammount
   loadPercentajeFrom(data): number {
-    console.log('loadPercentajeFrom');
     // TODO porcentaje data sobre ammount total
     this.longInputFrom = this.tokenDataFrom.balance.times(data / 100);
     const roundedAmount = Math.floor(Number(this.longInputFrom) * FLOOR_DECIMALS) / FLOOR_DECIMALS /*this.longInputFrom.toFixed(SHOW_DECIMALS)*/;
@@ -264,33 +269,18 @@ export class ToTradeComponent implements OnInit {
 
   // Get token list from service
   getTokenList(): void {
-    console.log('getTokenList');
     this.service.getTokenListBamboo().subscribe(
       res => {
-        const obj = res.tokens;
-
-        const arrayPolis = obj.slice(0, 1);
-        const arrayBamboo = obj.slice(1, 2);
-        const arrayWeth = obj.slice(2, 3);
-        const arrayWbtc = obj.slice(12, 13);
-        const arrayrest = obj.slice(3, 12);
-        const arrayrest2 = obj.slice(13);
-
-        this.listToken.push(arrayBamboo[0], arrayWeth[0], arrayWbtc[0], arrayPolis[0]);
-        arrayrest.forEach(element => {
-          this.listToken.push(element);
-        });
-        arrayrest2.forEach(element => {
-          this.listToken.push(element);
-        });
-        this.tokenList = this.listToken;
+        this.tokenList = this.utilsService.sortTokenListBySymbol(res.tokens);
+        if (this.pairAddressToken1 && this.pairAddressToken2){
+          this.getPairFronPreviousSelection( this.tokenList, this.pairAddressToken1, this.pairAddressToken2);
+        }
 
       });
   }
 
   // Add wallet to send
   addSend(): boolean {
-    console.log('addSend');
     if (this.addSendWallet === false) {
       return this.addSendWallet = true;
     }
@@ -304,7 +294,6 @@ export class ToTradeComponent implements OnInit {
 
   // Change direction of selected tokens
   async changeDirection(): Promise<void> {
-    console.log('changeDirection');
     const to = this.wallet.to;
     const toName = this.wallet.tokenTo.name;
     const toAmmount = this.wallet.tokenTo.ammount;
@@ -334,7 +323,6 @@ export class ToTradeComponent implements OnInit {
 
   // In case of better deal in AMM, show this blok
   betterDeal(): boolean {
-    console.log('betterDeal');
     if (this.wallet.from && this.wallet.tokenFrom.symbol && this.wallet.tokenTo.symbol) {
       // TODO Set if better deal Uniswap
       return this.betterDealBlock = true;
@@ -345,7 +333,6 @@ export class ToTradeComponent implements OnInit {
 
   // Show the BetterDeal option
   showBetterDeal(): boolean {
-    console.log('showBetterDeal');
     return this.showBetterDealBlock = true;
   }
 
@@ -361,7 +348,6 @@ export class ToTradeComponent implements OnInit {
 
   // Open dialog to token list and select FROM and TO
   openTokenList(input): void {
-    console.log('openTokenList');
     const tokenList = this.tokenList;
     const dialogRef = this.dialog.open(SelectToken, {
       width: '450px',
@@ -370,52 +356,55 @@ export class ToTradeComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(async (result) => {
-      if (input === 1) {
-        // If repeat the token
-        if (result.symbol === this.wallet.tokenTo.name) {
-          this.error = true;
-          this.errorText = 'to-stake.errorTextToken';
-          return;
+      if (result !== undefined) {
+        if (input === 1) {
+          console.log(result);
+          // If repeat the token
+          if (result.symbol === this.wallet.tokenTo.name) {
+            this.error = true;
+            this.errorText = 'to-stake.errorTextToken';
+            return;
+          }
+          this.error = false;
+          this.wallet.tokenFrom.name = result.symbol;
+          this.wallet.tokenFrom.icon = result.logoURI;
+          this.wallet.tokenFrom.address = result.address;
+          await this.setToken(1);
         }
-        this.error = false;
-        this.wallet.tokenFrom.name = result.symbol;
-        this.wallet.tokenFrom.icon = result.logoURI;
-        this.wallet.tokenFrom.address = result.address;
-        await this.setToken(1);
-      }
-      if (input === 2) {
-        // If repeat the token
-        if (result.symbol === this.wallet.tokenFrom.name) {
-          this.error = true;
-          this.errorText = 'to-stake.errorTextToken';
-          return;
+        if (input === 2) {
+          // If repeat the token
+          if (result.symbol === this.wallet.tokenFrom.name) {
+            this.error = true;
+            this.errorText = 'to-stake.errorTextToken';
+            return;
+          }
+          this.error = false;
+          this.wallet.tokenTo.name = result.symbol;
+          this.wallet.tokenTo.icon = result.logoURI;
+          this.wallet.tokenTo.address = result.address;
+          await this.setToken(2);
         }
-        this.error = false;
-        this.wallet.tokenTo.name = result.symbol;
-        this.wallet.tokenTo.icon = result.logoURI;
-        this.wallet.tokenTo.address = result.address;
-        await this.setToken(2);
-      }
-      // If there are two tokens selected, check if the pool exist
-      if (this.wallet.tokenFrom.name && this.wallet.tokenTo.name) {
-        await this.validatePair();
+        // If there are two tokens selected, check if the pool exist
+        const canValidatePair = this.wallet.tokenFrom.name && this.wallet.balanceFrom && this.wallet.tokenTo.name && this.wallet.balanceTo;
+        if (canValidatePair) {
+          await this.validatePair();
+        }
       }
     });
   }
 
   // After token is selected from list
   async setToken(where: number): Promise<void> {
-    console.log('setToken');
     let isEth = false;
     // Hardcoded addresses for kovan testing
     if (where === 1) {
-      isEth = this.wallet.tokenFrom.name === 'ETH' && this.utilsService.compareEthAddr(this.wallet.tokenFrom.address, weth_address);
+      isEth = this.wallet.tokenFrom.name === this.net && this.utilsService.compareEthAddr(this.wallet.tokenFrom.address, this.addresses.weth_address);
       this.tokenDataFrom = await this.tokenService.getTokenData(this.wallet.tokenFrom.address, isEth);
-      this.wallet.balanceFrom = this.tokenDataFrom.balance.toFixed(SHOW_DECIMALS);
+      this.wallet.balanceFrom = this.tokenDataFrom ? this.tokenDataFrom.balance.toFixed(SHOW_DECIMALS) : null;
     } else if (where === 2) {
-      isEth = this.wallet.tokenTo.name === 'ETH' && this.utilsService.compareEthAddr(this.wallet.tokenTo.address, weth_address);
+      isEth = this.wallet.tokenTo.name === this.net && this.utilsService.compareEthAddr(this.wallet.tokenTo.address, this.addresses.weth_address);
       this.tokenDataTo = await this.tokenService.getTokenData(this.wallet.tokenTo.address, isEth);
-      this.wallet.balanceTo = this.tokenDataTo.balance.toFixed(SHOW_DECIMALS);
+      this.wallet.balanceTo = this.tokenDataTo ? this.tokenDataTo.balance.toFixed(SHOW_DECIMALS) : null;
     }
     if (isEth) {
       this.isEth = where;
@@ -427,7 +416,7 @@ export class ToTradeComponent implements OnInit {
   }
 
   async validatePair(): Promise<void> {
-    console.log('validatePair');
+
     this.pairData = await this.contractService.getPairInfo(this.tokenDataFrom, this.tokenDataTo);
     if (this.pairData.addr === '0x0000000000000000000000000000000000000000') {
       // Pair does not exist
@@ -451,13 +440,12 @@ export class ToTradeComponent implements OnInit {
   }
 
   async assignProductsToUsers(): Promise<void> {
-    console.log('assignProductsToUsers');
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     try {
       // Approve
       // Check that we have allowance of token. Eth does not need approve
       if (this.isEth !== 1) {
-        await this.contractService.validateAllowance(this.tokenDataFrom, router_address, this.longInputFrom);
+        await this.contractService.validateAllowance(this.tokenDataFrom, this.addresses.router_address, this.longInputFrom);
       }
       // Get slippage and deadline values
       const slippage = Number(localStorage.getItem('slippage'));
@@ -473,20 +461,18 @@ export class ToTradeComponent implements OnInit {
         receipt = await this.routerService.swapAnyForExactAny(this.longInputFrom, this.longInputTo, this.tokenDataFrom,
           this.tokenDataTo, slippage, deadline, this.isEth > 0, this.wallet.recipient ? this.wallet.recipient : '0x');
       }
-      console.log(receipt);
       // Only reset amounts, keep token selections
       await this.afterOperation();
       this.alertService.success('Success');
     } catch (error) {
       this.alertService.error('Error: ' + error.message);
     } finally {
-      dialogPandaSpinner.close();
+      this.pandaSpinnerService.close();
     }
 
   }
 
   async afterOperation(): Promise<void> {
-    console.log('afterOperation');
     this.wallet.from = null;
     this.wallet.to = null;
     this.longInputFrom = null;
@@ -498,19 +484,63 @@ export class ToTradeComponent implements OnInit {
     await this.setToken(2);
   }
 
-  /**
-   * PandaSpinner Dialog
-   */
-  private getDialogPandaSpinner(): any {
-    return this.dialog.open(PandaspinnerComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      panelClass: 'panda-spinner'
-    });
+
+
+  async getPairFronPreviousSelection(list, token1, token2): Promise<void>{
+      list.forEach( element1 => {
+        if (element1.address === token1) {
+          this.wallet.tokenFrom.name = element1.symbol;
+          this.wallet.tokenFrom.icon = element1.logoURI;
+          this.wallet.tokenFrom.address = element1.address;
+        }
+        if (element1.address === token2) {
+          this.wallet.tokenTo.name = element1.symbol;
+          this.wallet.tokenTo.icon = element1.logoURI;
+          this.wallet.tokenTo.address = element1.address;
+          // let isEth = false;
+          // isEth = this.wallet.tokenTo.name === this.net && this.utilsService.compareEthAddr(this.wallet.tokenTo.address, this.addresses.weth_address);
+          // this.tokenDataTo = await this.tokenService.getTokenData(this.wallet.tokenTo.address, true);
+          // this.wallet.balanceTo = this.tokenDataTo ? this.tokenDataTo.balance.toFixed(SHOW_DECIMALS) : null;
+          // await this.setToken(2);
+        }
+      });
+      await this.setToken(1);
+      await this.setToken(2);
+      await this.validatePair();
+
+      // If there are two tokens selected, check if the pool exist
+      // const canValidatePair = this.wallet.tokenFrom.name && this.wallet.balanceFrom && this.wallet.tokenTo.name && this.wallet.balanceTo;
+      // if (canValidatePair) {
+      //   this.validatePair();
+      // }
+      // console.log('tokenFrom', this.tokenDataFrom);
+      // console.log('tokenTo', this.tokenDataTo);
+      // this.pairData = await this.contractService.getPairInfo(this.tokenDataFrom, this.tokenDataTo);
+      // console.log('pairData', this.pairData);
+      // if (this.pairData.addr === '0x0000000000000000000000000000000000000000') {
+      //   // Pair does not exist
+      //   // TODO: Translate error msg for invalid pair
+      //   this.error = true;
+      //   this.errorText = 'Invalid Pair';
+      // } else {
+      //   if (this.pairData.reserve0.isZero() && this.pairData.reserve1.isZero()) {
+      //     // TODO: Error message for not enough liquidity
+      //     this.error = true;
+      //     this.errorText = 'Not enough liquidity';
+      //   } else {
+      //     // Pair is valid
+      //     this.error = false;
+      //     this.liqProviderFee = (this.pairData.fee / 10).toString() + ' %';
+      //     // // Show betterDealBlock
+      //     // this.error = false;
+      //     this.betterDealBlock = true;
+      //   }
+      // }
+
   }
 
-
 }
+
 
 // Token Selection List Component Modal
 @Component({
@@ -519,8 +549,8 @@ export class ToTradeComponent implements OnInit {
   styleUrls: ['./to-trade.component.scss'],
   animations: [
     trigger('detailExpand', [
-      state('collapsed', style({height: '0px', minHeight: '0'})),
-      state('expanded', style({height: '*'})),
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
@@ -529,7 +559,7 @@ export class ToTradeComponent implements OnInit {
 export class SelectToken implements OnInit {
 
   wallet = [
-    {symbol: '', ammount: ''}];
+    { symbol: '', ammount: '' }];
   dataSource;
   displayedColumns: string[] = [
     'logo',
@@ -538,7 +568,6 @@ export class SelectToken implements OnInit {
     // 'detail',
   ];
 
-  tokenLogo = environment.tokenLogo;
   tokens;
   selection = new SelectionModel<Token>(true, []);
 
@@ -546,9 +575,10 @@ export class SelectToken implements OnInit {
   listToken = [];
   tokenList: JSON[];
 
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
+    private utilsService: UtilService,
     private service: ServiceService,
     public dialogRef: MatDialogRef<Token>,
     @Inject(MAT_DIALOG_DATA) public data) {
@@ -560,27 +590,13 @@ export class SelectToken implements OnInit {
 
   // Get list and order
   getTokenList(): void {
-    this.service.getTokenListBamboo().subscribe(
-      res => {
-        const obj = res.tokens;
-
-        const arrayPolis = obj.slice(0, 1);
-        const arrayBamboo = obj.slice(1, 2);
-        const arrayWeth = obj.slice(2, 3);
-        const arrayWbtc = obj.slice(12, 13);
-        const arrayrest = obj.slice(3, 12);
-        const arrayrest2 = obj.slice(13);
-
-        this.listToken.push(arrayBamboo[0], arrayWeth[0], arrayWbtc[0], arrayPolis[0]);
-        arrayrest.forEach(element => {
-          this.listToken.push(element);
-        });
-        arrayrest2.forEach(element => {
-          this.listToken.push(element);
-        });
-
-        this.tokenList = this.listToken;
+    this.service.getTokenListBamboo().subscribe((res,err) => {
+      if (res){
+        this.tokenList = this.utilsService.sortTokenListBySymbol(res.tokens);
         this.createTable();
+      }else if (err){
+        console.log(err);
+      }
       });
   }
 

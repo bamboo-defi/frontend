@@ -1,0 +1,101 @@
+<mat-card style="margin: 15px;" class="mat-elevation-z4">
+
+  <div class="container-card">
+    <div class="content-card-st">
+      <div class="tex-titl-st">
+        <strong>Staked Amount</strong>
+      </div>
+      <div class="tex-st">
+        {{ staking.ammount }} &nbsp;<img src="/assets/bamboo-face256.png" width="25px" height="25px">
+      </div>
+    </div>
+
+    <div class="content-card-st">
+      <div class="tex-titl-st">
+        <strong>Staked Time</strong>
+      </div>
+      <div class="tex-st">
+        {{ staking.time }} days
+      </div>
+    </div>
+
+    <div class="content-card-st">
+      <div class="tex-titl-st">
+        <strong>Timeleft</strong>
+      </div>
+      <div class="tex-st red">
+        <app-countdown-timer [time]="staking.daysTo"></app-countdown-timer>
+      </div>
+    </div>
+
+    <div class="content-card-st">
+      <div class="tex-titl-st">
+        <strong>ROI</strong>
+      </div>
+      <div class="tex-st">
+        {{ staking.roi }}
+      </div>
+    </div>
+
+    <div class="content-card-st">
+      <div class="tex-titl-st">
+        <strong>Amount acumulated</strong>
+      </div>
+      <div class="tex-st green-tex">
+        {{ staking.acumulated }}&nbsp; <img src="/assets/bamboo-face256.png" width="25px" height="25px">
+        &nbsp;
+        <button mat-flat-button class="btn-title" style="float: inherit;" color="primary"
+        [disabled]="staking.acumulated <= 0" (click)="withdrawAcumulatedRoi(staking)">{{ 'to-stake.claim' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div class="content-card-st">
+      <div>
+        <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="primary"
+        [disabled]="staking.timeLeft >= 0" (click)="withdrawStake(staking)">{{ 'to-stake.withdraw' | translate}}
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+  <!-- <mat-grid-list cols="6" rows="3" rowHeight="30">
+    <mat-grid-tile>
+      <div>
+        <strong>Staked Amount</strong>
+      </div>
+      <div>
+        {{ staking.ammount }}
+      </div>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <strong>Stake Time</strong>
+      {{ staking.time }} days
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <strong>Timeleft </strong>&nbsp;
+      <app-countdown-timer [time]="staking.daysTo"></app-countdown-timer>
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <strong>ROI</strong>
+      {{ staking.roi }}
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <strong>Amount acumulated</strong>
+      {{ staking.acumulated }}
+    </mat-grid-tile>
+    <mat-grid-tile>
+      <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="primary"
+        [disabled]="staking.timeLeft >= 0" (click)="withdrawStake(staking)">{{ 'to-stake.withdraw' | translate
+        }}</button>
+      <button mat-flat-button class="btn-title" style="float: inherit;" color="primary"
+        [disabled]="staking.acumulated <= 0" (click)="withdrawAcumulatedRoi(staking)">{{
+        'to-stake.claim' | translate }}</button>
+    </mat-grid-tile>
+  </mat-grid-list> -->
+</mat-card>

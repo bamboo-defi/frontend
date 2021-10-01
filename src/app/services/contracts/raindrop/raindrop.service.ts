@@ -3,6 +3,7 @@ import {ConnectionService} from '../../contract-connection/connection.service';
 import BigNumber from 'bignumber.js';
 const RaindropAbi = require('../abi/Raindrop.json');
 import {raindrop_address} from '../../contract-connection/tools/addresses';
+import {NetworkService} from '../../contract-connection/network.service';
 import {UtilService} from '../utils/util.service';
 
 
@@ -12,13 +13,20 @@ import {UtilService} from '../utils/util.service';
 })
 export class RaindropService {
 
-  constructor(private connService: ConnectionService,
-              private utils: UtilService) { }
+  addresses;
+
+  constructor(
+    private connService: ConnectionService,
+    private utils: UtilService,
+    private networkService: NetworkService
+  ) {
+    this.addresses = networkService.getAddressNetwork();
+  }
 
   // Ticket purchase operation for Raindrop
   public async buyTickets(nTickets: number): Promise<any> {
     await this.connService.syncAccount();
-    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, raindrop_address);
+    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, this.addresses.raindrop_address);
     return await raindrop.methods.buyTickets(nTickets).send({from: this.connService.accounts[0]});
   }
 
@@ -28,14 +36,14 @@ export class RaindropService {
     if (userAddr === '0x'){
       userAddr = this.connService.accounts[0];
     }
-    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, raindrop_address);
+    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, this.addresses.raindrop_address);
     return await raindrop.methods.getTickets(userAddr).call({from: this.connService.accounts[0]});
   }
 
   // Returns the ticket price for Raindrop
   public async getTicketPrice(): Promise<BigNumber> {
     await this.connService.syncAccount();
-    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, raindrop_address);
+    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, this.addresses.raindrop_address);
     const price =  await raindrop.methods.price().call({from: this.connService.accounts[0]});
     return this.utils.fromWeiToBN(price);
   }
@@ -43,21 +51,21 @@ export class RaindropService {
   // Returns the last winners of the Raindrop
   public async getLastWinners(): Promise<string[]> {
     await this.connService.syncAccount();
-    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, raindrop_address);
+    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, this.addresses.raindrop_address);
     return await raindrop.methods.getLastWinners().call({from: this.connService.accounts[0]});
   }
 
   // Returns a UNIX timestamp
   public async getNextLottery(): Promise<string> {
     await this.connService.syncAccount();
-    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, raindrop_address);
+    const raindrop = new this.connService.web3js.eth.Contract(RaindropAbi, this.addresses.raindrop_address);
     return await raindrop.methods.nextRain().call({from: this.connService.accounts[0]});
   }
 
   // Returns de prize of BBYP
   public async getPrizePool(): Promise<BigNumber> {
     await this.connService.syncAccount();
-    const raindrop  = new this.connService.web3js.eth.Contract(RaindropAbi, raindrop_address);
+    const raindrop  = new this.connService.web3js.eth.Contract(RaindropAbi, this.addresses.raindrop_address);
     const pool =  await raindrop.methods.prizePool().call({from: this.connService.accounts[0]});
     return this.utils.fromWeiToBN(pool);
   }

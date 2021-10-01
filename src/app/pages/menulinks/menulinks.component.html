@@ -1,0 +1,23 @@
+<mat-icon witth="25px">language</mat-icon>
+<mat-select (selectionChange)="useLanguage($event.value)" style="width: 15px;">
+    <mat-option *ngFor="let language of languagesList" [value]="language.languageSet">
+      {{language.languageName}}
+    </mat-option>
+</mat-select>
+<a href="https://github.com/bamboo-defi" target="_blank"><img src="assets/GitHub-Mark-32px.png" alt="Git"
+    style="width: 25px; margin-left: 5px;"></a>
+<a href="https://bamboodefi.medium.com/" target="_blank"><img src="assets/medium.png" alt="medium"
+    style="width: 25px; margin-left: 5px;"></a>
+<a href="https://twitter.com/FiBamboo/" target="_blank"><img src="assets/Twitter_Logo_Blue.png" alt="twitter"
+    style="width: 25px; margin-left: 5px;"></a>
+<img src="assets/telegram.png" alt="telegram" style="width: 25px; height: 25px; cursor: pointer; margin-left: 5px;" [matMenuTriggerFor]="telemenu"  (click)="openTelegram()">
+    <mat-menu #telemenu>
+      <span (mouseleave)="closeTelemenu()">
+        <a href="{{chat.link}}" target="_blank" *ngFor="let chat of telegram" style="text-decoration: none;">
+        <button mat-menu-item>
+          <img src="assets/telegram.png" alt="telegram" style="width: 18px; height: 18px; cursor: pointer; margin-left: 5px;">
+          {{chat.name}}
+        </button>
+        </a>
+      </span>
+    </mat-menu>

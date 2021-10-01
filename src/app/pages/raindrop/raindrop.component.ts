@@ -1,18 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {Bbyp} from 'src/app/interfaces/bbyp';
-import {OwnWallet} from 'src/app/interfaces/own-wallet';
-import {Raindrop} from 'src/app/interfaces/raindrop';
-import {ConfirmComponent} from '../confirm/confirm.component';
-import {TokenService} from 'src/app/services/contracts/token/token.service';
-import {TokenData} from 'src/app/interfaces/contracts';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Bbyp } from 'src/app/interfaces/bbyp';
+import { OwnWallet } from 'src/app/interfaces/own-wallet';
+import { Raindrop } from 'src/app/interfaces/raindrop';
+import { ConfirmComponent } from '../confirm/confirm.component';
+import { TokenService } from 'src/app/services/contracts/token/token.service';
+import { TokenData } from 'src/app/interfaces/contracts';
 import BigNumber from 'bignumber.js';
-import {ContractService} from 'src/app/services/contracts/contract.service';
-import {raindrop_address, bbyp_address} from 'src/app/services/contract-connection/tools/addresses';
-import {RaindropService} from 'src/app/services/contracts/raindrop/raindrop.service';
-import {BbypService} from 'src/app/services/contracts/bbyp/bbyp.service';
-import {PandaspinnerComponent} from '../pandaspinner/pandaspinner.component';
-import {AlertService} from '../../_alert';
+import { ContractService } from 'src/app/services/contracts/contract.service';
+import { NetworkService } from 'src/app/services/contract-connection/network.service';
+import { RaindropService } from 'src/app/services/contracts/raindrop/raindrop.service';
+import { BbypService } from 'src/app/services/contracts/bbyp/bbyp.service';
+import { PandaspinnerComponent } from '../pandaspinner/pandaspinner.component';
+import { AlertService } from '../../_alert';
+import { PandaSpinnerService } from '../pandaspinner/pandaspinner.service';
+import { environment } from 'src/environments/environment';
 
 const SHOW_DECIMALS = 5;
 
@@ -22,6 +24,9 @@ const SHOW_DECIMALS = 5;
   styleUrls: ['./raindrop.component.scss']
 })
 export class RaindropComponent implements OnInit {
+
+  addresses;
+
   isWait = false;
 
   raindrop: Raindrop = {
@@ -58,8 +63,11 @@ export class RaindropComponent implements OnInit {
     private rainService: RaindropService,
     private contractService: ContractService,
     private bbypService: BbypService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pandaSpinnerService: PandaSpinnerService,
+    private networkService: NetworkService
   ) {
+    this.addresses = networkService.getAddressNetwork();
   }
 
   ngOnInit(): void {
@@ -87,6 +95,9 @@ export class RaindropComponent implements OnInit {
   // Get the info on-chain for Raindrop and BBYP
   async getChainData(): Promise<void> {
     if (!this.contractService.isConnection()) {
+      // Get prices if wallet not connected
+      this.ticketPrice = environment.net === 'ETH' ? new BigNumber(100) : new BigNumber(30);
+      this.bbypTicketPrice = environment.net === 'ETH' ? new BigNumber(10) : new BigNumber(50);
       return;
     }
     // Get prices
@@ -179,9 +190,9 @@ export class RaindropComponent implements OnInit {
 
   // User raindrop ticket purchasing function
   async assignTiketsRaindropToUser(): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     try {
-      await this.contractService.validateAllowance(this.walletData, raindrop_address, this.ticketPrice.times(this.raindrop.tiketsToBuy));
+      await this.contractService.validateAllowance(this.walletData, this.addresses.raindrop_address, this.ticketPrice.times(this.raindrop.tiketsToBuy));
       const receipt = await this.rainService.buyTickets(this.raindrop.tiketsToBuy);
       this.raindrop.tiketsToBuy = null;
       await this.getChainData();
@@ -189,15 +200,15 @@ export class RaindropComponent implements OnInit {
     } catch (error) {
       this.alertService.error('Error: ' + error.message);
     } finally {
-      dialogPandaSpinner.close();
+      this.pandaSpinnerService.close();
     }
   }
 
   // User BBYP ticket purchasing function
   async assignTiketsBBYPToUser(): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     try {
-      await this.contractService.validateAllowance(this.walletData, bbyp_address, this.bbypTicketPrice.times(this.bbyp.tiketsToBurn));
+      await this.contractService.validateAllowance(this.walletData, this.addresses.bbyp_address, this.bbypTicketPrice.times(this.bbyp.tiketsToBurn));
       const receipt = await this.bbypService.buyTickets(this.bbyp.tiketsToBurn);
       this.bbyp.tiketsToBurn = null;
       await this.getChainData();
@@ -205,18 +216,8 @@ export class RaindropComponent implements OnInit {
     } catch (error) {
       this.alertService.error('Error: ' + error.message);
     } finally {
-      dialogPandaSpinner.close();
+      this.pandaSpinnerService.close();
     }
   }
 
-  /**
-   * PandaSpinner Dialog
-   */
-  private getDialogPandaSpinner(): any {
-    return this.dialog.open(PandaspinnerComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      panelClass: 'panda-spinner'
-    });
-  }
 }

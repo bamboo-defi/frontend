@@ -1,7 +1,7 @@
 <div *ngIf="isWait">
-  <div>
+  <!-- <div>
     <img src="/assets/bamboo_logo_pool_final.png" width="200" height="auto">
-  </div>
+  </div> -->
   <div>
     <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
   </div>
@@ -13,8 +13,12 @@
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ETH" #input>
     </mat-form-field>
-    <span (click)="refreshPools()"><mat-icon style="cursor: pointer;scale: 1.4; margin-right: 10px;" width="30px"
-                                               height="auto">cached</mat-icon></span>
+
+    <div>
+    <mat-slide-toggle *ngIf="this.connService.provider !== undefined" [(ngModel)]="isActive" (click)="isActiveRow('true')">Staked only</mat-slide-toggle>
+  </div>
+    <!--<span (click)="refreshPools()"><mat-icon style="cursor: pointer;scale: 1.4; margin-right: 10px;" width="30px"
+                                               height="auto">cached</mat-icon></span>-->
   </div>
   <div *ngIf="!dataSource">
     <mat-progress-bar color="primary" mode="indeterminate"></mat-progress-bar>
@@ -23,12 +27,17 @@
     <ng-container matColumnDef="title" sticky>
       <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pool.pool' | translate }}</mat-header-cell>
       <span class="mobile-label">{{ 'pool.pool' | translate }}:</span>
-      <mat-cell *matCellDef="let pool" class="font-big-pool point-cursor over-green"  (click)="setPoolToPairPage(pool)">
-        <img src="{{pool.logoTokenFirst}}" alt="" width="25px" height="auto">
-        <img src="{{pool.logoTokenSecond}}" alt="" style="margin-left: -2px;" width="25px"
-             height="auto">
-        {{pool.underlyingTokenFirst}}&nbsp;/&nbsp;{{pool.underlyingTokenSecond}}
-        <mat-icon style="font-size: 20px;">login</mat-icon>
+      <mat-cell *matCellDef="let pool" class="font-big point-cursor over-green"  (click)="setPoolToPairPage(pool)">
+        <div>
+          <div>
+            <img src="{{pool.logoTokenFirst}}" alt="" width="40px" height="auto">
+            <img src="{{pool.logoTokenSecond}}" alt="" style="margin-left: -2px;" width="40px" height="auto">
+          </div>
+          <div style="display: flex;">
+            {{pool.underlyingTokenFirst}}&nbsp;/&nbsp;{{pool.underlyingTokenSecond}}&nbsp; <mat-icon style="font-size: 20px;">login</mat-icon>
+
+          </div>
+        </div>
       </mat-cell>
     </ng-container>
 
@@ -38,14 +47,14 @@
         <span class="mobile-label">{{ 'liquidityMinus.underlying' | translate }}:</span>
         <div class="cont-column">
           <div class="item-pool">
-            <img src="{{pool.logoTokenFirst}}" alt="" width="25px"
-                 height="auto">  {{pool.underlyingTokenSecondValue}} {{pool.underlyingTokenFirst}}
+            <img src="{{pool.logoTokenFirst}}" alt="" width="22px"
+                 height="auto">  {{pool.underlyingTokenFirstValue | number: '1.1-4'}} {{pool.underlyingTokenFirst}}
           </div>
           <div class="item-pool">
-            <img src="{{pool.logoTokenSecond}}" alt="" width="25px"
-                 height="auto"> {{pool.underlyingTokenFirstValue}} {{pool.underlyingTokenSecond}}
+            <img src="{{pool.logoTokenSecond}}" alt="" width="22px"
+                 height="auto"> {{pool.underlyingTokenSecondValue | number: '1.1-4'}} {{pool.underlyingTokenSecond}}
           </div>
-          <div>{{pool.tvl}} TVL</div>
+          <div>TVL: &nbsp;{{pool.tvl | currency:'USD'}}</div>
         </div>
       </mat-cell>
     </ng-container>
@@ -54,10 +63,17 @@
       <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'pool.balance' | translate }}</mat-header-cell>
       <mat-cell *matCellDef="let pool">
         <span class="mobile-label">{{ 'pool.balance' | translate }}:</span>
-        <div class="cont-column">
-          <div>{{ 'pool.available' | translate }}: {{pool.available}}</div>
-          <div>{{ 'pool.staked' | translate }}: {{pool.staked}}</div>
-          <div>{{ pool.underlyingTokenFirst }}-{{ pool.underlyingTokenSecond }} Seeds</div>
+        <div class="cont-column" *ngIf="!pool.isLoading">
+          <div><strong>{{ 'pool.available' | translate }}:</strong> {{pool.available}}</div>
+          <div><strong>{{ 'pool.staked' | translate }}: </strong>{{pool.staked}}</div>
+        </div>
+        <div class="cont-column" *ngIf="pool.isLoading">
+          <mat-progress-bar
+          class="example-margin"
+          [color]="primary"
+          mode="indeterminate"
+          >
+      </mat-progress-bar>
         </div>
       </mat-cell>
     </ng-container>
@@ -76,19 +92,43 @@
             <span [class.green]="pool.yieldReward >= 1" class="reward">
               {{ pool.yieldReward }} x {{'pool.reward' | translate }}
             </span>
+            <div class="separator-lite"></div>
           </div>
         </div>
       </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="roi">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'liquidityMinus.roi' | translate }}</mat-header-cell>
+    <ng-container matColumnDef="bamboovalue">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'liquidityMinus.bambooValue' | translate }}</mat-header-cell>
       <mat-cell *matCellDef="let pool">
-        <span class="mobile-label">{{ 'liquidityMinus.roi' | translate }}:</span>
+        <span class="mobile-label">{{ 'liquidityMinus.bambooValue' | translate }}:</span>
+        <div class="cont-column" *ngIf="!pool.isExcludedFromBambooPrice && pool.bambooPrice != 0; else excluded">
+          <div>
+            <span class="font-big">{{ pool.bambooPrice | currency:'USD'  }}</span>
+          </div>
+        </div>
+        <ng-template #excluded  >
+          <div *ngIf="pool.isExcludedFromBambooPrice">
+          <button mat-button matTooltip="Bamboo price excluded from price media">
+                <mat-icon >info</mat-icon><span class="font-big">{{ pool.bambooPrice | currency:'USD'  }}</span>
+              </button>
+            </div>
+        </ng-template>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="roi">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>A{{ 'liquidityMinus.roi' | translate }}&nbsp;(per 1000$)</mat-header-cell>
+      <mat-cell *matCellDef="let pool">
+        <span class="mobile-label">A{{ 'liquidityMinus.roi' | translate }}:</span>
         <div class="cont-column">
-          <div>{{pool.roiDaily}} <span class="font-grey"> {{ 'pool.daily' | translate }}</span></div>
-          <div><span class="font-grey"> {{pool.roiMonthly}} {{ 'pool.monthly' | translate }}</span></div>
-          <div><span class="font-grey"> {{pool.roiYearly}} {{ 'pool.yearly' | translate }}</span></div>
+          <div (click)="apydialog(pool)">
+            <div class="screen-label"><b>Yearly ROI: </b></div>
+            <div style="display: flex; align-items: center;cursor: pointer;" class="tex-med"><span > {{pool.roiYearly | number:'1.0-2'}}%&nbsp;</span><mat-icon color="primary" style="vertical-align: bottom;">calculate</mat-icon></div>
+          </div>
+          <!-- <div>{{pool.roiDaily | number:'1.0-2'}}&nbsp;% <span class="font-grey"> {{ 'pool.daily' | translate }}</span></div>
+          <div><span class="font-grey"> {{pool.roiMonthly | number:'1.0-2'}}&nbsp;% {{ 'pool.monthly' | translate }}</span></div>
+          <div><span class="font-grey"> {{pool.roiYearly | number:'1.0-2'}}&nbsp;% {{ 'pool.yearly' | translate }}</span></div> -->
         </div>
       </mat-cell>
     </ng-container>
@@ -110,7 +150,7 @@
           </div>
         </ng-container>
         <ng-template #noReward>
-          <span class="font-grey grey reward">{{ 'pool.noreward' | translate }}</span>
+          <span class="font-grey grey reward" *ngIf="!pool.isLoading">{{ 'pool.noreward' | translate }}</span>
         </ng-template>
       </mat-cell>
     </ng-container>
@@ -118,18 +158,20 @@
     <ng-container matColumnDef="select">
       <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
       <mat-cell *matCellDef="let pool">
-        <div *ngIf="pool.isActive" class="content-buttons">
-          <div class="item-pool">
-            <button mat-flat-button color="primary" class="btn-title"
-                    (click)="depositPool(pool)"> {{ 'pool.deposit' | translate }} </button>
+        <ng-container *ngIf="!pool.isLoading">
+          <div *ngIf="pool.isActive" class="content-buttons">
+            <div class="item-pool">
+              <button mat-flat-button color="primary" class="btn-title"
+                      (click)="depositPool(pool)"> {{ 'pool.deposit' | translate }} </button>
+            </div>
+            <div class="item-pool">
+              <button mat-flat-button color="primary" class="btn-title"
+                      (click)="withdrawPool(pool)"> {{ 'pool.withdraw' | translate }} </button>
+            </div>
           </div>
-          <div class="item-pool">
-            <button mat-flat-button color="primary" class="btn-title"
-                    (click)="withdrawPool(pool)"> {{ 'pool.withdraw' | translate }} </button>
-          </div>
-        </div>
-        <button *ngIf="!pool.isActive" mat-flat-button color="primary" (click)="approvePool(pool)"
-                class="btn-title"> {{ 'pool.approveStaking' | translate }} </button>
+          <button *ngIf="!pool.isActive" mat-flat-button color="primary" (click)="approvePool(pool)"
+                  class="btn-title"> {{ 'pool.approveStaking' | translate }} </button>
+        </ng-container>
       </mat-cell>
     </ng-container>
 
@@ -139,4 +181,5 @@
     </ng-container>
 
   </mat-table>
+  <mat-paginator [pageSizeOptions]="[15, 25, 50]" showFirstLastButtons></mat-paginator>
 </div>

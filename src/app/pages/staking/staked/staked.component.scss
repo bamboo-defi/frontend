@@ -1,0 +1,46 @@
+.tex-st{
+  font-size: 1.6em;
+  display: flex;
+}
+.green-tex{
+  color: #7AC949;
+}
+.content-card-st{
+  display: flex;
+  flex-direction: row;
+  margin: 0.5em;
+}
+.container-card{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.tex-titl-st{
+  width: 11em;
+}
+.container-st {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3em;
+}
+
+@media only screen and (min-width: 1200px) {
+  .content-card-st{
+    display: flex;
+    flex-direction: column;
+  }
+  .tex-st{
+    font-size: 1.6em;
+    display: flex;
+    margin-top: 0.5em;
+  }
+  .container-card{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

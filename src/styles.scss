@@ -91,6 +91,7 @@ mat-card {
 .home-card {
   width: 100%;
   margin: 1em;
+  text-align: center;
 }
 
 .home-card-resume {
@@ -241,6 +242,19 @@ input[type=number] {
   font-size: 40px;
   // width: 250px;
   text-align: center;
+  border: none;
+}
+
+.form-big:focus {
+  height: 35px;
+  color: rgba(47, 79, 79, 0.829) !important;
+  font-size: 40px;
+  // width: 250px;
+  text-align: center;
+  border: none;
+  outline: none;
+  box-shadow: none;
+
 }
 
 .tex-big {
@@ -362,11 +376,12 @@ input[type=number] {
 }
 
 .btn-confirm {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 50px;
-  color: white;
-  background-color: #8ed164;
+  color: white!important;
+  background-color: #8ed164!important;
+}
+.btn-confirm:hover{
+  background-color: #f9fff4!important;
+  color: #4bc102!important;
 }
 
 .btn-cancel {
@@ -406,8 +421,10 @@ input[type=number] {
 
 .prop-card {
   border-left: 4px solid #8ed164;
-  margin-top: 20px;
+  margin-top: 15px;
   width: 100%;
+  height: auto!important;
+  border-radius: 10px;
 }
 
 .prop-item {
@@ -419,12 +436,21 @@ input[type=number] {
 .prop-tile {
   height: auto;
 }
-
-.prop-tex {
-  padding: 15px;
-  width: inherit;
+.prop-body{
+  font-size: 14px;
 }
 
+.prop-tex {
+  padding: 5 5 15 15;
+  width: inherit;
+  height: auto;
+}
+.prop-link{
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+  // padding: 10px;
+}
 .prop-votes {
   width: 100%;
 }
@@ -460,8 +486,9 @@ input[type=number] {
 
 .val-item {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   width: 100%;
+  margin: 10px;
 }
 
 .val-pending {
@@ -492,6 +519,22 @@ input[type=number] {
   justify-content: center;
   align-self: center;
   padding: 25px;
+}
+
+.btn-pending{
+  color: white!important;
+  border-radius: 15px!important;
+  background: grey!important;
+}
+.btn-active{
+  color: white!important;
+  border-radius: 15px!important;
+  background-color: #37B66F!important;
+}
+.btn-closed{
+  color: white!important;
+  border-radius: 15px!important;
+  background-color: #6F42C1!important;
 }
 
 // Harvest
@@ -599,7 +642,7 @@ input[type=number] {
 
 .feed-title {
   font-size: 24px;
-  color: #8ed164;
+  color: #7ac949;
   font-weight: 600;
 }
 
@@ -829,6 +872,7 @@ mat-cell div {
   justify-content: space-around;
   text-align: center;
   align-items: center;
+  border: none;
 }
 
 .big-text-ra {
@@ -852,6 +896,24 @@ mat-cell div {
   color: rgba(47, 79, 79, 0.829) !important;
 }
 
+.center-align-bridge {
+  text-align: center !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: rgba(47, 79, 79, 0.829) !important;
+  border: none;
+}
+
+.center-align-bridge:focus {
+  text-align: center !important;
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: rgba(47, 79, 79, 0.829) !important;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
 .container-start {
   display: flex;
   flex-direction: row;
@@ -872,7 +934,7 @@ mat-cell div {
 
 // Tokens
 .positive {
-  color: green !important;
+  color: rgb(0, 207, 0) !important;
 }
 
 .negative {
@@ -889,7 +951,7 @@ mat-cell div {
 
 // Token Value
 .item-card-info {
-  font-size: 22px;
+  font-size: 16px;
   font-weight: 600;
   color: rgba(47, 79, 79, 0.829);
   padding: 5px;
@@ -909,7 +971,6 @@ mat-cell div {
   display: flex;
   place-content: space-between;
   align-items: center;
-
 }
 
 .img-small {
@@ -919,9 +980,9 @@ mat-cell div {
 
 // Liquidity minus
 .form-big-lm {
-  height: 35px;
+  height: 2.5em;
   color: rgba(47, 79, 79, 0.829) !important;
-  font-size: 40px;
+  font-size: 2em;
 }
 
 .form-medium {
@@ -947,8 +1008,8 @@ mat-cell div {
 
 .select-token {
   padding: 8px !important;
-  margin: 5px !important;
-  font-size: 18px !important;
+  // margin: 5px !important;
+  // font-size: 18px !important;
   border-radius: 30px !important;
 }
 
@@ -962,10 +1023,8 @@ mat-cell div {
 }
 
 .token-ammount {
-  margin-left: 15px;
   padding: 15px;
   border-radius: 15px;
-  font-size: 40px;
   background-color: #E8F1E0;
   text-align: center;
 }
@@ -973,6 +1032,11 @@ mat-cell div {
 .display-liquidity {
   display: flex;
   align-items: center;
+}
+
+.mat-chip-list-minus{
+  display: flex;
+  justify-content: center;
 }
 
 
@@ -1005,7 +1069,8 @@ mat-cell div {
 .tex-grey {
   font-size: 18px;
   font-weight: 500;
-  color: rgba(47, 79, 79, 0.829);
+  color: inherit!important;
+  //color: rgba(47, 79, 79, 0.829);
 }
 
 .container-start-lp {
@@ -1017,19 +1082,7 @@ mat-cell div {
 }
 
 // Stake
-.container-st {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.container-st {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .container-row-st {
   display: flex;
@@ -1042,7 +1095,7 @@ mat-cell div {
 .tex-select-st {
   font-size: 20px;
   width: 200px !important;
-  text-align: center;
+  text-align: left;
 }
 
 .ammount-select-st {
@@ -1209,6 +1262,75 @@ a:not([href]) {
   top: 10px;
 }
 
+// Branding
+.brand-title{
+  font-size: 24px;
+  color: #8ed164;
+  font-weight: 600;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.brand-container{
+  display: flex;
+  // flex-direction: column;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+}
+.brand-item{
+  margin: 10px;
+  text-align: center;
+  display: grid!important;
+}
+.brand-img{
+  width: 180px;
+  height: auto;
+}
+.brand-img:hover{
+  transform: scale(1.2);
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.brand-text{
+  margin-bottom: 5px;
+  color: #979797;
+}
+
+.supplyError {
+  border: 2px solid red!important;
+  border-radius: 10px;
+}
+
+// Guide
+
+.container-gu{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  align-content: flex-start;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.item-gu{
+  flex-grow: 1;
+}
+.item-gu img{
+  min-width: 200px;
+  max-width: 250px;
+  border-radius: 5px;
+  border: 1px solid #E8F1E0;
+}
+.item-gu p {
+  border-radius: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  padding: 10px;
+  background-color: #E8F1E0;
+}
+
+
 @media only screen and (max-width: 600px) {
   .tex-home {
     font-size: 3em;
@@ -1231,7 +1353,7 @@ a:not([href]) {
     width: 100%;
   }
   .img-resp-ho {
-    width: 100%;
+    width: 70%;
     height: auto;
   }
   .feed-container {
@@ -1317,6 +1439,11 @@ a:not([href]) {
     width: 70%;
     height: auto;
   }
+
+  // Branding
+  .brand-container{
+    flex-direction: row;
+  }
 }
 
 @media(max-width: 1200px) {
@@ -1334,6 +1461,7 @@ a:not([href]) {
     flex-direction: column;
     align-items: start;
     padding: 8px 24px;
+    min-height: auto;
   }
   .mat-cell {
     margin-top: 10px;
@@ -1355,10 +1483,7 @@ a:not([href]) {
     display: none;
   }
   .div-display-liquidity {
-    margin: 0 -20px;
-  }
-  .span-display-liquidity {
-    margin-right: 10px;
+    margin: 0 20px;
   }
 }
 
@@ -1374,8 +1499,18 @@ a:not([href]) {
     line-height: 1.2em;
     // width: 50%;
   }
+  .item-card-info {
+    font-size: 22px;
+    font-weight: 600;
+    color: rgba(47, 79, 79, 0.829);
+    padding: 5px;
+    margin-top: 10px;
+    display: flex;
+    place-content: start;
+    align-items: center;
+  }
   .img-resp {
-    width: 70%;
+    width: 100%;
     height: auto;
   }
   .content-card {
@@ -1458,6 +1593,7 @@ a:not([href]) {
   .item-class-ho {
     padding: 10px;
     width: 48%;
+    margin-top: 2em;
   }
   .content-class-ho {
     flex-direction: row;
@@ -1501,6 +1637,23 @@ a:not([href]) {
   }
   .buy-box {
     width: 400px;
+  }
+  // GOVERNANCE
+  .val-item {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    margin: 10px;
+  }
+  .prop-link{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+
+  // Guide
+  .container-gu{
+    flex-direction: row;
   }
 }
 

@@ -13,6 +13,8 @@ export interface Pool {
   underlyingTokenSecond: string;
   underlyingTokenFirstValue: number;
   underlyingTokenSecondValue: number;
+  underlyingTokenFirstValueUSDT: number;
+  underlyingTokenSecondValueUSDT: number;
   underlyingBamboo: number;
   value: number;
   yield: number;
@@ -25,4 +27,8 @@ export interface Pool {
   staked: number;
   reward: number;
   isActive: boolean;
+  isLoading: boolean;
+  bambooPrice: number;
+  isExcludedFromBambooPrice: boolean;
+  roiYCompound: number;
 }

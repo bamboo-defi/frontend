@@ -11,11 +11,10 @@
           [(ngModel)]="unstakeAmmount"
           placeholder="0"
           autocomplete="off"
-          type="number"
+          type="text"
           [minlength]="1"
-          [maxlength]="20"
-          style="text-align:center;"
-          class="form-big"
+          [maxlength]="35"
+          style="text-align:center;color: rgba(47, 79, 79, 0.829); font-size: 1.5rem;"
           required>
       </div>
       <div>
@@ -25,10 +24,13 @@
         <img matSuffix src="assets/bamboos.png" width="60px" height="60px">
       </div>
     </div>
+    <div>
+      {{ 'pool.reward' | translate }}: {{reward}} <img src="assets/bamboo-head.png" width="30px" height="auto">
+    </div>
 
   <!--Buttons to validate-->
   <div class="content-card-confirm inline separator-big">
-    <div><button mat-button color="primary" class="btn-confirm" type="submit" [disabled]="!f.valid"><span style="vertical-align: sub;"><mat-icon>check</mat-icon></span>{{ 'confirm.okValidate' | translate }}</button></div>
+    <div><button mat-button color="primary" class="btn-title" type="submit" [disabled]="!f.valid"><span style="vertical-align: sub;"><mat-icon>check</mat-icon></span>{{ 'confirm.okValidate' | translate }}</button></div>
     <div><button mat-button [mat-dialog-close]="noDeal" color="warn" class="btn-cancel"><span style="vertical-align: sub;"><mat-icon>clear</mat-icon></span>{{ 'confirm.noValidate' | translate }}</button></div>
   </div>
 </form>

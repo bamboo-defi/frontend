@@ -1,0 +1,79 @@
+<div style="width: 100%;">
+  <form class="separator" name="form" #f="ngForm" (ngSubmit)="f.form.valid && !error && onSubmit()">
+    <div class="container-st" style="margin-left: 1em;">
+      <div><strong>{{ 'to-stake.yourbamboo' | translate }}: &nbsp;</strong></div>
+      <div class="tex-st align-st">{{ ownWallet.unstaked }} &nbsp;<img src="/assets/bamboo-face256.png"
+          width="35px" height="35px">
+      </div>
+    </div>
+
+    <mat-card class="mat-elevation-z4" style="margin-top: 3em;">
+
+      <div class="card-st">
+        <div class="container-st">
+          <div><strong>{{ 'to-stake.totaltostake' | translate}}({{ minimumBamboo }}&nbsp; BAMBOO at least)</strong></div>
+          <div class="align-st">
+            <img matSuffix src="/assets/bamboo-face256.png" width="35px" height="35px">&nbsp;
+            <mat-select class="tex-select-st" [(ngModel)]="bambooToStake" #ammountToStake name="ammountToStake"
+              (selectionChange)="$event ? setMultiplier() : null" placeholder="{{ 'to-stake.ammountBamboo' | translate}}"
+              required>
+              <!-- <mat-option>{{ 'to-stake.yourbamboo' | translate }}</mat-option> -->
+              <mat-option *ngFor="let bamboo of bambooAmmount" [value]="bamboo" class="tex-select-st">
+                {{bamboo.bambooSelect}}
+              </mat-option>
+            </mat-select>
+
+
+          </div>
+        </div>
+
+        <div class="container-st">
+          <div><strong>{{ 'to-stake.time' | translate}}</strong></div>
+          <div class="separator">
+            <mat-select class="tex-select-st" [(ngModel)]="toStake.timeToStake" #timeToStake name="timeToStake"
+              (selectionChange)="$event ? setMultiplier() : null" placeholder="{{ 'to-stake.selectTime' | translate }}"
+              required>
+              <mat-option *ngFor="let time of timeValue" [value]="time">
+                {{time.text}}
+              </mat-option>
+            </mat-select>
+
+          </div>
+        </div>
+
+        <div class="container-st">
+          <div *ngIf="multiplier">
+            {{ 'to-stake.multiplier' | translate }}:
+          </div>
+          <div *ngIf="multiplier">
+            <span class="form-medium" style="color: #7AC949!important;">x{{multiplier}}</span>
+          </div>
+          <div class="container-st separator-big">
+            <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="primary" type="submit"
+              [disabled]="!f.valid || toStake.toStakeAmmount>ownWallet.unstaked || toStake.toStakeAmmount<50" *ngIf="!error">
+              <mat-icon>create</mat-icon>
+              <span *ngIf="allow; else allowok">{{ 'to-stake.stakenow' | translate }}</span>
+              <ng-template #allowok>{{ 'field.approve' | translate }}</ng-template>
+            </button>
+            <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="warn" [disabled]="!f.valid"
+              *ngIf="error">
+              <mat-icon>create</mat-icon> {{ 'to-stake.errorAmmount' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+
+
+  </form>
+
+  <div class="separator-big"></div>
+
+  <ng-container *ngIf="stakings">
+    <div *ngFor="let data of stakings">
+      <app-staked [staking]="data" (withdraw)="refreshData($event)"></app-staked>
+    </div>
+  </ng-container>
+
+</div>
+<div class="separator-big"></div>

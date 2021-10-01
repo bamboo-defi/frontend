@@ -1,0 +1,44 @@
+<mat-card class="mat-elevation-z6 buy-box box">
+
+    <div style="display: flex; justify-content: space-between; flex-direction: row;">
+      <div (click)="backToLiquidity()" style="cursor: pointer;"><mat-icon style="font-size: 35px;" color="primary">arrow_back</mat-icon></div>
+      <div><h2>{{ 'liquidityMinus.liquidityMinus' | translate }}</h2></div>
+    </div>
+
+<div *ngIf="!liquidTool" style="text-align: center;" class="separator"><strong>{{ 'liquidityMinus.selectPool' | translate }}</strong></div>
+<div class="content-pool separator-big" style="margin: 10px;">
+  <div>
+    <button mat-flat-button color="primary" (click)="selectTokenFromList()" *ngIf="pool.underlyingTokenFirst"
+      class="select-token"><img src="{{pool.logoTokenFirst}}" style="width: 35px; height: 35px; margin: 10px;"> {{
+      pool.underlyingTokenFirst }}</button>
+    <button mat-flat-button color="accent" (click)="selectTokenFromList()" *ngIf="!pool.underlyingTokenFirst"
+      class="select-token">{{ 'to-trade.select' | translate }}</button>
+  </div>
+  <div style="display: flex; align-items: baseline;">
+    <mat-icon class="plus-icon" color="primary" style="font-size: 35px; font-weight: 900; width: auto;">add</mat-icon>
+  </div>
+  <div>
+    <button mat-flat-button color="primary" (click)="selectTokenToList()" *ngIf="pool.underlyingTokenSecond"
+      class="select-token"><img src="{{pool.logoTokenSecond}}" style="width: 35px; height: 35px; margin: 10px;">
+      {{pool.underlyingTokenSecond}}</button>
+    <button mat-flat-button color="accent" (click)="selectTokenToList()" *ngIf="!pool.underlyingTokenSecond"
+      class="select-token">{{ 'to-trade.select' | translate }}</button>
+  </div>
+</div>
+
+<!-- If pool doesnt exist on selected tokens-->
+<div *ngIf="errorNoPool" class="token-equal">{{ 'liquidityMinus.noPoolsAvailable' | translate}}</div>
+
+<!--If tokens are equal -->
+<div *ngIf="tokenEqual" class="token-equal">{{ 'liquidityMinus.sameToken' | translate }}</div>
+
+<!--If pool has not owner BLps -->
+<div *ngIf="!pool.reward" class="token-equal">{{ 'liquidityMinus.noBlps' | translate }}</div>
+
+<!--Pool selected-->
+
+<div class="separator">
+  <app-minus-liquidity-pair *ngIf="poolSelected" [pairSelected]="poolSelected"></app-minus-liquidity-pair>
+</div>
+
+</mat-card>

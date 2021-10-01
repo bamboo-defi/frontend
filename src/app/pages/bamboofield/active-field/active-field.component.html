@@ -1,0 +1,28 @@
+
+<div class="separator-big item-field">
+  <mat-card class="mat-elevation-z5">
+    <mat-card-title>
+      {{ 'field.seeds' | translate }}
+    </mat-card-title>
+    <mat-card-content>
+      <div *ngIf="seeds.seeds; else noSeed" class="separator-big"
+           style="display: flex; align-items: center; justify-content: center;">
+        <span class="form-big">{{seeds.seeds}} </span><img src="assets/semillas.png" width="60px" height="auto">
+      </div>
+      <ng-template #noSeed>
+        <div class="separator-big">
+          <span class="form-big">0.0 </span><img src="assets/semillas.png" width="60px" height="auto">
+        </div>
+      </ng-template>
+      <div class="separator-big">
+        <button mat-flat-button color="primary" class="btn-field" [disabled]="!seeds.seedsToHarvest"
+                (click)="harvest()">{{ 'field.harvest' | translate }}</button>
+      </div>
+
+      <div class="separator-big" *ngIf="seeds.stake">
+        <button mat-flat-button color="primary" class="btn-field"
+                (click)="getMoreSeeds()">{{ 'field.getMore' | translate }}</button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

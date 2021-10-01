@@ -5,6 +5,7 @@ export class Alert {
   autoClose: boolean;
   keepAfterRouteChange: boolean;
   fade: boolean;
+  img: string;
 
   constructor(init?: Partial<Alert>) {
     Object.assign(this, init);

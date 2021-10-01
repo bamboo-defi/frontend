@@ -16,7 +16,14 @@ import { TokenvalueComponent } from './tokenvalue/tokenvalue.component';
 import { PairComponent } from './pair/pair.component';
 import { BamboofieldComponent } from './bamboofield/bamboofield.component';
 import { LendingComponent } from './lending/lending.component';
-import { PandaspinnerComponent } from './pandaspinner/pandaspinner.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { BrandingComponent } from './branding/branding.component';
+import { WrappedComponent } from './wrapped/wrapped.component';
+import { BridgeComponent } from './bridge/bridge.component';
+import { PairCreateComponent } from './pair-create/pair-create.component';
+import { StakingComponent } from './staking/staking.component';
+import { LiquidityPlusComponent } from './wallet/liquidity-plus/liquidity-plus.component';
+import { SearchPairComponent } from './wallet/search-pair/search-pair.component';
 
 const routes: Routes = [
   {
@@ -28,7 +35,7 @@ const routes: Routes = [
         component: HomeComponent
       },
       {
-        path: 'Home',
+        path: 'home',
         component: HomeComponent
       },
       {
@@ -40,8 +47,24 @@ const routes: Routes = [
         component: WalletComponent
       },
       {
-        path: 'pools',
+        path: 'wallet/:id1/:id2',
+        component: WalletComponent
+      },
+      {
+        path: 'wallet/:pool',
+        component: WalletComponent
+      },
+      {
+        path: 'bridge',
+        component: BridgeComponent
+      },
+      {
+        path: 'farms',
         component: PoolComponent
+      },
+      {
+        path: 'pools',
+        component: StakingComponent
       },
       {
         path: 'tokens',
@@ -80,17 +103,46 @@ const routes: Routes = [
         component: TokenvalueComponent
       },
       {
-        path: 'pair/:id',
+        path: 'pair/:address/:id1/:id2',
         component: PairComponent
+      },
+      {
+        path: 'pair',
+        redirectTo: 'pools'
       },
       {
         path: 'lending',
         component: LendingComponent
+      },
+      // {
+      //   path: 'branding',
+      //   component: BrandingComponent
+      // },
+      // {
+      //   path: 'wrapped',
+      //   component: WrappedComponent
+      // },
+      {
+        path: 'bridge',
+        component: BridgeComponent
+      },
+      {
+        path: 'liquidityPlus',
+        component: LiquidityPlusComponent
+      },
+      {
+        path: 'searchPair',
+        component: SearchPairComponent
       }
+      // {
+      //   path: 'pair-create',
+      //   component: PairCreateComponent
+      // }
     ]
   },
 
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // { path: '', redirectTo: 'home', pathMatch: 'full' },
+  // { path: '404', component: NotFoundComponent},
   { path: '**', redirectTo: 'home' },
 ];
 

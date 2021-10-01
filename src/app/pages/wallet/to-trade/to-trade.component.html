@@ -8,14 +8,14 @@
     <!-- From -->
 
     <div class="container-between">
-      <div>{{'to-trade.from' | translate }}
+      <div><strong>{{'to-trade.from' | translate }}</strong>
         <span *ngIf="estimatedFrom">{{'to-trade.estimated' | translate }}</span>
       </div>
       <div class="container-end">
         <input matInput #balanceFrom="ngModel" name="balanceFrom" class="form-control right-align" style="width: 40%;"
           [(ngModel)]="wallet.balanceFrom" placeholder="{{wallet.balanceFrom}}" disabled autocomplete="off"
           required />&nbsp;
-        <span matPreffix>{{ 'to-trade.balanceFrom' | translate }}</span>
+        <span matPreffix><strong>{{ 'to-trade.balanceFrom' | translate }}</strong></span>
       </div>
     </div>
     <div class="separator"></div>
@@ -37,7 +37,7 @@
         </div>
         <div>
           <button mat-flat-button color="primary" (click)="selectTokenFromList()" *ngIf="wallet.tokenFrom.name"
-            class="select-token"><img src="{{wallet.tokenFrom.icon}}" style="width: 35px; height: 35px; margin: 10px;">
+            class="select-token"><img src="{{wallet.tokenFrom.icon}}" style="width: 35px; height: 35px;">
             {{ wallet.tokenFrom.name }}</button>
           <button mat-flat-button color="accent" (click)="selectTokenFromList()" *ngIf="!wallet.tokenFrom.name"
             class="select-token">{{ 'to-trade.select' | translate }}</button>
@@ -49,26 +49,27 @@
     <!-- Add wallet send / Change direcction-->
     <div class="separator-big"></div>
     <div class="container-between">
-      <div class="point-cursor positive" (click)="changeDirection()">
-        <mat-icon>arrow_downward</mat-icon>
+      <div class="point-cursor" (click)="changeDirection()">
+        <mat-icon color="primary">import_export</mat-icon>
       </div>
       <div><button mat-flat-button class="tex-opcional" (click)="addSend()" *ngIf="addSendWallet === false">
           <mat-icon>expand_more</mat-icon>{{ 'to-trade.addSend' | translate }}
         </button> </div>
     </div>
+
     <!-- To -->
 
     <div class="separator-big"></div>
 
     <div class="container-between">
-      <div>{{'to-trade.to' | translate }}
-        <span *ngIf="estimatedTo">{{'to-trade.estimated' | translate }}</span>
+      <div><strong>{{'to-trade.to' | translate }}</strong>
+        <span *ngIf="estimatedTo">&nbsp;{{'to-trade.estimated' | translate }}</span>
       </div>
       <div class="container-end">
 
         <input matInput #balanceTo="ngModel" name="balanceTo" class="form-control right-align" style="width: 40%;"
           [(ngModel)]="wallet.balanceTo" placeholder="0" disabled required />&nbsp;
-        <span matPreffix>{{ 'to-trade.balanceTo' | translate }}</span>
+        <span matPreffix><strong>{{ 'to-trade.balanceTo' | translate }}</strong></span>
 
       </div>
     </div>
@@ -84,7 +85,7 @@
         <div>
           <!-- <input matInput #nameTo="ngModel" name="nameTo" class="form-control" [(ngModel)]="wallet.tokenTo.name" placeholder="0" (click)="selectTokenToList()" required/> -->
           <button mat-flat-button color="primary" (click)="selectTokenToList()" *ngIf="wallet.tokenTo.name"
-            class="select-token"><img src="{{wallet.tokenTo.icon}}" style="width: 35px; height: 35px; margin: 10px;">
+            class="select-token"><img src="{{wallet.tokenTo.icon}}" style="width: 35px; height: 35px;">
             {{wallet.tokenTo.name}}</button>
           <button mat-flat-button color="accent" (click)="selectTokenToList()" *ngIf="!wallet.tokenTo.name"
             class="select-token">{{ 'to-trade.select' | translate }}</button>
@@ -103,8 +104,10 @@
           <mat-icon>arrow_downward</mat-icon>
         </div>
         <div>
-          <div mat-flat-button class="tex-opcional" (click)="addSend()">
-            <mat-icon>expand_less</mat-icon>{{ 'to-trade.removeSend' | translate }}
+          <div>
+            <button mat-flat-button class="tex-opcional" (click)="addSend()">
+              <mat-icon>expand_less</mat-icon>{{ 'to-trade.removeSend' | translate }}
+            </button>
           </div>
         </div>
       </div>
@@ -146,17 +149,17 @@
     </button></div>
   <div class="separator"></div>
 
-  <mat-card *ngIf="betterDealBlock === true">
+  <mat-card *ngIf="betterDealBlock === true" style="background-color: #E8F1E0;">
     <div class="container-between">
-      <div>{{ 'to-trade.minimunReceived' | translate}}: </div>
-      <div>{{ minimunReceived }}</div>
+      <div><strong>{{ 'to-trade.minimunReceived' | translate}}: </strong></div>
+      <div>{{ minimunReceived }}<img src="{{wallet.tokenTo.icon}}" style="width: 20px; height: 20px; margin-left: 5px;"></div>
     </div>
     <div class="container-between">
-      <div>{{ 'to-trade.priceImpact' | translate }}: </div>
+      <div><strong>{{ 'to-trade.priceImpact' | translate }}: </strong></div>
       <div>{{ priceImpact }}</div>
     </div>
     <div class="container-between">
-      <div>{{ 'to-trade.liqProviderFee' | translate }}: </div>
+      <div><strong>{{ 'to-trade.liqProviderFee' | translate }}: </strong></div>
       <div>{{ liqProviderFee }}</div>
     </div>
     <div class="separator-big"></div>

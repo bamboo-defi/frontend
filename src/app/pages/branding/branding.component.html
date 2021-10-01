@@ -1,0 +1,74 @@
+<div class="brand-container" style="padding-bottom: 15px; border-bottom: 1px solid #7AC949">
+  <mat-card *ngFor="let logo of logos" class="brand-item mat-elevation-z3" >
+    <mat-card-title>
+      {{ logo.text}}
+    </mat-card-title>
+    <mat-card-content style="display: flex; justify-content: center;">
+      <a href="assets/{{logo.link}}" download style="text-decoration: none; ">
+        <img src="assets/{{logo.link}}" alt ="logo.name" class="brand-img">
+      </a>
+    </mat-card-content>
+    <mat-card-footer style="margin: auto 0 0;">
+      <a href="assets/{{logo.link}}" download style="text-decoration: none;">
+      <span class="brand-text">{{ 'brand.download' | translate }}<mat-icon style="vertical-align: middle;">download</mat-icon></span>
+      </a>
+    </mat-card-footer>
+  </mat-card>
+</div>
+<div class="separator-big"></div>
+<div style="padding-bottom: 25px; border-bottom: 1px solid #7AC949">
+  <div class="brand-title">{{ 'brand.fonts' | translate }}</div>
+
+  <mat-card class="brand-item mat-elevation-z3" >
+    <mat-card-title>
+      Architects Daughter
+    </mat-card-title>
+    <mat-card-content style="display: flex; justify-content: center;">
+      <a href="https://fonts.google.com/specimen/Architects+Daughter?preview.text_type=custom" target="_blank" style="text-decoration: none; margin-bottom: 15px;" class="tex-home-ho"><span>Tipografy</span></a>
+    </mat-card-content>
+    <mat-card-footer style="margin: auto 0 0;">
+      <a href="https://fonts.google.com/specimen/Architects+Daughter?preview.text_type=custom" style="text-decoration: none;" target="_blank">
+      <span class="brand-text">{{ 'brand.download' | translate }}<mat-icon style="vertical-align: middle;">download</mat-icon></span>
+      </a>
+    </mat-card-footer>
+  </mat-card>
+</div>
+<div class="separator-big"></div>
+<div style="padding-bottom: 25px; border-bottom: 1px solid #7AC949">
+  <div class="brand-title">{{ 'brand.images' | translate }}</div>
+  <div class="brand-container">
+    <mat-card class="brand-item mat-elevation-z3" >
+      <mat-card-title>
+        Banner Grooow!
+      </mat-card-title>
+      <mat-card-content style="display: flex; justify-content: center;">
+        <a href="assets/vinilo1.png" download style="text-decoration: none; ">
+          <img src="assets/vinilo1.png" alt ="vinilo1" style="width: 300px; height: auto;" class="brand-img">
+        </a>
+      </mat-card-content>
+      <mat-card-footer style="margin: auto 0 0;">
+        <a href="assets/vinilo1.png" download style="text-decoration: none;">
+        <span class="brand-text">{{ 'brand.download' | translate }}<mat-icon style="vertical-align: middle;">download</mat-icon></span>
+        </a>
+      </mat-card-footer>
+    </mat-card>
+
+
+      <mat-card *ngFor="let image of logoImages" class="brand-item mat-elevation-z3" >
+        <mat-card-title>
+          {{ image.text}}
+        </mat-card-title>
+        <mat-card-content style="display: flex; justify-content: center;">
+          <a href="assets/{{image.link}}" download style="text-decoration: none; ">
+            <img src="assets/{{image.link}}" alt ="image.name" class="brand-img">
+          </a>
+        </mat-card-content>
+        <mat-card-footer style="margin: auto 0 0;">
+          <a href="assets/{{image.link}}" download style="text-decoration: none;">
+          <span class="brand-text">{{ 'brand.download' | translate }}<mat-icon style="vertical-align: middle;">download</mat-icon></span>
+          </a>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+
+</div>

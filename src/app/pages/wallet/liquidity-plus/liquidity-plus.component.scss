@@ -48,6 +48,20 @@
   padding: 10px;
   border-radius: 15px;
   background-color: #E8F1E0;
+  display: flex;
+  flex-direction: column;
+}
+
+.first-pool-eth {
+  margin: 20px 0px;
+  padding: 10px;
+  border-radius: 15px;
+  background-color: #f5cdcd;
+  display: flex;
+  flex-direction: row;
+}
+.first-pool-eth > p {
+  margin-left: 10px;
 }
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,

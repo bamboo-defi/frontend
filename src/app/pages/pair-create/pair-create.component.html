@@ -1,0 +1,146 @@
+<div class="frame-info separator">{{ 'create-pair.explainPairPool' | translate }}</div>
+
+
+  <mat-vertical-stepper linear #stepper (selectionChange)="onStepChange($event)">
+    <mat-step [stepControl]="form1.control">
+
+      <!-- Set token address-->
+      <ng-template matStepperIcon="edit">
+        <mat-icon>check</mat-icon>
+      </ng-template>
+      <form #form1="ngForm">
+        <ng-template matStepLabel>
+         {{ 'create-pair.setPair' | translate }}
+        </ng-template>
+
+        <div>
+          <button mat-flat-button color="primary" (click)="openTokenList(1)" *ngIf="tokenDataFirst.addr"
+            class="select-token" [disabled]="!isConnected"><img src="{{tokenDataFirst.logoURI}}" style="width: 35px; height: 35px; margin: 10px;"> {{
+            tokenDataFirst.symbol }} - {{ tokenDataFirst.addr }}</button>
+          <button mat-flat-button color="accent" (click)="openTokenList(1)" *ngIf="!tokenDataFirst.addr"
+            class="select-token" [disabled]="!isConnected">{{ 'create-pair.select' | translate }}</button>
+        </div>
+        <div style="display: flex; align-items: baseline;">
+          <mat-icon class="plus-icon" color="primary" style="font-size: 35px; font-weight: 900; width: auto; margin-left: 20px;">add</mat-icon>
+        </div>
+        <div>
+          <button mat-flat-button color="primary" (click)="openTokenList(2)" *ngIf="tokenDataSecond.addr"
+            class="select-token" [disabled]="!isConnected"><img src="{{tokenDataSecond.logoURI}}" style="width: 35px; height: 35px; margin: 10px;">
+            {{tokenDataSecond.symbol}} - {{ tokenDataSecond.addr }}</button>
+          <button mat-flat-button color="accent" (click)="openTokenList(2)" *ngIf="!tokenDataSecond.addr"
+            class="select-token" [disabled]="!isConnected">{{ 'create-pair.select' | translate }}</button>
+        </div>
+        <div *ngIf="error" class="val-rejected separator" style="color:#fff; ">
+            {{ errorText | translate }}
+        </div>
+
+
+
+
+
+        <div class="frame-info separator">{{ 'create-pair.explainSelectPair' | translate }}</div>
+        <div class="separator">
+          <button mat-flat-button matStepperNext color="primary" [disabled]="!tokenDataFirst.addr || !tokenDataSecond.addr || error" class="btn-title" style="width: 100%;"><mat-icon>keyboard_arrow_down</mat-icon> {{ 'create-pair.next' | translate }}</button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="form2.control">
+
+      <!-- Approve tokens -->
+      <form #form2="ngForm">
+        <ng-template matStepLabel>
+          {{ 'create-pair.approveTittle' | translate }}
+        </ng-template>
+        <div class="separator">
+        <div>
+          <button mat-flat-button color="accent" (click)="approve(1, tokenDataFirst)"
+                  [disabled]="token1Approved || !isConnected || !tokenDataFirst.addr || !tokenDataSecond.addr || error"
+                  style="width: 48%; border-radius: 50px;">
+            {{ 'create-pair.approve' | translate }} {{tokenDataFirst.symbol}}
+          </button>
+          <button mat-flat-button color="accent" (click)="approve(2, tokenDataSecond)"
+                  [disabled]="token2Approved || !isConnected || !tokenDataFirst.addr || !tokenDataSecond.addr || error"
+                  style="width: 48%; border-radius: 50px; margin-left: 10px;">
+            {{ 'create-pair.approve' | translate }} {{tokenDataSecond.symbol}}
+          </button>
+        </div>
+          <div *ngIf="error2" class="val-rejected separator" style="color:#fff; ">
+            {{ errorText2 | translate }}
+          </div>
+
+        <div class="frame-info separator">{{ 'create-pair.explainApprovePair' | translate }}</div>
+
+        <div class="separator-big">
+          <button mat-button matStepperPrevious style="border-radius: 50px;"><mat-icon>keyboard_arrow_up</mat-icon> {{ 'create-pair.previous' | translate }}</button>
+          <button mat-flat-button color="primary" [disabled]="!token1Approved || !token2Approved" matStepperNext style="border-radius: 50px;"><mat-icon>keyboard_arrow_down</mat-icon>{{ 'create-pair.next' | translate }}</button>
+        </div>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="form3.control">
+      <ng-template matStepLabel>{{ 'create-pair.addLiquidity' | translate }}</ng-template>
+
+      <!-- add Pair Liquidity -->
+
+       <form class="separator" name="form" #form3="ngForm">
+
+        <div class="separator" style="text-align: center;">
+          <div><img src="{{tokenDataFirst.logoURI}}" style="width: 25px; height: 25px;">&nbsp;{{tokenDataFirst.symbol}} - {{ tokenDataFirst.addr }}</div>
+          <div>{{ 'create-pair.yourBalance' | translate }}: {{tokenDataFirst.balance}}</div>
+          <div class="separator"></div>
+          <div>
+            <input matInput name="inputFirst" [ngClass]="{'supplyError': tokenDataFirst.balance < token1Supply}"
+                   class="form-big-lp" #inputFirst="ngModel" [(ngModel)]="token1Supply" placeholder="0.0" autocomplete="off"
+                   [disabled]="!isConnected || !token1Approved || !token2Approved || !tokenDataFirst.addr || !tokenDataSecond.addr"
+                   type="number" required />
+          </div>
+
+        </div>
+
+        <div class="container-center separator" style="text-align: center; display: flex;">
+          <mat-icon color="primary" style="font-size: 45px; font-weight: 900; margin-right: 20px;">add</mat-icon>
+        </div>
+
+        <div class="separator-big" style="text-align: center;">
+          <div><img src="{{tokenDataSecond.logoURI}}" style="width: 25px; height: 25px;">&nbsp;{{tokenDataSecond.symbol}} - {{ tokenDataSecond.addr }}</div>
+          <div>{{ 'create-pair.yourBalance' | translate }}: {{tokenDataSecond.balance}}</div>
+          <div class="separator"></div>
+          <div>
+            <input matInput name="inputSecond" [ngClass]="{'supplyError': tokenDataSecond.balance < token2Supply}"
+                   class="form-big-lp" #inputSecond="ngModel" [(ngModel)]="token2Supply" placeholder="0.0" autocomplete="off"
+                   [disabled]="!isConnected || !token1Approved || !token2Approved || !tokenDataFirst.addr || !tokenDataSecond.addr"
+                   type="number" required />
+          </div>
+        </div>
+
+        <!--pool explain-->
+         <div *ngIf="error3 || tokenDataFirst.balance < token1Supply || tokenDataSecond.balance < token2Supply" class="val-rejected separator" style="color:#fff; ">
+           {{ errorText3 | translate }}
+         </div>
+         <div *ngIf="error31" class="val-rejected separator" style="color:#fff; ">
+           {{ errorText31 | translate }}
+         </div>
+
+        <div class="frame-info separator">
+          {{ 'create-pair.approveTokensExplain' | translate }}
+        </div>
+
+         <!--Supply Button-->
+
+        <div class="separator-big container-colum">
+
+          <button mat-flat-button class="btn-title" style="float: inherit; width: 100%;" color="primary"
+            type="submit"
+            [disabled]="!form3.valid || !tokenDataFirst.addr || token1Supply <= 0 || !token1Supply || !tokenDataSecond.addr || token2Supply <= 0 || !token2Supply || !token1Approved || !token2Approved || !isConnected"
+            (click)="submitAmounts()">
+            <mat-icon>create</mat-icon> {{ 'create-pair.supply' | translate}}
+          </button>
+        </div>
+      </form>
+
+    </mat-step>
+  </mat-vertical-stepper>
+

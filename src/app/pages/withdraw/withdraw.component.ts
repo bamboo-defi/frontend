@@ -6,8 +6,11 @@ import {TokenData} from 'src/app/interfaces/contracts';
 import BigNumber from 'bignumber.js';
 import {PandaspinnerComponent} from '../pandaspinner/pandaspinner.component';
 import {AlertService} from '../../_alert';
+import { PandaSpinnerService } from '../pandaspinner/pandaspinner.service';
+import { UtilService } from 'src/app/services/contracts/utils/util.service';
 
-const FLOOR_DECIMALS = 1000000;
+const FLOOR_DECIMALS = 1000000000000000000;
+const NUMBER_DECIMALS = 18;
 
 @Component({
   selector: 'app-withdraw',
@@ -20,8 +23,9 @@ export class WithdrawComponent implements OnInit {
   noDeal = false;
   id: string;
   unstakeAmmount: string;
-  available: number;
+  available: string;
   maxSeeds: number;
+  reward: number;
 
   tokenData: TokenData;
 
@@ -31,7 +35,9 @@ export class WithdrawComponent implements OnInit {
     private tokenService: TokenService,
     public dialogRef: MatDialogRef<WithdrawComponent>,
     public dialogPandaSpinner: MatDialog,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pandaSpinnerService: PandaSpinnerService,
+    private utilsService: UtilService
   ) {
   }
 
@@ -42,39 +48,20 @@ export class WithdrawComponent implements OnInit {
   // Get available SLP tokens to withdraw
   async getAvailable(id, address): Promise<void> {
     this.tokenData = await this.tokenService.getTokenData(address);
-    this.available = Number(Math.floor(Number(await this.keeperService.getStakedLP(id, this.tokenData)) * FLOOR_DECIMALS) / FLOOR_DECIMALS);
+    const data = await this.keeperService.getStakedLP(id, this.tokenData);
+    this.available = Number(data.toFixed(NUMBER_DECIMALS)) > 0 ? data.toFixed(NUMBER_DECIMALS) : '0';
+    this.reward = this.data.row.reward;
   }
 
   // Set max ammount of seeds. Need Service
-  setMaxSeeds() {
-    this.unstakeAmmount = this.available.toString();
+  setMaxSeeds(): void {
+    this.unstakeAmmount = this.available;
   }
 
   // Generates SLP deposit in the pool
   async withdrawSlp(): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
-    try {
-      const receipt = await this.keeperService.withdrawLP(this.data.row.id, new BigNumber(this.unstakeAmmount), this.tokenData);
-      this.ok = true;
-      this.dialogRef.close(this.ok);
-      this.alertService.success('Success');
-    } catch (error) {
-      this.alertService.error('Error: ' + error.message);
-    } finally {
-      this.dialogRef.close();
-      dialogPandaSpinner.close();
-    }
-  }
-
-  /**
-   * PandaSpinner Dialog
-   */
-  private getDialogPandaSpinner(): any {
-    return this.dialogPandaSpinner.open(PandaspinnerComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      panelClass: 'panda-spinner'
-    });
+    const amount = new BigNumber(this.unstakeAmmount);
+    this.dialogRef.close({amount, tokenData: this.tokenData});
   }
 
 }

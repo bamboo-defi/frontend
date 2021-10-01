@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {Vault} from 'src/app/interfaces/vault';
-import { BbypService } from 'src/app/services/contracts/bbyp/bbyp.service';
-import {TokenService} from 'src/app/services/contracts/token/token.service';
-import {environment} from 'src/environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { Vault } from 'src/app/interfaces/vault';
+import {ServiceService} from '../../services/service.service';
+import { environment } from 'src/environments/environment';
 
 const SHOW_DECIMALS = 4;
 
@@ -15,20 +14,13 @@ export class BamboovaultComponent implements OnInit {
   isWait = false;
 
   charityLink = 'http://www.pandahome.org/e/ensearch/index.php?keyboard=bamboodefi';
-  vault: Vault = {
-    feesActual: 0,
-    fees24: 0,
-    charityActual: 0,
-    charityTotal: 0,
-    burnedTotal: 0,
-    developersTotal: 0,
-    balance: 0,
-    totalBBYP: 0,
-  };
+  vault: Vault;
 
   bambooVaultWallet = environment.bambooVaultWallet;
 
-  constructor(private tokenService: TokenService, private bbypService: BbypService) {
+  constructor(
+    private serviceService: ServiceService
+  ) {
   }
 
   ngOnInit(): void {
@@ -39,11 +31,11 @@ export class BamboovaultComponent implements OnInit {
    * Get Vault data
    */
   async vaultData(): Promise<void> {
-    const wallet = await this.tokenService.getBAMBOOData(this.bambooVaultWallet);
-    this.vault.balance = Number(wallet.balance.toFixed(SHOW_DECIMALS));
-    this.vault.developersTotal = Number((this.vault.balance * 0.85).toFixed(SHOW_DECIMALS));
-    this.vault.charityTotal = Number((this.vault.balance * 0.05).toFixed(SHOW_DECIMALS));
-    this.vault.totalBBYP = Number((await this.bbypService.getPrizePool()).toFixed(SHOW_DECIMALS));
+    this.serviceService.getBambooVault().subscribe(
+      async (res) => {
+        this.vault = res.vault;
+      }
+    );
   }
 
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Bamboo } from 'src/app/interfaces/bamboo';
-import { ContractService } from 'src/app/services/contracts/contract.service';
+import {ServiceService} from '../../services/service.service';
 
 @Component({
   selector: 'app-sumary',
@@ -11,7 +11,7 @@ export class SumaryComponent implements OnInit {
 
   bamboo: Bamboo;
 
-  constructor(private contractService: ContractService) { }
+  constructor(private service: ServiceService) { }
 
   ngOnInit(): void {
 
@@ -22,12 +22,17 @@ export class SumaryComponent implements OnInit {
       porcentajeLiquidity: 0.00,
       fees: 0.0,
     };
-    //this.getValuesForBamboo();
+    this.getValuesForBamboo();
   }
 
   async getValuesForBamboo(): Promise<void> {
-    this.bamboo.valor = await this.contractService.getBambooValueInUSDT();
-    this.bamboo.liquidity = await this.contractService.getLiquidityInUSDT();
+    this.service.getBambooGlobalMarket().subscribe(
+      res => {
+        this.bamboo.valor = res.market.bambooPrice;
+        this.bamboo.liquidity = res.market.bambooLiquidity;
+        this.bamboo.fees = res.market.bambooFeesDay;
+      }
+    );
   }
 
 }

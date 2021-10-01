@@ -1,0 +1,66 @@
+<div style="overflow: auto; height: 550px;">
+  <div style="display: flex; justify-content: space-between; color:primary" class="big-text">{{ 'tokens.selectToken' | translate }} <span (click)="onNoClick()"><mat-icon>close</mat-icon></span></div>
+  <mat-form-field>
+    <mat-label>{{ 'tokens.search' | translate }}</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="{{ 'tokens.search' | translate }}">
+  </mat-form-field>
+    <div style=" height: 200px; width: 430px;max-width: 100%; overflow: auto;">
+      <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+        <ng-container matColumnDef="logo">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.tokenName' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            <img src="{{token.logoURI}}" alt="logo" style="width: 20px; height: 20px; margin-right: 20px;">
+            {{token.symbol | uppercase}} &nbsp; {{token.name | uppercase}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="tokenName">
+          <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            {{token.name | uppercase}}
+          </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef="ammount">
+          <mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'tokens.tokenAmmount' | translate }}</mat-header-cell>
+          <mat-cell *matCellDef="let token">
+            <ng-container *ngFor="let walletAmmount of wallet">
+              {{walletAmmount.ammount}}
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container>
+          <!-- <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row> -->
+          <mat-row *matRowDef="let token; columns: displayedColumns;" class="client-row" [mat-dialog-close]="token"
+            (click)="$event.stopPropagation()" (change)="$event ? data.token : null" cdkFocusInitial></mat-row>
+        </ng-container>
+
+
+      </mat-table>
+    </div>
+  <div class="separator"></div>
+  <div class="frame-info">
+    {{ 'tokens.selectFromAddress' | translate}}
+  </div>
+  <div class="input-form">
+
+      <input matInput
+      #tokenAdress = "ngModel"
+      name="tokenAdress"
+      [(ngModel)]="data.address"
+
+      placeholder="{{ 'tokens.setAddress' | translate }}"
+      style="margin-left: 10px;">
+
+  </div>
+  <div>
+    <button mat-flat-button color="primary" [disabled]="!data" (click)="getTokenByAddress(data.address)" class="btn-title" style="width: 100%;">
+      <mat-icon>check</mat-icon>{{ 'tokens.setToken' | translate }}
+    </button>
+  </div>
+  <div class="separator"></div>
+
+</div>

@@ -96,6 +96,12 @@
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe>
           </mat-tab>
+          <mat-tab label="{{ 'information.useGuides' | translate }}">
+            <app-guide></app-guide>
+          </mat-tab>
+          <mat-tab label="{{ 'Branding' | translate }}">
+            <app-branding></app-branding>
+          </mat-tab>
         </mat-tab-group>
       </mat-card-content>
     </mat-card>

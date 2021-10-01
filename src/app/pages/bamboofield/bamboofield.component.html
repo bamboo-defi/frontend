@@ -10,47 +10,70 @@
   </div>
 </div>
 <div *ngIf="!isWait">
-  <div class="container">
+  <div class="container" style="width: 340px;">
     <div class="separator-big item-field">
-      <mat-card class="mat-elevation-z5">
+      <mat-card class="mat-elevation-z5" *ngIf="seeds.seeds">
         <mat-card-title>
           {{ 'field.seeds' | translate }}
         </mat-card-title>
         <mat-card-content>
-          <div *ngIf="seeds.seeds; else noSeed" class="separator-big"
-               style="display: flex; align-items: center; justify-content: center;">
-            <span class="form-big">{{seeds.seeds}} </span><img src="assets/semillas.png" width="60px" height="auto">
-          </div>
-          <ng-template #noSeed>
-            <div class="separator-big">
-              <span class="form-big">0.0 </span><img src="assets/semillas.png" width="60px" height="auto">
+          <div >
+            <div class="separator-big"
+                style="display: flex; align-items: center; justify-content: center;">
+              <span class="form-big">{{seeds.seeds}} </span><img src="assets/semillas.png" width="60px" height="auto">
             </div>
-          </ng-template>
-          <div class="separator-big">
-            <button mat-flat-button color="primary" class="btn-field" [disabled]="!seeds.seedsToHarvest"
-                    (click)="harvest()">{{ 'field.harvest' | translate }}</button>
-          </div>
 
-          <div class="separator-big" *ngIf="seeds.stake">
-            <button mat-flat-button color="primary" class="btn-field"
-                    (click)="getMoreSeeds()">{{ 'field.getMore' | translate }}</button>
+            <div class="separator-big" style="display: flex;justify-content: space-between;">
+              <button mat-flat-button color="primary" class="btn-field" [disabled]="!seeds.seedsToHarvest || !couldWithdraw"
+                  (click)="harvest()">{{ 'field.harvest' | translate }}</button>
+              <button mat-flat-button color="primary" class="btn-field"
+                  (click)="getMoreSeeds()">{{ 'field.getMore' | translate }}</button>
+            </div>
+
           </div>
-        </mat-card-content>
+          <div class="separator-big"></div>
+          <div style="display: flex; justify-content: center;">
+            <mat-progress-spinner
+              [style.background-image]="'url(./assets/bamboo-face256.png)'"
+              [style.background-repeat]="'no-repeat'"
+              [style.background-position]="'center'"
+              [style.background-size]="'75%'"
+              [color]="color"
+              [mode]="mode"
+              [value]="value">
+            </mat-progress-spinner>
+          </div>
+          <div *ngIf="!couldWithdraw">
+            <div style="text-align: center;" class="separator">
+              <p>Date to Withdraw:</p>
+            </div>
+            <div>
+              <h3> <strong>{{seeds.timeWithdraw | date: 'short'}}</strong></h3>
+            </div>
+          </div>
+          <div *ngIf="couldWithdraw">
+            {{ 'atWithdraw' | translate }}When you withdraw, you harvest and claim all Bamboo and seeds ammount.
+          </div>
+          <div class="separator-big" style="text-align: center;">
+            <button mat-flat-button color="primary" class="btn-field" style="width: 100%;" [disabled]="!couldWithdraw"
+                    (click)="withdrawBamboo()">{{ 'field.withdraw' | translate }}</button>
+          </div>
+          </mat-card-content>
       </mat-card>
     </div>
 
     <div class="separator-big item-field">
-      <mat-card class="mat-elevation-z5">
+      <mat-card class="mat-elevation-z5" *ngIf="!seeds.seeds">
         <mat-card-title>
           {{ 'field.field' | translate }}
         </mat-card-title>
         <mat-card-content>
-          <div class="separator-big tex-big" *ngIf="bambooRegistered; else noStaked" style="height: auto">
-            {{seeds.stake}} <img src="assets/bamboo-head.png" width="60px" height="60px">
-          </div>
-          <ng-template #noStaked>
+          <div class="separator"></div>
             <form name="form" #f="ngForm" (ngSubmit)="f.form.valid && stakeNew>=2000 && registerBamboo()">
-              <div style="display: flex;  align-items: center; justify-content: center;">
+              <div style="display: flex;  align-items: center; justify-content: left; margin: 15px;">
+                <div>
+                  <img matSuffix src="assets/bamboo-head.png" width="60px" height="60px" style="margin-right: 10px;">
+                </div>
                 <div>
                   <input matInput
                          name="toStakeFieldAmount"
@@ -61,41 +84,82 @@
                          (change)="$event ? isError() : null"
                          [minlength]="3"
                          [maxlength]="10"
-                         style="text-align:center;"
+                         style="text-align:left;"
                          class="form-big"
                          type="number"
                          required>
                 </div>
-                <div>
-                  <img matSuffix src="assets/bamboo-head.png" width="60px" height="60px">
+              </div>
+
+                <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows class="table-pool">
+
+                  <ng-container matColumnDef="title" sticky>
+                    <mat-header-cell *matHeaderCellDef mat-header></mat-header-cell>
+                    <mat-cell *matCellDef="let pool" style="display: flex; justify-content: center;">
+                        <div >
+                          <img src="{{pool.logoTokenFirst}}" alt="" width="30px" height="auto">
+                          <img src="{{pool.logoTokenSecond}}" alt="" style="margin-left: -2px;" width="30px" height="auto">
+                        </div>
+                        <div style="display: flex; margin-left: 10px;" >
+                          {{pool.underlyingTokenFirst}}&nbsp;/&nbsp;{{pool.underlyingTokenSecond}}&nbsp; <mat-icon style="font-size: 20px;">check</mat-icon>
+                        </div>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- <ng-container matColumnDef="back" sticky >
+                    <mat-header-cell *matHeaderCellDef mat-header></mat-header-cell>
+                    <mat-cell *matCellDef="let pool" style="text-align: right; display: flex;justify-content: flex-end; align-items: center;">
+                      <button mat-flat-button color="primary" (click)="goBackToPools()" class="btn-title">
+                        <mat-icon>undo</mat-icon>&nbsp;{{ 'pool.goToPools' | translate }}
+                      </button>
+                    </mat-cell>
+                  </ng-container> -->
+
+
+                   <ng-container>
+                    <mat-header-row *matHeaderRowDef="displayedColumns" style="border-bottom-width: 0px; display: none;"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"
+                    [class.notRow]="!row.staked"
+                    class="rowSelect"
+                    style="align-items: stretch;"
+                    (click)="selectPoolToField(row)"
+                    ></mat-row>
+                  </ng-container>
+
+                </mat-table>
+
+                <div *ngIf="selected" style="display: flex; justify-content: center;" class="separator">
+                  <button mat-flat-button color="accent" (click)="goBackToPools()" class="btn-title">
+                    <mat-icon>undo</mat-icon>&nbsp;{{ 'pool.goToPools' | translate }}
+                  </button>
                 </div>
-              </div>
-              <div class="separator"></div>
-              <div class="select-container">
-                <mat-label>{{ 'field.selectPool' | translate }}</mat-label>
-                <mat-select [(ngModel)]="pool" name="pool">
-                  <mat-option *ngFor="let pool of pools" [value]="pool">
-                    <img src="{{pool.logoTokenFirst}}" alt="pool.logoTokenFirst" width="25px" height="auto">
-                    <img src="{{pool.logoTokenSecond}}" alt="pool.logoTokenSecond" width="25px"
-                         height="auto"> {{pool.underlyingTokenFirst}}/{{pool.underlyingTokenSecond}}
-                  </mat-option>
-                </mat-select>
-              </div>
-              <div class="separator-big">
+                              <div class="separator-big">
                 <button mat-flat-button color="primary" class="btn-field" type="submit"
                         [disabled]="!f.valid || stakeNew<=2000 || !pool || isConnect=='disconnected' || error">{{ 'field.approve' | translate }}</button>
                 <div *ngIf="error" color="warn" class="error-field"
                      type="error">{{ 'field.youNeedMore' | translate }}</div>
               </div>
             </form>
-          </ng-template>
+            <div class="separator"></div>
+            <mat-accordion>
+              <mat-expansion-panel style="border-radius: 15px; background: rgba(0,0,0,.12);">
+                <mat-expansion-panel-header>
+                  <mat-panel-title style="display: flex; align-items: center;">
+                    <mat-icon style="color:grey">help_outline</mat-icon>&nbsp;{{ 'field.knowMore' | translate }}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="separator"></div>
+                <div [innerHTML]="'field.disclaimer' | translate "></div>
+
+              </mat-expansion-panel>
+            </mat-accordion>
+
+            <!-- <mat-card class="separator" style="background-color: rgba(0,0,0,.12);"><mat-card-content >{{ 'field.disclaimer' | translate }}</mat-card-content></mat-card> -->
 
         </mat-card-content>
       </mat-card>
     </div>
   </div>
-  <div class="separator-big" style="text-align: center;">
-    <button mat-flat-button color="primary" class="btn-field" [disabled]="!couldWithdraw"
-            (click)="withdrawBamboo()">{{ 'field.withdraw' | translate }}</button>
-  </div>
+
 </div>
+

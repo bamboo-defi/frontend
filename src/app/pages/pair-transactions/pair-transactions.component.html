@@ -1,27 +1,40 @@
 <div>
-  <h2>{{ 'pair.transactionTable' | translate }}</h2>
+  <h2>{{ 'pair.transactionTable' | translate }}
+    <mat-icon
+    matTooltip="Refresh rate 10 minutes"
+    matTooltipPosition="right"
+    matTooltipClass="tooltip-style"
+    >info</mat-icon></h2>
+
 </div>
-<div>
+<div class="tr-table-btn">
   {{ 'pair.selectType' | translate }}
-  <button mat-flat-button color="primary" class="btn-title"
+  <button mat-flat-button color="primary" class="btn-title btn-tx"
           (click)="getTransactions('')">{{ 'pair.all' | translate }}</button>
-  <button mat-flat-button color="primary" class="btn-title"
+  <button mat-flat-button color="primary" class="btn-title btn-tx"
           (click)="getTransactions('SWAP')">{{ 'pair.swaps' | translate }}</button>
-  <button mat-flat-button color="primary" class="btn-title"
+  <button mat-flat-button color="primary" class="btn-title btn-tx"
           (click)="getTransactions('ADD')">{{ 'pair.adds' | translate }}</button>
-  <button mat-flat-button color="primary" class="btn-title"
+  <button mat-flat-button color="primary" class="btn-title btn-tx"
           (click)="getTransactions('REMOVE')">{{ 'pair.removes' | translate }}</button>
 </div>
 <div>
   <mat-table *ngIf="dataSource" [dataSource]="dataSource" matSort multiTemplateDataRows>
+    <!--Transactions-->
     <ng-container matColumnDef="name">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ 'pair.transactions' | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let pair">
-        {{pair.type}} {{ pair.name }}
+        <ng-container *ngIf="token1 == pair.tokenName1 && pair.type == 'SWAP'"><span class="negative"><strong>{{ 'pair.sell' | translate }}</strong></span></ng-container>
+        <ng-container *ngIf="token1 == pair.tokenName2 && pair.type == 'SWAP'"><span class="positive"><strong>{{ 'pair.buy' | translate }}</strong></span></ng-container>
+        <ng-container *ngIf="pair.type == 'ADD'"><strong>{{ 'pair.add' | translate }}</strong></ng-container>
+        <ng-container *ngIf="pair.type == 'REMOVE'"><strong>{{ 'pair.remove' | translate }}</strong></ng-container>
       </mat-cell>
     </ng-container>
+
+    <!--Value not used-->
+
     <ng-container matColumnDef="totalValue">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ 'pair.totalValue' | translate }}
@@ -30,42 +43,177 @@
         {{ pair.totalValue | currency:'USD'}}
       </mat-cell>
     </ng-container>
+
+    <!--Ammount token 1-->
+
     <ng-container matColumnDef="tokenAmmount1">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ 'pair.tokenAmmount' | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let pair">
-        {{ pair.tokenAmmount1 }}  {{ pair.tokenName1 }}
+        <span style="font-weight: 500;">{{ pair.tokenAmmount1 }}</span>&nbsp;  {{ pair.tokenName1 }}&nbsp;
+        <img *ngIf="pair.tokenName1 == token1" src="{{tokenLogo1}}" style="width: 25px; height: 25px;">
+        <img *ngIf="pair.tokenName1 == token2" src="{{tokenLogo2}}" style="width: 25px; height: 25px;">
       </mat-cell>
     </ng-container>
+
+    <!--Sign-->
+
+    <ng-container matColumnDef="sign">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let pair">
+        <ng-container *ngIf="token1 == pair.tokenName1 && pair.type == 'SWAP'"><mat-icon class="negative">arrow_forward</mat-icon></ng-container>
+        <ng-container *ngIf="token1 == pair.tokenName2 && pair.type == 'SWAP'"><mat-icon class="positive">arrow_forward</mat-icon></ng-container>
+        <ng-container *ngIf="pair.type == 'ADD'" ><mat-icon>add</mat-icon></ng-container>
+        <ng-container *ngIf="pair.type == 'REMOVE'" ><mat-icon>remove</mat-icon></ng-container>
+      </mat-cell>
+    </ng-container>
+
+    <!--Ammount Token 2-->
+
     <ng-container matColumnDef="tokenAmmount2">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ 'pair.tokenAmmount' | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let pair">
-        {{ pair.tokenAmmount2 }} {{ pair.tokenName2 }}
-      </mat-cell>
+        <span style="font-weight: 500;">{{ pair.tokenAmmount2 }}</span>&nbsp; {{ pair.tokenName2 }}&nbsp;
+        <img *ngIf="pair.tokenName2 == token1" src="{{tokenLogo1}}" style="width: 25px; height: 25px;">
+        <img *ngIf="pair.tokenName2 == token2" src="{{tokenLogo2}}" style="width: 25px; height: 25px;">
+       </mat-cell>
     </ng-container>
+
+    <!--Others - links -->
     <ng-container matColumnDef="account">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ 'pair.account' | translate }}
+        {{ 'pair.others' | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let pair">
-        <a href="https://etherscan.io/tx/{{pair.account}}" target="_blank">{{ pair.account }}</a>
+        <a href="{{link}}/tx/{{pair.hash}}" target="_blank"><img src="/assets/{{logoNetwork}}" alt="logo" style="width: 25px; height: 25px;"></a>
+        <a href="{{link}}/address/{{pair.from}}" target="_blank" color="primary">
+          <mat-icon color="primary" *ngIf="!pair.contractAddress" style="width: 25px; height: 25px;">person</mat-icon>
+        </a>
+        <a href="{{link}}/tx/{{pair.contractAddress}}" target="_blank" color="primary">
+          <mat-icon *ngIf="pair.contractAddress" style="width: 25px; height: 25px;">precision_manufacturing</mat-icon>
+        </a>
+        <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon color="primary" style="width: 30px; height: 30px;">info</mat-icon></button>
+
       </mat-cell>
     </ng-container>
+
+    <!--TimeStamp-->
+
     <ng-container matColumnDef="timeStamp" style="display: flex; justify-content: end;">
       <mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ 'pair.timeStamp' | translate }}
       </mat-header-cell>
       <mat-cell *matCellDef="let pair">
-        {{ pair.timeStamp * 1000 | date }}
+        {{ pair.timeStamp * 1000 | date: 'short' }}
       </mat-cell>
     </ng-container>
+
+    <!--Expanded Detail-->
+
+    <ng-container matColumnDef="expandedDetail">
+      <mat-cell *matCellDef="let pair" [attr.colspan]="displayedColumns.length" class="container-detail">
+      <div class="client-detail"
+      [@detailExpand]="pair == expandedClient ? 'expanded' : 'collapsed'">
+            <div style="padding: 10px;">
+              <div>{{ 'pair.wallet' | translate}}: <a href="{{link}}/address/{{pair.from}}" target="_blank" rel="noopener noreferrer">{{ pair.from }}</a></div>
+              <div *ngIf="buys == 0 && sells == 0" class="menu-tx">{{ 'pair.notOperations' | translate }}</div>
+              <div *ngIf="buys != 0" class="menu-tx"> <span class="positive">{{ buys }}&nbsp;{{ 'pair.totalBuys' | translate }}</span> {{ 'pair.totalAmmount' | translate }} {{ totalBuys }} <img src="{{tokenLogo1}}" style="width: 20px; height: 20px;"></div>
+              <div *ngIf="sells != 0" class="menu-tx"> <span class="negative">{{ sells }}&nbsp;{{ 'pair.totalSells' | translate }}</span> {{ 'pair.totalAmmount' | translate }} {{ totalSells }} <img src="{{tokenLogo1}}" style="width: 20px; height: 20px;"></div>
+            </div>
+
+            <!--Table expanded-->
+            <mat-table *ngIf="dataWallet" [dataSource]="dataWallet" matSort multiTemplateDataRows class="tableTx">
+              <!--Transaction type-->
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'pair.transactions' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let pair">
+                  <ng-container *ngIf="token1 == pair.tokenName1 && pair.type == 'SWAP'"><span class="negative"><strong>{{ 'pair.sell' | translate }}</strong></span></ng-container>
+                  <ng-container *ngIf="token1 == pair.tokenName2 && pair.type == 'SWAP'"><span class="positive"><strong>{{ 'pair.buy' | translate }}</strong></span></ng-container>
+                  <ng-container *ngIf="pair.type == 'ADD'"><strong>{{ 'pair.add' | translate }}</strong></ng-container>
+                  <ng-container *ngIf="pair.type == 'REMOVE'"><strong>{{ 'pair.remove' | translate }}</strong></ng-container>
+                </mat-cell>
+              </ng-container>
+              <!--Ammount Token 1-->
+              <ng-container matColumnDef="tokenAmmount1">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'pair.tokenAmmount' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let pair">
+                  <span style="font-weight: 500;">{{ pair.tokenAmmount1 }}</span>&nbsp;  {{ pair.tokenName1 }}&nbsp;
+                  <img *ngIf="pair.tokenName1 == token1" src="{{tokenLogo1}}" style="width: 25px; height: 25px;">
+                  <img *ngIf="pair.tokenName1 == token2" src="{{tokenLogo2}}" style="width: 25px; height: 25px;">
+                </mat-cell>
+              </ng-container>
+              <!--Sign-->
+              <ng-container matColumnDef="sign">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let pair">
+                  <ng-container *ngIf="token1 == pair.tokenName1 && pair.type == 'SWAP'"><mat-icon class="negative">arrow_forward</mat-icon></ng-container>
+                  <ng-container *ngIf="token1 == pair.tokenName2 && pair.type == 'SWAP'"><mat-icon class="positive">arrow_forward</mat-icon></ng-container>
+                  <ng-container *ngIf="pair.type == 'ADD'" ><mat-icon>add</mat-icon></ng-container>
+                  <ng-container *ngIf="pair.type == 'REMOVE'" ><mat-icon>remove</mat-icon></ng-container>
+                </mat-cell>
+              </ng-container>
+              <!--Ammount Token 2-->
+              <ng-container matColumnDef="tokenAmmount2">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'pair.tokenAmmount' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let pair">
+                  <span style="font-weight: 500;">{{ pair.tokenAmmount2 }}</span>&nbsp; {{ pair.tokenName2 }}&nbsp;
+                  <img *ngIf="pair.tokenName2 == token1" src="{{tokenLogo1}}" style="width: 25px; height: 25px;">
+                  <img *ngIf="pair.tokenName2 == token2" src="{{tokenLogo2}}" style="width: 25px; height: 25px;">
+                 </mat-cell>
+              </ng-container>
+              <!--TimeStamp-->
+              <ng-container matColumnDef="timeStamp" style="display: flex; justify-content: end;">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'pair.timeStamp' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let pair">
+                  {{ pair.timeStamp * 1000 | date: 'short'}}
+                </mat-cell>
+              </ng-container>
+              <!--Others - links -->
+              <ng-container matColumnDef="account">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>
+                  {{ 'pair.view' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let pair">
+                  <a href="{{link}}/tx/{{pair.hash}}" target="_blank"><img src="/assets/{{logoNetwork}}" alt="logo" style="width: 25px; height: 25px;"></a>
+                </mat-cell>
+              </ng-container>
+
+              <!--Rows-->
+              <ng-container>
+                <mat-header-row *matHeaderRowDef="displayedWalletColumns; sticky: true" style="width: 100%;"></mat-header-row>
+                <mat-row *matRowDef="let pair; columns: displayedWalletColumns;" class="client-row"></mat-row>
+              </ng-container>
+            </mat-table>
+      </div>
+      </mat-cell>
+   </ng-container>
+
+    <!--Rows-->
     <ng-container>
       <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true" style="width: 100%;"></mat-header-row>
-      <mat-row *matRowDef="let pair; columns: displayedColumns;" class=""></mat-row>
+      <mat-row *matRowDef="let pair; columns: displayedColumns;" class="client-row"
+      [class.expanded-row]="expandedClient === pair"
+      (click)="expandedClient = expandedClient === pair ? null : pair; getFromInformation(pair.from, token1, pair.tokenName1, pair.type)"></mat-row>
+      <mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></mat-row>
     </ng-container>
   </mat-table>
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+  <mat-menu #menu="matMenu" >
+    <div *ngIf="buys == 0 && sells == 0" class="menu-tx">{{ 'pair.notOperations' | translate }}</div>
+    <div *ngIf="buys != 0" class="menu-tx"> <span class="positive">{{ buys }}&nbsp;{{ 'pair.totalBuys' | translate }}</span> {{ 'pair.totalAmmount' | translate }} {{ totalBuys }} <img src="{{tokenLogo1}}" style="width: 20px; height: 20px;"></div>
+    <div *ngIf="sells != 0" class="menu-tx"> <span class="negative">{{ sells }}&nbsp;{{ 'pair.totalSells' | translate }}</span> {{ 'pair.totalAmmount' | translate }} {{ totalSells }} <img src="{{tokenLogo1}}" style="width: 20px; height: 20px;"></div>
+  </mat-menu>
 </div>

@@ -7,79 +7,50 @@
     <div class="resume">
       {{ 'governance.resume' | translate }}
       <br>
-      <img src="/assets/comming-soon.png" width="150px">
+      <div class="separator"></div>
+      <a href="{{linkNewProposal}}" target="_blank">
+        <button mat-flat-button style="width: 100%;" class="btn-active">{{ 'governance.setNew' | translate }}</button>
+      </a>
     </div>
   </div>
 </div>
 
-<!--
-<mat-card class="mat-elevation-z6 separator-big">
-  <mat-card-header style="height: 175px;">
-  <div mat-card-avatar class="panda-image"></div>
-  <mat-card-title>{{ 'governance.proposals' | translate }}</mat-card-title>
-  <mat-card-subtitle>{{ 'governance.voteProposalsExplain' | translate }}</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item *ngFor="let proposition of propositions" class="prop-tile">
-        <ng-container *ngIf="proposition.isValidate">
-        <mat-card  class="prop-card mat-elevation-z3">
-          <div class="prop-item">
-            <div class="prop-tex">
-              {{ proposition.proposition }}
-            </div>
-            <div class="prop-votes">
-                <mat-slider
-                  class="votesSlider"
-                  [max]="proposition.voteTotal / 100"
-                  [min]="0"
-                  [step]="1"
-                  [value]= "proposition.voteOk / 100"
-                  class="prop-slider">
-              </mat-slider>
-              <div class="prop-legend"><span class="vote-ok">{{ proposition.voteOk }} {{ 'governance.voteOk' | translate }}</span> |<span class="vote-no"> {{ 'governance.voteNo' | translate }} {{ proposition.voteNo}}</span></div>
-              <div class="prop-btn">
-                <button mat-flat-button color="accent" (click)="approve()" class="btn-title"><mat-icon>thumb_up</mat-icon> {{ 'governance.approve' | translate }}</button>
-                <button mat-flat-button color="warn" (click)="deny()" class="btn-title"><mat-icon>thumb_down</mat-icon> {{ 'governance.deny' | translate }}</button>
-              </div>
-            </div>
-          </div>
-        </mat-card>
-      </ng-container>
-      </mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
-
-
-<mat-card class="mat-elevation-z6 separator-big">
-  <mat-card-title>{{ 'governance.pendingValidateList' | translate }}</mat-card-title>
-  <mat-card-subtitle>{{ 'governance.pendingValidateExplanation' | translate }}</mat-card-subtitle>
-  <mat-card-content>
-    <div>
-      <button mat-flat-button color="primary" (click)="createProposal()" class="new-prop"><mat-icon>create</mat-icon>{{ 'createPoposal' | translate }}</button>
+<div>
+  <button mat-flat-button class="btn-active" style="margin: 10px;"
+          (click)="selectList('active')">{{ 'governance.active' | translate}}</button>
+  <button mat-flat-button class="btn-pending" style="margin: 10px;"
+          (click)="selectList('pending')">{{ 'governance.pending' | translate}}</button>
+  <button mat-flat-button class="btn-closed" style="margin: 10px;"
+          (click)="selectList('closed')">{{ 'governance.closed' | translate}}</button>
+  <button mat-flat-button color="primary" style="margin: 10px; border-radius: 15px;"
+          (click)="selectList('all')">{{ 'governance.all' | translate}}</button>
+</div>
+<mat-list>
+  <mat-list-item *ngFor="let proposition of proposals" class="prop-card mat-elevation-z5">
+    <div class="val-item">
+      <div class="prop-tex">
+        <div class="prop-title"><b>{{ proposition.title }}</b></div>
+        <div class="prop-body">{{ proposition.body }}</div>
+        <div>{{ 'governance.start' | translate }}:
+          <strong>{{ proposition.start * 1000 |  date: 'dd/MM/yyyy' }}</strong> {{ 'governance.end' | translate }}:
+          <strong>{{ proposition.end * 1000 |  date: 'dd/MM/yyyy' }}</strong></div>
+        <div *ngIf="proposition.start < timestamp">{{ 'governance.votes' | translate }}: <strong>{{proposition.nVotes}}</strong></div>
+      </div>
+      <div *ngIf="proposition.end > timestamp && proposition.start > timestamp" class="prop-link ">
+        <a href="{{linkProposals}}{{proposition.id}}" target="_blank">
+          <button mat-flat-button class="btn-pending">{{ 'governance.pending' | translate}}</button>
+        </a>
+      </div>
+      <div *ngIf="proposition.end > timestamp && proposition.start < timestamp" class="prop-link">
+        <a href="{{linkProposals}}{{proposition.id}}" target="_blank">
+          <button mat-flat-button class="btn-active">{{ 'governance.active' | translate}}</button>
+        </a>
+      </div>
+      <div *ngIf="proposition.end < timestamp" class="prop-link">
+        <a href="{{linkProposals}}{{proposition.id}}" target="_blank">
+          <button mat-flat-button class="btn-closed">{{ 'governance.closed' | translate}}</button>
+        </a>
+      </div>
     </div>
-
-    <mat-list>
-      <mat-list-item *ngFor="let proposition of propositions" class="prop-tile">
-        <mat-card class="prop-card mat-elevation-z3">
-          <div class="val-item">
-            <div class="prop-tex">
-              {{ proposition.proposition }}
-            </div>
-            <div *ngIf="proposition.isApproved" class="val-approved">
-              {{'governance.isApproved' | translate }}
-            </div>
-            <div *ngIf="!proposition.isRejected && !proposition.isApproved" class="val-pending">
-              {{'governance.inProcessValidation' | translate }}
-            </div>
-            <div *ngIf="proposition.isRejected && !proposition.isApproved" class="val-rejected">
-              {{'governance.isRejected' | translate }}
-            </div>
-          </div>
-        </mat-card>
-      </mat-list-item>
-    </mat-list>
-
-  </mat-card-content>
-</mat-card> -->
+  </mat-list-item>
+</mat-list>

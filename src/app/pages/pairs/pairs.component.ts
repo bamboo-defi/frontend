@@ -1,9 +1,17 @@
-import {trigger, state, style, transition, animate} from '@angular/animations';
-import {SelectionModel} from '@angular/cdk/collections';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {Pair} from 'src/app/interfaces/pair';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { Pair } from 'src/app/interfaces/pair';
+import { PairTransaction } from 'src/app/interfaces/pair-transaction';
+import { Pool } from 'src/app/interfaces/pool';
+import { Volumes } from 'src/app/interfaces/volumes';
+import { ContractService } from 'src/app/services/contracts/contract.service';
+import { TransactionService } from 'src/app/services/front-services/pairs/transaction.service';
+import { ServiceService } from 'src/app/services/service.service';
+import { PairTransactionsComponent } from '../pair-transactions/pair-transactions.component';
 
 @Component({
   selector: 'app-pairs',
@@ -33,79 +41,8 @@ import {Pair} from 'src/app/interfaces/pair';
 })
 export class PairsComponent implements OnInit {
   isWait = false;
-
-  pair: Pair;
-  pairs = [{
-    id: 'idPool2',
-    logoTokenFirst: 'https://raw.githubusercontent.com/bamboo-defi/frontend/main/src/assets/bamboo-head.png',
-    logoTokenSecond: 'https://raw.githubusercontent.com/grupokindynos/kindynos-branding/master/polis/polis-isotype-background-round.png',
-    pairTokenNameFirst: 'TOK',
-    pairTokenNameSecond: 'TOK2',
-    addressTokenFirst: '0x86f725b1a47e6003c19d6675fea0156625d07d61',
-    addressTokenSecond: '0x1377d26E4f427739c0498E748f747f8063Bd675b',
-    pairAddress: '0xF10E6e664E5aE4b8b7d3FD81655d0bcAebB32fF4',
-    liquidity: 0.0,
-    liquidityPercentaje: 0.0,
-    volume24: 0.0,
-    volume24Percentaje: 0.0,
-    volume7: 0.0,
-    volume7Percentaje: 0.0,
-    fees24: 0.0,
-    fees24Percentaje: 0.0,
-    feesYear: 0.0,
-    feesYearPercentaje: 0.0,
-    pairFirstEqualSecond: 0.0,
-    pairSecondEqualFirst: 0.0,
-    ammountFirst: 0.0,
-    ammountSecond: 0.0,
-  }, {
-    id: 'idPool3',
-    logoTokenFirst: 'https://raw.githubusercontent.com/bamboo-defi/frontend/main/src/assets/bamboo-head.png',
-    logoTokenSecond: 'https://raw.githubusercontent.com/grupokindynos/kindynos-branding/master/polis/polis-isotype-background-round.png',
-    pairTokenNameFirst: 'TOK2',
-    pairTokenNameSecond: 'TOK3',
-    addressTokenFirst: '0x1377d26E4f427739c0498E748f747f8063Bd675b',
-    addressTokenSecond: '0x86c3be09eba0f1a674cdd5c7b4ca75ba7028325a',
-    pairAddress: '0xe264945e0EB8e061fAf981d3C82765efd9073B1D',
-    liquidity: 0.0,
-    liquidityPercentaje: 0.0,
-    volume24: 0.0,
-    volume24Percentaje: 0.0,
-    volume7: 0.0,
-    volume7Percentaje: 0.0,
-    fees24: 0.0,
-    fees24Percentaje: 0.0,
-    feesYear: 0.0,
-    feesYearPercentaje: 0.0,
-    pairFirstEqualSecond: 0.0,
-    pairSecondEqualFirst: 0.0,
-    ammountFirst: 0.0,
-    ammountSecond: 0.0,
-  }, {
-    id: 'idPool3',
-    logoTokenFirst: 'https://raw.githubusercontent.com/bamboo-defi/frontend/main/src/assets/bamboo-head.png',
-    logoTokenSecond: 'https://raw.githubusercontent.com/grupokindynos/kindynos-branding/master/polis/polis-isotype-background-round.png',
-    pairTokenNameFirst: 'TOK2',
-    pairTokenNameSecond: 'WETH',
-    addressTokenFirst: '0x1377d26E4f427739c0498E748f747f8063Bd675b',
-    addressTokenSecond: '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
-    pairAddress: '0x31a225127BaD9054cC9f353ab24a20B3B22F9f6B',
-    liquidity: 0.0,
-    liquidityPercentaje: 0.0,
-    volume24: 0.0,
-    volume24Percentaje: 0.0,
-    volume7: 0.0,
-    volume7Percentaje: 0.0,
-    fees24: 0.0,
-    fees24Percentaje: 0.0,
-    feesYear: 0.0,
-    feesYearPercentaje: 0.0,
-    pairFirstEqualSecond: 0.0,
-    pairSecondEqualFirst: 0.0,
-    ammountFirst: 0.0,
-    ammountSecond: 0.0,
-  }];
-
+  pairs: Pair[] = [];
+  pairTransaction: PairTransaction[];
   // Table colums
   dataSource;
   selection;
@@ -118,25 +55,37 @@ export class PairsComponent implements OnInit {
     'yearFees',
   ];
 
-  @ViewChild(MatSort, {static: true})
-  sort: MatSort;
+  pools: Pool[];
 
-  constructor() {
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
+
+  constructor(
+    private contractService: ContractService,
+    private service: ServiceService,
+    private router: Router,
+    private transactionService: TransactionService
+  ) {
   }
 
   ngOnInit(): void {
     this.isWait = true;
-    this.getPairData(this.pairs);
+    this.getPairData();
   }
 
   /**
    * Datos de tabla Pool
    */
-  getPairData(data): any {
-    this.dataSource = new MatTableDataSource<Pair>(data);
-    this.dataSource.sort = this.sort;
-    this.selection = new SelectionModel<Pair>(false, []);
-    this.isWait = false;
+  async getPairData(): Promise<any> {
+    //this.pairs = await this.contractService.getPairList();
+    this.service.getPairList().subscribe(async(res) => {
+      await this.setDataVolumes(this.pairs);
+      this.dataSource = new MatTableDataSource<Pair>(res.pairs);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+      this.isWait = false;
+    });
   }
 
   /**
@@ -145,6 +94,28 @@ export class PairsComponent implements OnInit {
   applyFilter(event: Event): any {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  setPoolToPairPage(row: Pool): void {
+    this.service.setPair(row);
+    console.log(row.id);
+    this.router.navigateByUrl('pages/pair/' + row.id);
+  }
+
+  async setDataVolumes(pairs: Pair[]): Promise<void> {
+    const data: string[] = [];
+    this.pairs.forEach(p => { data.push(p.pairAddress); });
+    const volumes: Volumes[] = await this.transactionService.getVolumes(data);
+    pairs.forEach(pair => {
+      for (const volume of volumes) {
+        if (volume.id.toLowerCase() === pair.pairAddress.toLowerCase()) {
+          pair.volume24 = volume.volume24h;
+          pair.volume24Percentaje = (volume.volume24h / volume.volumeTotal) * 100;
+          pair.fees24 = pair.volume24 * 0.003;
+          pair.volume7 = volume.volume7days;
+        }
+      }
+    });
   }
 
 }

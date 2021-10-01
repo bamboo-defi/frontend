@@ -11,14 +11,15 @@ import { Slippage } from 'src/app/interfaces/slippage';
 export class SettingsComponent implements OnInit {
 
   settings: Settings = {
-    slipTolerance : 1,
+    slipTolerance : 2,
     transDeadLine : 60
   };
 
   slippages: Slippage[] = [
-    {value: 0.1},
-    {value: 0.5},
     {value: 1},
+    {value: 2},
+    {value: 5},
+    {value: 10},
   ];
 
   fromValuePercentaje = [
@@ -53,7 +54,7 @@ export class SettingsComponent implements OnInit {
   // Open settings accordion, select values from localStorage or, in case, hardcoded values
   openSettings(): void{
     if (!localStorage.getItem('slippage')) {
-      this.settings.slipTolerance = 1;
+      this.settings.slipTolerance = 2;
     } else {
       this.settings.slipTolerance  = +localStorage.getItem('slippage');
     }

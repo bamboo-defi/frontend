@@ -1,11 +1,10 @@
 import {trigger, state, style, transition, animate} from '@angular/animations';
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {Bamboo} from 'src/app/interfaces/bamboo';
 import {LiquidityMinus} from 'src/app/interfaces/liquidity-minus';
 import {Pool} from 'src/app/interfaces/pool';
 import {ServiceService} from 'src/app/services/service.service';
-import {ConfirmComponent} from '../../confirm/confirm.component';
 import {SelectToken} from '../to-trade/to-trade.component';
 import {environment} from 'src/environments/environment';
 import {TokenService} from 'src/app/services/contracts/token/token.service';
@@ -15,12 +14,16 @@ import {LiquidityValue, PairData, TokenData} from 'src/app/interfaces/contracts'
 import BigNumber from 'bignumber.js';
 import {PairService} from 'src/app/services/contracts/pair/pair.service';
 import {ContractService} from 'src/app/services/contracts/contract.service';
-import {router_address, weth_address} from 'src/app/services/contract-connection/tools/addresses';
-import {PandaspinnerComponent} from '../../pandaspinner/pandaspinner.component';
+import {NetworkService} from 'src/app/services/contract-connection/network.service';
 import {AlertService} from '../../../_alert';
+import {PandaSpinnerService} from '../../pandaspinner/pandaspinner.service';
+import {mergeMap} from 'rxjs/operators';
+import {Pair} from '../../../interfaces/pair';
+import {MatTableDataSource} from '@angular/material/table';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
-import set = Reflect.set;
-
+const BLP_DECIMALS = 18;
 const SHOW_DECIMALS = 5;
 const TOKEN_1 = 1;
 const TOKEN_2 = 2;
@@ -53,6 +56,10 @@ const TOKEN_2 = 2;
 })
 export class LiquidityMinusComponent implements OnInit {
 
+  addresses;
+
+  net: string = environment.net;
+
   liquidityMiusTotal: LiquidityMinus[] = [{
     ammountNumber: 0,
     ammountToken: 'select Token'
@@ -79,7 +86,6 @@ export class LiquidityMinusComponent implements OnInit {
 
   listToken = [];
   tokenList: JSON[];
-  tokenLogo = environment.tokenLogo;
   error: boolean;
   errorAmmount: string;
   tokenEqual = false;
@@ -96,6 +102,21 @@ export class LiquidityMinusComponent implements OnInit {
   tokenDataSecond: TokenData;
 
   errorNoPool = false;
+  noPairs = false;
+  isConnect: string;
+
+  dataSource: MatTableDataSource<any>;
+  availablePairs: Pair[] = [];
+  observedPairs = 0;
+  pairsLoaded = false;
+
+  displayedColumns: string[] = [
+    'pair'
+  ];
+
+  pairSelected: Pool;
+  poolSelected: Pool;
+  @Output() messageEvent = new EventEmitter<string>();
 
   constructor(
     private service: ServiceService,
@@ -105,9 +126,14 @@ export class LiquidityMinusComponent implements OnInit {
     private utilsService: UtilService,
     private pairService: PairService,
     private contractService: ContractService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pandaSpinnerService: PandaSpinnerService,
+    private networkService: NetworkService,
+    private location: Location,
+    private router: Router,
   ) {
     this.liquidityAmount = new BigNumber(0);
+    this.addresses = networkService.getAddressNetwork();
   }
 
   ngOnInit(): void {
@@ -134,6 +160,8 @@ export class LiquidityMinusComponent implements OnInit {
       underlyingTokenSecond: '',
       underlyingTokenFirstValue: null,
       underlyingTokenSecondValue: null,
+      underlyingTokenFirstValueUSDT: null,
+      underlyingTokenSecondValueUSDT: null,
       underlyingBamboo: null,
       value: null,
       yield: null,
@@ -145,50 +173,107 @@ export class LiquidityMinusComponent implements OnInit {
       available: null,
       staked: null,
       reward: null,
-      isActive: true
+      isActive: true,
+      isLoading: true,
+      bambooPrice: null,
+      isExcludedFromBambooPrice: null,
+      roiYCompound: null
     };
-    this.reward = {
-      tokenFirst: '0',
-      tokenSecond: '0'
-    };
+    // this.reward = {
+    //   tokenFirst: '0',
+    //   tokenSecond: '0'
+    // };
     this.getTokenList();
+    this.isConnect = localStorage.getItem('connected');
+    if (this.isConnect === 'connected') {
+      this.getLPReserves().then();
+    } else {
+      this.noPairs = true;
+    }
 
+  }
+
+  async getLPReserves(): Promise<void> {
+    this.service.getPairList().pipe(
+      mergeMap((res) => this.getPairsReserves(res))
+    ).subscribe((res1) => {
+      /*let index = res1.length - 1;
+      while (index >= 0) {
+        if (this.utilsService.fromBNtoNumber(res1[index].liquidityData.balance) === 0) {
+          res1.splice(index, 1);
+        }
+        index -= 1;
+      }
+      this.availablePairs = res1;
+      console.log(typeof this.availablePairs);
+      console.log(typeof this.availablePairs[0]);
+      console.log(this.availablePairs);*/
+    });
+  }
+
+  async getPairsReserves(res): Promise<void> {
+    return new Promise(async resolve => {
+      console.log(res);
+      const pairs = res.pairs;
+      this.observedPairs = 0;
+      this.pairsLoaded = false;
+      if (!pairs){
+        this.noPairs = true;
+      }
+      for (const pair of pairs) {
+        /*const tok1 = await this.tokenService.getTokenData(pair.addressTokenFirst,
+          pair.pairTokenNameFirst === this.net && pair.addressTokenFirst === this.addresses.weth_address);
+        const tok2 = await this.tokenService.getTokenData(pair.addressTokenSecond,
+          pair.pairTokenNameSecond === this.net && pair.addressTokenSecond === this.addresses.weth_address);
+        pair.pairData = await this.contractService.getPairInfo(tok1, tok2);
+        pair.liquidityData = await this.tokenService.getTokenData(pair.pairAddress, false);
+        if (this.utilsService.fromBNtoNumber(pair.liquidityData.balance) > 0) {
+          console.log(this.availablePairs);
+          console.log(typeof this.availablePairs);
+          this.availablePairs.push(pair);
+        }*/
+        this.calcPairReserve(pair, pairs.length).then();
+      }
+      resolve();
+      // resolve(pairs);
+    });
+  }
+
+  async calcPairReserve(pair, length): Promise<void> {
+    const tok1 = await this.tokenService.getTokenData(pair.addressTokenFirst,
+      pair.pairTokenNameFirst === this.net && pair.addressTokenFirst === this.addresses.weth_address);
+    const tok2 = await this.tokenService.getTokenData(pair.addressTokenSecond,
+      pair.pairTokenNameSecond === this.net && pair.addressTokenSecond === this.addresses.weth_address);
+    pair.pairData = await this.contractService.getPairInfo(tok1, tok2);
+    pair.liquidityData = await this.tokenService.getTokenData(pair.pairAddress, false);
+    if (this.utilsService.fromBNtoNumber(pair.liquidityData.balance, 18) > 0 ) {
+      this.availablePairs.push(pair);
+      console.log(this.availablePairs);
+      this.dataSource = new MatTableDataSource(this.availablePairs);
+    }
+    this.observedPairs += 1;
+    if (this.observedPairs === length) {
+      this.pairsLoaded = true;
+    }
   }
 
   // Get token list from service
   getTokenList(): void {
     this.service.getTokenListBamboo().subscribe(
       res => {
-        const obj = res.tokens;
-
-        const arrayPolis = obj.slice(0, 1);
-        const arrayBamboo = obj.slice(1, 2);
-        const arrayWeth = obj.slice(2, 3);
-        const arrayWbtc = obj.slice(12, 13);
-        const arrayrest = obj.slice(3, 12);
-        const arrayrest2 = obj.slice(13);
-
-        this.listToken.push(arrayBamboo[0], arrayWeth[0], arrayWbtc[0], arrayPolis[0]);
-        arrayrest.forEach(element => {
-          this.listToken.push(element);
-        });
-        arrayrest2.forEach(element => {
-          this.listToken.push(element);
-        });
-        this.tokenList = this.listToken;
-
+        this.tokenList = this.utilsService.sortTokenListBySymbol(res.tokens);
       });
   }
 
-  // Select token FROM
-  selectTokenFromList(): void {
-    return this.openTokenList(TOKEN_1);
-  }
+  // // Select token FROM
+  // selectTokenFromList(): void {
+  //   return this.openTokenList(TOKEN_1);
+  // }
 
-  // Select token TO
-  selectTokenToList(): void {
-    return this.openTokenList(TOKEN_2);
-  }
+  // // Select token TO
+  // selectTokenToList(): void {
+  //   return this.openTokenList(TOKEN_2);
+  // }
 
 
   // Open dialog to token list and select FROM and TO
@@ -201,37 +286,38 @@ export class LiquidityMinusComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(async (result) => {
-      if (input === TOKEN_1) {
-        if (result.symbol === this.pool.underlyingTokenSecond) {
-          this.tokenEqual = true;
+      if (result !== undefined) {
+        if (input === TOKEN_1) {
+          if (result.symbol === this.pool.underlyingTokenSecond) {
+            this.tokenEqual = true;
+            return;
+          }
+          this.tokenEqual = false;
+          this.error = false;
+          this.pool.underlyingTokenFirst = result.symbol;
+          this.pool.logoTokenFirst = result.logoURI;
+          this.pool.addressTokenFirst = result.address;
+          await this.setToken(TOKEN_1);
+        }
+        if (input === TOKEN_2) {
+          if (result.symbol === this.pool.underlyingTokenFirst) {
+            this.tokenEqual = true;
+            return;
+          }
+          this.tokenEqual = false;
+          this.error = false;
+          this.pool.underlyingTokenSecond = result.symbol;
+          this.pool.logoTokenSecond = result.logoURI;
+          this.pool.addressTokenSecond = result.address;
+          await this.setToken(TOKEN_2);
+        }
+        // If both tokens are defined, search Metamask to see if it has a pool.
+        if (this.pool.underlyingTokenFirst && this.pool.underlyingTokenSecond) {
+          return await this.selectPool();
+        } else {
           return;
         }
-        this.tokenEqual = false;
-        this.error = false;
-        this.pool.underlyingTokenFirst = result.symbol;
-        this.pool.logoTokenFirst = result.logoURI;
-        this.pool.addressTokenFirst = result.address;
-        await this.setToken(TOKEN_1);
       }
-      if (input === TOKEN_2) {
-        if (result.symbol === this.pool.underlyingTokenFirst) {
-          this.tokenEqual = true;
-          return;
-        }
-        this.tokenEqual = false;
-        this.error = false;
-        this.pool.underlyingTokenSecond = result.symbol;
-        this.pool.logoTokenSecond = result.logoURI;
-        this.pool.addressTokenSecond = result.address;
-        await this.setToken(TOKEN_2);
-      }
-      // If both tokens are defined, search Metamask to see if it has a pool.
-      if (this.pool.underlyingTokenFirst && this.pool.underlyingTokenSecond) {
-        return await this.selectPool(this.pool.underlyingTokenFirst, this.pool.underlyingTokenSecond);
-      } else {
-        return;
-      }
-
     });
   }
 
@@ -239,15 +325,66 @@ export class LiquidityMinusComponent implements OnInit {
   async setToken(where: number): Promise<void> {
     if (where === TOKEN_1) {
       this.tokenDataFirst = await this.tokenService.getTokenData(this.pool.addressTokenFirst,
-        this.pool.underlyingTokenFirst === 'ETH' && this.pool.addressTokenFirst === weth_address);
+        this.pool.underlyingTokenFirst === this.net && this.pool.addressTokenFirst === this.addresses.weth_address);
     } else if (where === TOKEN_2) {
       this.tokenDataSecond = await this.tokenService.getTokenData(this.pool.addressTokenSecond,
-        this.pool.underlyingTokenSecond === 'ETH' && this.pool.addressTokenSecond === weth_address);
+        this.pool.underlyingTokenSecond === this.net && this.pool.addressTokenSecond === this.addresses.weth_address);
     }
   }
 
+  getSelectedPair(pair): void {
+    console.log('pair', pair);
+    return this.poolSelected = pair;
+  }
+
+  // async getSelectedPair(pair): Promise<void> {
+  //   this.poolSelected = pair;
+  //   this.tokenDataFirst = await this.tokenService.getTokenData(pair.addressTokenFirst,
+  //     pair.pairTokenNameFirst === this.net && pair.addressTokenFirst === this.addresses.weth_address);
+  //   this.tokenDataSecond = await this.tokenService.getTokenData(pair.addressTokenSecond,
+  //     pair.pairTokenNameSecond === this.net && pair.addressTokenSecond === this.addresses.weth_address);
+  //   this.pool = {
+  //     id: 'idPool1',
+  //     logo: 'string',
+  //     title: 'Bamboo grow!',
+  //     pair: pair.pairTokenNameFirst + '/' + pair.pairTokenNameSecond,
+  //     address: pair.pairAddress,
+  //     logoTokenFirst: pair.logoTokenFirst,
+  //     logoTokenSecond: pair.logoTokenSecond,
+  //     addressTokenFirst: pair.addressTokenFirst,
+  //     addressTokenSecond: pair.addressTokenSecond,
+  //     underlyingToken: null,
+  //     underlyingTokenFirst: '',
+  //     underlyingTokenSecond: '',
+  //     underlyingTokenFirstValue: null,
+  //     underlyingTokenSecondValue: null,
+  //     underlyingTokenFirstValueUSDT: null,
+  //     underlyingTokenSecondValueUSDT: null,
+  //     underlyingBamboo: null,
+  //     value: null,
+  //     yield: null,
+  //     yieldReward: null,
+  //     roiDaily: null,
+  //     roiMonthly: null,
+  //     roiYearly: null,
+  //     tvl: null,
+  //     available: null,
+  //     staked: null,
+  //     reward: Number(pair.liquidityData.balance.toFixed(pair.liquidityData.decimals)),
+  //     isActive: true,
+  //     isLoading: true,
+  //     bambooPrice: null,
+  //     isExcludedFromBambooPrice: null,
+  //     roiYCompound: null
+  //   };
+  //   this.liquidityData = pair.liquidityData;
+  //   this.pairData = pair.pairData;
+  //   this.liquidTool = true;
+  //   await this.setRewards();
+  // }
+
   // When you have the two tokens selected, it looks to see if the pool exists.
-  async selectPool(tokenFirst, tokenSecond): Promise<void> {
+  async selectPool(): Promise<void> {
     this.errorNoPool = false;
     // If the pool exists it returns the data and activates liquidTool showing the liquidity subtraction tools.
     this.pairData = await this.contractService.getPairInfo(this.tokenDataFirst, this.tokenDataSecond);
@@ -266,8 +403,8 @@ export class LiquidityMinusComponent implements OnInit {
         this.isEth = this.tokenDataFirst.isEth || this.tokenDataSecond.isEth;
         // Get the data of liquidity
         this.liquidityData = await this.tokenService.getTokenData(this.pairData.addr, false);
-        this.pool.reward = Number(this.liquidityData.balance.toFixed(SHOW_DECIMALS));
-        await this.setRewards();
+        this.pool.reward = Number(this.liquidityData.balance.toFixed(BLP_DECIMALS));
+      //  await this.setRewards();
       }
     }
     if (this.pool.id) {
@@ -279,120 +416,116 @@ export class LiquidityMinusComponent implements OnInit {
     }
   }
 
-  // Returns the percentage to subtract from liquidity
-  async setPercent(percent): Promise<void> {
-    this.ammountPercentaje = percent;
-    await this.setRewards();
+  // // Returns the percentage to subtract from liquidity
+  // async setPercent(percent): Promise<void> {
+  //   this.ammountPercentaje = percent;
+  //   await this.setRewards();
+  // }
+
+  // // If +100% returns 100
+  // maxCien(): number {
+  //   if (this.ammountPercentaje >= 100) {
+  //     this.ammountPercentaje = 100;
+  //     this.ammountBalance = this.ammountPercentaje * this.pool.reward;
+  //     return this.ammountPercentaje;
+  //   }
+  //   this.ammountBalance = this.ammountPercentaje * this.pool.reward / 100;
+  //   return this.ammountBalance;
+
+  // }
+
+  // // Percentage change event return amount
+  // async setRewards(): Promise<void> {
+  //   // Modify liquidity amount
+  //   const amount = new BigNumber(this.ammountPercentaje / 100);
+  //   this.liquidityAmount = this.liquidityData.balance.multipliedBy(amount);
+  //   // Estimate the value of liquidity
+  //   this.liquidityEstimate = await this.pairService.estimateLiquidityValue(this.pairData.addr, this.tokenDataFirst,
+  //     this.tokenDataSecond, this.liquidityAmount);
+  //   // Check if token order was not inverted
+  //   let estimateA = this.liquidityEstimate.amountA;
+  //   let estimateB = this.liquidityEstimate.amountB;
+  //   if (!this.utilsService.compareEthAddr(this.liquidityEstimate.tokenA.addr, this.tokenDataFirst.addr)) {
+  //     estimateA = this.liquidityEstimate.amountB;
+  //     estimateB = this.liquidityEstimate.amountA;
+  //   }
+  //   this.reward.tokenFirst = estimateA.toFixed(SHOW_DECIMALS);
+  //   this.reward.tokenSecond = estimateB.toFixed(SHOW_DECIMALS);
+  //   this.ammountBalance = Number(this.liquidityAmount.toFixed(BLP_DECIMALS));
+  // }
+
+  // onSubmit(): void {
+
+  //   // Operation Data
+  //   const operationData = {
+  //     name: 'liquidityMinus',
+  //     ammount: this.liquidityAmount.toFixed(SHOW_DECIMALS),
+  //     pool: this.pool,
+  //     reward: this.reward
+  //   };
+
+  //   // Confirm Dialog
+  //   const dialogRef = this.dialog.open(ConfirmComponent, {
+  //     width: '450px',
+  //     data: operationData
+  //   });
+  //   dialogRef.afterClosed().subscribe(async (result) => {
+  //     if (result) {
+  //       await this.liquidityMinusSelectedPool();
+  //     } else {
+  //       return;
+  //     }
+
+  //   });
+  // }
+
+  // // Confirmed, need service
+  // async liquidityMinusSelectedPool(): Promise<void> {
+  //   this.pandaSpinnerService.open();
+  //   try {
+  //     // Approve liquidity if needed
+  //     await this.contractService.validateAllowance(this.liquidityData, this.addresses.router_address, this.liquidityAmount);
+
+  //     // Get slippage and deadline values
+  //     const slippage = Number(localStorage.getItem('slippage'));
+  //     // Deadline to seconds
+  //     const deadline = Number(localStorage.getItem('transDeadLine')) * 60;
+
+  //     // Remove Liquidity
+  //     await this.routerService.removeLiquidityAny(this.pairData.addr, this.liquidityAmount, slippage,
+  //       deadline, this.liquidityEstimate, this.isEth);
+
+  //     // Reset pool balance
+  //     this.liquidityData = await this.tokenService.getTokenData(this.pairData.addr, false);
+  //     this.ammountPercentaje = 0;
+  //     this.pool.reward = Number(this.liquidityData.balance.toFixed(BLP_DECIMALS));
+  //     await this.setRewards();
+  //     this.alertService.success('Success');
+  //   } catch (error) {
+  //     this.alertService.error('Error: ' + error.message);
+  //   } finally {
+  //     this.pandaSpinnerService.close();
+  //   }
+  // }
+
+  // // Amount onchange
+  // async maxBalance(): Promise<void> {
+  //   if (this.ammountBalance < Number(this.liquidityData.balance.toString())) {
+  //     this.ammountPercentaje = this.ammountBalance * 100 / this.pool.reward;
+  //     await this.setRewards();
+  //   } else {
+  //     this.ammountPercentaje = 100;
+  //     this.ammountBalance = this.pool.reward;
+  //     await this.setRewards();
+  //   }
+  // }
+
+  goToLiquidityPlus(): void{
+    this.router.navigateByUrl('/pages/liquidityPlus');
   }
 
-  // If +100% returns 100
-  maxCien(): number {
-    if (this.ammountPercentaje >= 100) {
-      this.ammountPercentaje = 100;
-      this.ammountBalance = this.ammountPercentaje * this.pool.reward;
-      return this.ammountPercentaje;
-    }
-    this.ammountBalance = this.ammountPercentaje * this.pool.reward / 100;
-    return this.ammountBalance;
-
-  }
-
-  // Percentage change event return ammount
-  async setRewards(): Promise<void> {
-    // Return this.reward;
-    const pool = this.pool;
-    // Modify liquidity amount
-    this.liquidityAmount = this.liquidityData.balance.times(this.ammountPercentaje / 100);
-    // Estimate the value of liquidity
-    this.liquidityEstimate = await this.pairService.estimateLiquidityValue(this.pairData.addr, this.tokenDataFirst,
-      this.tokenDataSecond, this.liquidityAmount);
-    // Check if token order was not inverted
-    let estimateA = this.liquidityEstimate.amountA;
-    let estimateB = this.liquidityEstimate.amountB;
-    if (!this.utilsService.compareEthAddr(this.liquidityEstimate.tokenA.addr, this.tokenDataFirst.addr)) {
-      estimateA = this.liquidityEstimate.amountB;
-      estimateB = this.liquidityEstimate.amountA;
-    }
-    this.reward.tokenFirst = estimateA.toFixed(SHOW_DECIMALS);
-    this.reward.tokenSecond = estimateB.toFixed(SHOW_DECIMALS);
-    this.ammountBalance = Number(this.liquidityAmount.toFixed(SHOW_DECIMALS));
-  }
-
-  onSubmit(): void {
-
-    // Operation Data
-    const operationData = {
-      name: 'liquidityMinus',
-      ammount: this.liquidityAmount.toFixed(SHOW_DECIMALS),
-      pool: this.pool,
-      reward: this.reward
-    };
-
-    // Confirm Dialog
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      width: '450px',
-      data: operationData
-    });
-    dialogRef.afterClosed().subscribe(async (result) => {
-      if (result) {
-        await this.liquidityMinusSelectedPool(this.ammountPercentaje, this.pool.id);
-      } else {
-        return;
-      }
-
-    });
-  }
-
-  // Confirmed, need service
-  async liquidityMinusSelectedPool(ammount, pool): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
-    try {
-      // Approve liquidity if needed
-      await this.contractService.validateAllowance(this.liquidityData, router_address, this.liquidityAmount);
-
-      // Get slippage and deadline values
-      const slippage = Number(localStorage.getItem('slippage'));
-      // Deadline to seconds
-      const deadline = Number(localStorage.getItem('transDeadLine')) * 60;
-
-      // Remove Liquidity
-      const receipt = await this.routerService.removeLiquidityAny(this.pairData.addr, this.liquidityAmount, slippage,
-        deadline, this.liquidityEstimate, this.isEth);
-
-      // Reset pool balance
-      this.liquidityData = await this.tokenService.getTokenData(this.pairData.addr, false);
-      this.ammountPercentaje = 0;
-      this.pool.reward = Number(this.liquidityData.balance.toFixed(SHOW_DECIMALS));
-      await this.setRewards();
-      this.alertService.success('Success');
-    } catch (error) {
-      this.alertService.error('Error: ' + error.message);
-    } finally {
-      dialogPandaSpinner.close();
-    }
-  }
-
-  // Amount onchange
-  async maxBalance(): Promise<void> {
-    if (this.ammountBalance < Number(this.liquidityData.balance.toString())) {
-      this.ammountPercentaje = this.ammountBalance * 100 / this.pool.reward;
-      await this.setRewards();
-    } else {
-      this.ammountPercentaje = 100;
-      this.ammountBalance = this.pool.reward;
-      await this.setRewards();
-    }
-  }
-
-  /**
-   * PandaSpinner Dialog
-   */
-  private getDialogPandaSpinner(): any {
-    return this.dialog.open(PandaspinnerComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      panelClass: 'panda-spinner'
-    });
+  goToSearchPair(): void{
+    this.router.navigateByUrl('/pages/searchPair');
   }
 
 }

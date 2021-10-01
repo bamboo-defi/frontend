@@ -33,7 +33,7 @@
     </ng-container>
 
     <ng-container>
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <!-- <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row> -->
       <mat-row *matRowDef="let token; columns: displayedColumns;" class="client-row" [mat-dialog-close]="token"
         (click)="$event.stopPropagation()" (change)="$event ? data.token : null" cdkFocusInitial></mat-row>
     </ng-container>

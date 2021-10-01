@@ -1,0 +1,42 @@
+<div mat-dialog-content style="display: flex; align-items: center; justify-content: space-between; " >
+  <div class="big-text"> ROI </div>
+  <mat-icon mat-dialog-close style="cursor: pointer;">close</mat-icon>
+</div>
+<div class="separator"></div>
+
+<table style="border-collapse: collapse; width: 100%;">
+  <tr>
+    <td><b>Time</b></td><td style="text-align: right;"><b>ROI</b></td>
+  </tr>
+  <tr>
+    <td>1 day</td><td class="tex-med">{{data.roiDaily | number:'1.0-2'}}%</td>
+  </tr>
+  <!-- <tr>
+    <td>7 days</td><td>{{data.roiWeekly}}%</td>
+  </tr> -->
+  <tr>
+    <td>30 days</td><td class="tex-med">{{data.roiMonthly | number:'1.0-2'}}%</td>
+  </tr>
+  <tr>
+    <td>365 days</td><td class="tex-med">{{data.roiYearly | number:'1.0-2'}}%</td>
+  </tr>
+  <tr>
+    <td>APY</td><td class="tex-med">{{data.roiYCompound | number:'1.0-2'}}%</td>
+  </tr>
+</table>
+<div class="separator"></div>
+<div *ngIf="data.bambooPrice != 0">Bamboo Value:&nbsp;<strong>{{ data.bambooPrice | currency:'USD'  }}</strong></div>
+<div class="separator"></div>
+<div style="font-size: 11px;">
+  <ul>
+    <li>Calculated based on current rates. </li>
+    <li>APY compounding 1x daily. </li>
+    <li>Rates are estimates provided for your convenience only, and by no means represent guaranteed returns.</li>
+  </ul>
+</div>
+<div class="separator"></div>
+<div color="primary" (click)="buy(data.addressTokenFirst, data.addressTokenSecond)" mat-dialog-close style="display: flex; align-items: center; justify-content: space-between; ">
+  <button mat-flat-button style="border-radius: 15px;">Get {{data.underlyingTokenFirst}} - {{data.underlyingTokenSecond}} &nbsp;<img [src]="data.logoTokenFirst" width="25px"><img [src]="data.logoTokenSecond" width="25px"><mat-icon>login</mat-icon>
+  </button>
+</div>
+

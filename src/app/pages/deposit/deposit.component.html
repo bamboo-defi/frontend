@@ -14,11 +14,10 @@
                [(ngModel)]="stakeAmount"
                placeholder="0"
                autocomplete="off"
-               type="number"
+               type="text"
                [minlength]="1"
-               [maxlength]="20"
-               style="text-align:center;"
-               class="form-big-de"
+               [maxlength]="35"
+               style="text-align:center;color: rgba(47, 79, 79, 0.829); font-size: 1.5rem;"
                required>
       </div>
       <div>
@@ -32,7 +31,7 @@
     <!--Buttons to validate-->
     <div class="content-card-confirm inline separator-big">
       <div>
-        <button mat-button color="primary" class="btn-confirm" type="submit" [disabled]="!f.valid">
+        <button mat-button color="primary" class="btn-title" type="submit" [disabled]="!f.valid">
           <span style="vertical-align: sub;">
             <mat-icon>check</mat-icon>
           </span>

@@ -36,7 +36,7 @@
           <span class="tex-medium-left">{{ globalMarket.atl | currency:'USD'}}</span>&nbsp;
           <span
             [ngClass]="{'negative': globalMarket.atlPercentage < 0, 'positive': globalMarket.atlPercentage >= 0}">
-            {{globalMarket.atlPercentage | number: '1.1-1'}}%</span>
+            {{globalMarket.atlPercentage | number: '1.1-2'}}%</span>
         </div>
       </mat-list-item>
       <mat-list-item>
@@ -45,17 +45,14 @@
           <span class="tex-medium-left">{{ globalMarket.priceChange24 | currency:'USD'}}</span>&nbsp;
           <span
             [ngClass]="{'negative': globalMarket.priceChange24Percentage < 0, 'positive': globalMarket.priceChange24Percentage >= 0}">
-            {{globalMarket.priceChange24Percentage | number: '1.1-1'}}%</span>
+            {{globalMarket.priceChange24Percentage | number: '1.1-2'}}%</span>
         </div>
       </mat-list-item>
       <mat-list-item>
         <div mat-line>{{ 'globalMarket.circulatingSupply' | translate }}</div>
-        <div mat-line *ngIf="globalMarket.circulatingSupply > 0">
-          <span class="tex-medium-left">{{ globalMarket.circulatingSupply }} / {{ globalMarket.totalSupply }}</span>&nbsp;
+        <div mat-line>
+          <span class="tex-medium-left">{{ globalMarket.totalSupply | number:'1.0-2' }}</span>&nbsp;
           <img style="width: 30px; height: auto;" src="/assets/bamboo-head.png">
-        </div>
-        <div mat-line *ngIf="globalMarket.circulatingSupply == 0">
-          <img style="width: auto; height: 35px;" src="/assets/comming-soon-transparent.png">
         </div>
       </mat-list-item>
     </mat-list>

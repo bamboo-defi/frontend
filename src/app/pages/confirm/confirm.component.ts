@@ -20,7 +20,8 @@ export class ConfirmComponent implements OnInit {
   withdraw: boolean;
   claim: boolean;
   withdrawStaking: boolean;
-  withdrawAcumulated: boolean;
+  withdrawAccumulated: boolean;
+  createPair: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data
@@ -29,66 +30,21 @@ export class ConfirmComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.data.name === 'to-trade') {
-      if (
-        this.data.toAmmount &&
+      this.toTrade = !!(this.data.toAmmount &&
         this.data.toName &&
         this.data.fromAmmount &&
-        this.data.fromName
-      ) {
-        this.toTrade = true;
-      } else {
-        this.toTrade = false;
-      }
+        this.data.fromName);
     }
-    if (this.data.name === 'liquidity-plus') {
-      this.liquidityPlus = true;
-    } else {
-      this.liquidityPlus = false;
-    }
-    if (this.data.name === 'toStake') {
-      this.toStake = true;
-    } else {
-      this.toStake = false;
-    }
-    if (this.data.name === 'liquidityMinus') {
-      this.liquidityMinus = true;
-    } else {
-      this.liquidityMinus = false;
-    }
-    if (this.data.name === 'raindrop') {
-      this.raindrop = true;
-    } else {
-      this.raindrop = false;
-    }
-    if (this.data.name === 'bbyp') {
-      this.bbyp = true;
-    } else {
-      this.bbyp = false;
-    }
-    if (this.data.name === 'bambooField') {
-      this.bambooField = true;
-    } else {
-      this.bambooField = false;
-    }
-    if (this.data.name === 'withdraw') {
-      this.withdraw = true;
-    } else {
-      this.withdraw = false;
-    }
-    if (this.data.name === 'claim') {
-      this.claim = true;
-    } else {
-      this.claim = false;
-    }
-    if (this.data.name === 'withdrawStaking') {
-      this.withdrawStaking = true;
-    } else {
-      this.withdrawStaking = false;
-    }
-    if (this.data.name === 'withdrawAcumulated') {
-      this.withdrawAcumulated = true;
-    } else {
-      this.withdrawAcumulated = false;
-    }
+    this.liquidityPlus = this.data.name === 'liquidity-plus';
+    this.toStake = this.data.name === 'toStake';
+    this.liquidityMinus = this.data.name === 'liquidityMinus';
+    this.raindrop = this.data.name === 'raindrop';
+    this.bbyp = this.data.name === 'bbyp';
+    this.bambooField = this.data.name === 'bambooField';
+    this.withdraw = this.data.name === 'withdraw';
+    this.claim = this.data.name === 'claim';
+    this.withdrawStaking = this.data.name === 'withdrawStaking';
+    this.withdrawAccumulated = this.data.name === 'withdrawAcumulated';
+    this.createPair = this.data.name === 'createPair';
   }
 }

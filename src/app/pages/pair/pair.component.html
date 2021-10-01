@@ -1,21 +1,32 @@
 <div class="container-pa">
   <div class="item-70">
-    <div class="mat-elevation-z4 frame-info">
-      <div class="item-card-info">1 <img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto">&nbsp;{{pair.pairTokenNameFirst}}: {{pair.pairFirstEqualSecond}}
-        {{pair.pairTokenNameSecond}}<img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto"></div>
-      <div class="item-card-info">1 <img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto">&nbsp; {{pair.pairTokenNameSecond}}: {{pair.pairSecondEqualFirst}}
-        {{pair.pairTokenNameFirst}}<img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto"></div>
+    <div *ngIf="pair.pairFirstEqualSecond" class="mat-elevation-z4 frame-info">
+      <div class="item-card-info">{{ 'pair.tokenValue' | translate}}</div>
+      <div>
+        <div class="item-card-info content-card">
+          <div> 1 &nbsp;<img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto">&nbsp;{{pair.pairTokenNameFirst}}:</div>
+          <div>{{pair.pairFirstEqualSecond | number:'1.1-5'}}&nbsp;{{pair.pairTokenNameSecond}}&nbsp;<img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto"></div>
+        </div>
+        <div class="item-card-info content-card">
+          <div> 1 &nbsp;<img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto">&nbsp; {{pair.pairTokenNameSecond}}: </div>
+          <div>
+            {{pair.pairSecondEqualFirst | number:'1.1-5'}}
+            {{pair.pairTokenNameFirst}}&nbsp;<img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto">
+          </div>
+        </div>
+      </div>
     </div>
     <div class="separator"></div>
 
     <div class="mat-elevation-z4 frame-info">
+      <div class="item-card-info">{{ 'pair.poolTotal' | translate}}</div>
       <div class="item-card-info">
         <img src="{{pair.logoTokenFirst}}" alt="" width="30px" height="auto">&nbsp;
-        {{pair.ammountFirst}} {{pair.pairTokenNameFirst}}
+        {{pair.ammountFirst | number:'1.1-5'}} {{pair.pairTokenNameFirst}}
       </div>
       <div class="item-card-info">
         <img src="{{pair.logoTokenSecond}}" alt="" width="30px" height="auto">&nbsp;
-        {{pair.ammountSecond}} {{pair.pairTokenNameSecond}}
+        {{pair.ammountSecond | number:'1.1-5'}} {{pair.pairTokenNameSecond}}
       </div>
     </div>
     <div class="separator"></div>
@@ -81,7 +92,14 @@
 <!-- Transactions table -->
 
 <div>
-  <app-pair-transactions [pairId]="pair.id" [pairAddress]="pair.pairAddress"></app-pair-transactions>
+  <app-pair-transactions
+  [pairId]="pair.id"
+  [pairAddress]="pair.pairAddress"
+  [token1]="pair.pairTokenNameFirst"
+  [token2]="pair.pairTokenNameSecond"
+  [tokenLogo1]="pair.logoTokenFirst"
+  [tokenLogo2]="pair.logoTokenSecond"
+  ></app-pair-transactions>
 </div>
 
 <div class="separator-big">

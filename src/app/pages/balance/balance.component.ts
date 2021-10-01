@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OwnWallet } from 'src/app/interfaces/own-wallet';
 import { ContractService } from 'src/app/services/contracts/contract.service';
+import {ConnectionService} from "../../services/contract-connection/connection.service";
 
 @Component({
   selector: 'app-balance',
@@ -11,9 +12,11 @@ export class BalanceComponent implements OnInit {
 
   ownWallet: OwnWallet;
   isWait = false;
+  isConnected = false;
 
   constructor(
-    private contractService: ContractService
+    private contractService: ContractService,
+    private connService: ConnectionService
   ) { }
 
   ngOnInit(): void {
@@ -35,7 +38,12 @@ export class BalanceComponent implements OnInit {
    * Gets connected wallet data
    */
   async getOwnWallet(): Promise<any> {
-    this.ownWallet = await this.contractService.getOwnWallet();
+    if (this.connService.provider === undefined){
+      this.isConnected = false;
+    } else {
+      this.ownWallet = await this.contractService.getOwnWallet();
+      this.isConnected = true;
+    }
     this.isWait = false;
   }
 

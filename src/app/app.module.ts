@@ -8,7 +8,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { DialogContent } from './pages/pages.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {ConnectionService} from './services/contract-connection/connection.service';
-
+import {APOLLO_OPTIONS} from 'apollo-angular';
+import {HttpLink} from 'apollo-angular/http';
+import {InMemoryCache} from '@apollo/client/core';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,19 @@ import {ConnectionService} from './services/contract-connection/connection.servi
      DialogContent
    ],
   providers: [
-    ConnectionService
+    ConnectionService,
+    {
+      provide: APOLLO_OPTIONS,
+      useFactory: (httpLink: HttpLink) => {
+        return {
+          cache: new InMemoryCache(),
+          link: httpLink.create({
+            uri: 'https://hub.snapshot.org/graphql'
+          }),
+        };
+      },
+      deps: [HttpLink]
+    }
   ],
   bootstrap: [AppComponent],
 })

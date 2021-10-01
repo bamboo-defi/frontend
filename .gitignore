@@ -47,5 +47,3 @@ Thumbs.db
 
 # .env File
 .env
-environments/
-service.service*

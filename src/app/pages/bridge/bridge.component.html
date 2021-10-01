@@ -1,0 +1,59 @@
+<mat-grid-list cols="1" rowHeight="600px">
+  <mat-grid-tile>
+    <mat-card style="text-align: center;" class="buy-box staked-box box mat-elevation-z6">
+      <div class="feed-title" style="line-height: 1.5em;"><b>{{ netTo }} Bridge</b></div>
+      <div>
+        <div class="select-container" style="margin-top: 15px;">
+          <p [innerHTML]="'bridge.explain' | translate: {net: net, netTo: netTo}"></p>
+        </div>
+        <form class="separator" name="form" #f="ngForm" (ngSubmit)="f.form.valid && bridge.wallet && bridge.amount>0">
+
+          <div style="margin-top: 25px;">
+            <div><strong>{{'bridge.setWallet' | translate }}</strong></div>
+            <div style="margin-top: 10px;">
+              <input matInput name="wallet" class="center-align-bridge" #wallet="ngModel" [(ngModel)]="bridge.wallet"
+                placeholder="{{ 'bridge.wallet' | translate }}" required />
+            </div>
+          </div>
+
+          <div style="margin-top: 25px;">
+            <div><strong>{{'bridge.setAmmount' | translate }}</strong></div>
+            <div style="margin-top: 10px;" style="display: inline;">
+              <input matInput name="ammount" class="center-align-bridge" #ammount="ngModel" [(ngModel)]="bridge.amount"
+                placeholder="{{ 'bridge.ammount' | translate }}" style="width: 80%;" required />
+              <!--<img src="assets/bamboo-head.png" style="width: 35px;height: auto;">-->
+            </div>
+          </div>
+          <div *ngIf="!isApproved;then notApproved else approved"></div>
+          <ng-template #notApproved>
+            <div style="margin-top: 25px;">
+              <button mat-flat-button color="primary" class="btn-title-100" style="width: 100%;" [disabled]="!f.valid"
+                (click)="approveBridge()" >
+                {{ 'bridge.approve' | translate }}</button>
+            </div>
+            <div style="margin-top: 25px;">
+              <button mat-flat-button color="primary" class="btn-title-100" style="width: 100%;" disabled [innerHTML]=" 'bridge.setBridge' | translate: {netTo: netTo} "
+                ></button>
+            </div>
+          </ng-template>
+
+
+          <ng-template #approved>
+            <div style="margin-top: 25px;">
+              <button mat-flat-button color="primary" class="btn-title-100" style="width: 100%;" disabled
+                >
+                {{ 'bridge.approve' | translate }}</button>
+            </div>
+            <div style="margin-top: 25px;">
+              <button mat-flat-button color="primary" class="btn-title-100" style="width: 100%;" (click)="toBridge()"
+                [disabled]="!f.valid" [innerHTML]=" 'bridge.setBridge' | translate: {netTo: netTo} "></button>
+            </div>
+
+          </ng-template>
+
+        </form>
+
+      </div>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>

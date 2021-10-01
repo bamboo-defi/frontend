@@ -1,79 +1,214 @@
 <div class="example-container-pa">
-  <mat-toolbar color="primary" class="bamboo-toolbar">
+  <mat-toolbar class="bamboo-toolbar">
     <button mat-icon-button (click)="snav.toggle()">
       <mat-icon>menu</mat-icon>
     </button>
     <a [routerLink]="['/home']" class="link-no-under">
       <h1 class="example-app-name">BambooDeFi</h1>
     </a>
-    <button mat-flat-button color="none" class="btn-title-nav" (click)="openDialog()">{{ 'wallet' | translate
+    <button mat-flat-button color="none" class="btn-title-nav" style="overflow: auto;" (click)="openDialog()">{{ message
       }}</button>
   </mat-toolbar>
 
   <mat-sidenav-container class="bamboo-sidenav-container">
 
-    <mat-sidenav #snav position="end" mode="over" fixedTopGap="56">
+    <!-- Mobile sidenav -->
+    <mat-sidenav #snav position="end" mode="over" fixedTopGap="56" class="nav-bamboo">
 
-      <div class="lang-separator">
-        <mat-form-field class="selector" appearance="standard">
-          <mat-label>{{ 'selectlanguage' | translate }}</mat-label>
-          <mat-select (selectionChange)="useLanguage($event.value)">
-            <mat-option *ngFor="let language of languagesList" [value]="language.languageSet">{{language.languageName}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div style="margin: 5px;">
+
+        <div *ngIf="net == 'ETH'" style="display: flex;">
+          <button class="no-border nav-item is-active-eth" style="width: 80px; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+            ETH&nbsp; <img src="assets/eth-diamond-black.png" width="10px" height="auto">
+          </button>
+          <a href="https://bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-bsc" style="width: 80px;margin-right: 2px;border: 1px solid white; display: flex; align-items: center; justify-content: center;">
+              BSC&nbsp; <img src="https://dex-bin.bnbstatic.com/static/images/icon_dex.svg" width="22px" height="auto">
+            </button>
+          </a>
+          <a href="https://vlx.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-velas" style="width: 80px;border: 1px solid white; display: flex; align-items: center; justify-content: center;">
+              VELAS&nbsp; <img src="https://raw.githubusercontent.com/velas/mobile-wallet/master/assets/velas-logo1.png" width="22px" height="auto">
+            </button>
+          </a>
+        </div>
+
+        <div *ngIf="net == 'BNB'" style="display: flex;">
+          <a href="https://eth.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-eth" style="width: 80px;border: 1px solid white; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+              ETH&nbsp;<img src="assets/eth-diamond-black.png" width="10px" height="auto">
+            </button>
+          </a>
+            <button class="no-border nav-item is-active" style="width: 80px; display: flex;margin-right: 2px; align-items: center; justify-content: center;">
+              BSC &nbsp;<img src="https://dex-bin.bnbstatic.com/static/images/icon_dex.svg" width="22px" height="auto">
+            </button>
+            <a href="https://vlx.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+              <button class="no-border nav-item-velas" style="width: 80px;border: 1px solid white;display: flex; align-items: center; justify-content: center;">
+                VELAS&nbsp; <img src="https://raw.githubusercontent.com/velas/mobile-wallet/master/assets/velas-logo1.png" width="22px" height="auto">
+              </button>
+            </a>
+        </div>
+
+        <div *ngIf="net == 'VLX'" style="display: flex;">
+          <a href="https://eth.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-eth" style="width: 80px;border: 1px solid white; margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+              ETH&nbsp;<img src="assets/eth-diamond-black.png" width="10px" height="auto">
+            </button>
+          </a>
+          <a href="https://bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-bsc" style="width: 80px;border: 1px solid white;margin-right: 2px; display: flex; align-items: center; justify-content: center;">
+              BSC&nbsp; <img src="https://dex-bin.bnbstatic.com/static/images/icon_dex.svg" width="22px" height="auto">
+            </button>
+          </a>
+          <button class="no-border nav-item is-active" style="width: 80px; display: flex; align-items: center; justify-content: center;">
+                VELAS&nbsp; <img src="https://raw.githubusercontent.com/velas/mobile-wallet/master/assets/velas-logo1.png" width="22px" height="auto">
+          </button>
+
+        </div>
+      </div>
+
+
+      <div class="separator"
+      style="display: flex; justify-content: flex-start; margin-left: 15px; margin-bottom: 15px; padding-top: 10px; align-items: baseline;">
+        <app-menulinks></app-menulinks>
       </div>
 
       <mat-nav-list>
-        <a *ngFor="let list of linkToPages" mat-list-item (click)="snav.toggle()" [routerLink]='list.link'>{{ list.text
-          | translate}}</a>
+        <a *ngFor="let list of linkToPages" mat-list-item (click)="snav.toggle(); setImage(list.image, list.text, list.link)"
+          [routerLink]='list.link'
+          class="nav-item">
+          {{ list.text | translate}}<img [src]="assetsLink + list.image" mat-list-icon class="icon-img">
+        </a>
+        <a mat-list-item class="nav-item" href="https://www.bamboodefi.shop/" target="_blank">Bamboo Shop<img src="assets/CarritoBamboo.png" mat-list-icon class="icon-img"></a>
+
       </mat-nav-list>
+      <div style="display: flex; align-items: center; justify-content: flex-start; padding: 16px; cursor: pointer;" (click)="setBamboo()"
+        matTooltip="Set Bamboo token at Metamask">
+          <img src="assets/bamboodefitoken.png" alt="bamboo" width="30px">
+          <mat-icon color="primary">favorite</mat-icon><img src="assets/metamask-fox.svg" alt="metamask" width="30px">
+
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: flex-start; padding: 0px 16px; cursor: pointer;"
+      (click)="goToTokpie('https://tokpie.io/blog/bamboodefi-bamboo-token/#How_to_buy_BAMBOO_with_Bank_Card_or_Apple_Pay')">
+        <img src="assets/bamboodefitoken.png" alt="bamboo" width="30px">
+        &nbsp;<mat-icon color="primary">favorite</mat-icon>&nbsp;
+        <img src="assets/Apple_Pay.png" alt="apple-pay" width="35px">
+        <img src="assets/visa.png" alt="assets/Apple_Pay.png" width="35px">
+        <img src="assets/mastercard.png" alt="assets/Apple_Pay.png" width="35px">
+      </div>
 
     </mat-sidenav>
 
+    <!-- web sidenav-->
+
     <mat-sidenav opened mode="side" class="side-nav" disableClose>
-      <div class="container">
-        <div class="item">
-          <a [routerLink]="['/home']" class="link-no-under"><img class="row-img" src="{{assetsLink}}bamboo-head.png"></a>
+      <mat-card style="margin: 15px;" class="mat-elevation-z4">
+        <div class="container-title">
+          <div>
+            <a [routerLink]="['/pages/home']" class="link-no-under"><img class="row-img"
+                src="{{assetsLink}}bamboo-face256.png"></a>
+          </div>
+          <div>
+            <a [routerLink]="['/pages/home']" class="link-no-under"><span
+                class="bamboo-title">BambooDeFi</span><br />Bamboo
+              Ecosystem</a>
+          </div>
         </div>
-        <div class="item">
-          <a [routerLink]="['/home']" class="link-no-under"><span class="bamboo-title">BambooDeFi</span><br />Bamboo
-            Ecosystem</a>
+      </mat-card>
+      <div>
+
+        <div *ngIf="net == 'ETH'" style="display: flex; margin-left: 15px;">
+          <button class="no-border nav-item is-active" style="width: 65px; margin-right: 5px; display: flex; align-items: center; justify-content: center;">
+            ETH&nbsp; <img src="assets/eth-diamond-black.png" width="10px" height="auto">
+          </button>
+          <a href="https://bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-bsc" style="width: 72px;border: 1px solid white; display: flex;margin-right: 5px; align-items: center; justify-content: center;">
+              BSC &nbsp;<img src="https://dex-bin.bnbstatic.com/static/images/icon_dex.svg" width="22px" height="auto">
+            </button>
+          </a>
+          <a href="https://vlx.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-velas" style="width: 65px;border: 1px solid white; display: flex; align-items: center; justify-content: center;">
+              VLX&nbsp;<img src="https://raw.githubusercontent.com/velas/mobile-wallet/master/assets/velas-logo1.png" width="22px" height="auto">
+            </button>
+          </a>
         </div>
+
+        <div *ngIf="net == 'BNB'" style="display: flex; margin-left: 15px;">
+          <a href="https://eth.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-eth" style="width: 65px;border: 1px solid white; margin-right: 5px; display: flex; align-items: center; justify-content: center;">
+              ETH &nbsp;<img src="assets/eth-diamond-black.png" width="10px" height="auto">
+            </button>
+          </a>
+          <button class="no-border nav-item is-active" style="width: 72px; display: flex;margin-right: 5px; align-items: center; justify-content: center;">
+              BSC &nbsp; <img src="https://dex-bin.bnbstatic.com/static/images/icon_dex.svg" width="22px" height="auto">
+          </button>
+          <a href="https://vlx.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-velas" style="width: 65px;border: 1px solid white; display: flex; align-items: center; justify-content: center;">
+              VLX&nbsp;<img src="https://raw.githubusercontent.com/velas/mobile-wallet/master/assets/velas-logo1.png" width="22px" height="auto">
+            </button>
+          </a>
+        </div>
+
+        <div *ngIf="net == 'VLX'" style="display: flex; margin-left: 15px;">
+          <a href="https://eth.bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-eth" style="width: 65px;border: 1px solid white; margin-right: 5px; display: flex; align-items: center; justify-content: center;">
+              ETH &nbsp;<img src="assets/eth-diamond-black.png" width="10px" height="auto">
+            </button>
+          </a>
+          <a href="https://bamboodefi.com{{locationPage}}" style="text-decoration: none;">
+            <button class="no-border nav-item-bsc" style="width: 72px;border: 1px solid white;margin-right: 5px; display: flex; align-items: center; justify-content: center;">
+              BSC &nbsp;<img src="https://dex-bin.bnbstatic.com/static/images/icon_dex.svg" width="22px" height="auto">
+            </button>
+          </a>
+          <button class="no-border nav-item is-active" style="width: 65px;margin-right: 5px; display: flex; align-items: center; justify-content: center;">
+              VLX&nbsp;<img src="https://raw.githubusercontent.com/velas/mobile-wallet/master/assets/velas-logo1.png" width="22px" height="auto">
+          </button>
+         </div>
       </div>
 
-      <div class="lang-separator">
-        <mat-form-field class="selector" appearance="standard">
-          <mat-label>{{ 'selectlanguage' | translate }}</mat-label>
-          <mat-select (selectionChange)="useLanguage($event.value)">
-            <mat-option *ngFor="let language of languagesList" [value]="language.languageSet">{{language.languageName}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <div class="separator"
+      style="display: flex; justify-content: flex-start; margin-left: 15px; margin-bottom: 15px; padding-top: 10px;">
+        <app-menulinks></app-menulinks>
       </div>
 
       <mat-selection-list #links [multiple]="false">
         <mat-list-option *ngFor="let link of linkToPages" class="nav-item" [value]="link" [routerLink]="link.link"
-          [routerLinkActive]="['is-active']" (click)="setImage(link.image, link.text)">
+          [routerLinkActive]="['is-active']" (click)="setImage(link.image, link.text, link.link)">
           <img [src]="assetsLink + link.image" mat-list-icon class="icon-img"> {{link.text | translate}}
         </mat-list-option>
+
+        <a mat-list-item class="nav-item" href="https://www.bamboodefi.shop/" style="text-decoration: none;" target="_blank">
+          <img src="assets/CarritoBamboo.png" mat-list-icon  class="icon-img"><span mat-list-text style="padding-right: 16px; padding-left: 16px;">Bamboo Shop</span>
+        </a>
+
       </mat-selection-list>
-      <div class="img-nav-botton">
-        <a href="https://nexxyolabs.com" target=”_blank”><img src="assets/nexxyo-labs.png" alt="Nexxyolabs"
-            class="img-nexxyo"></a>
-      </div>
-      <div class="img-nav-botton button-partner">
-        <button mat-flat-button class="nav-item item-card" routerLink="about" (click)="setImage('about.png', 'About')"
-          [routerLinkActive]="['is-active']">Partners</button>
-      </div>
 
+      <div style="display: flex; align-items: center; justify-content: flex-start; padding: 16px; cursor: pointer;"
+      (click)="goToTokpie('https://tokpie.io/blog/bamboodefi-bamboo-token/#How_to_buy_BAMBOO_with_Bank_Card_or_Apple_Pay')">
+        <img src="assets/bamboodefitoken.png" alt="bamboo" width="40px">
+        &nbsp;<mat-icon color="primary">favorite</mat-icon>&nbsp;
+        <img src="assets/Apple_Pay.png" alt="apple-pay" width="45px">
+        <img src="assets/visa.png" alt="assets/Apple_Pay.png" width="45px">
+        <img src="assets/mastercard.png" alt="assets/Apple_Pay.png" width="45px">
+      </div>
     </mat-sidenav>
-    <mat-sidenav-content class="right-content">
 
+    <mat-sidenav-content class="right-content">
       <alert></alert>
-      <mat-card class="card-first">
-        <mat-card-title class="card-title-home ">{{titlePage | translate}} <button mat-flat-button color="primary"
-            class="btn-title" (click)="openDialog()">{{ message }}</button></mat-card-title>
+      <mat-card class="card-first mat-elevation-z4">
+        <mat-card-title class="card-title-home ">
+          <span style="display: flex; align-items: center;">&nbsp;{{titlePage | translate}} </span>
+          <span>
+            <button mat-flat-button color="primary" class="btn-title" style="overflow: auto;" (click)="openDialog()">{{
+              message }}</button>
+            <button mat-button color="primary" class="btn-title" style="overflow: auto;" (click)="setBamboo()"
+              matTooltip="Set Bamboo token at Metamask">
+              <img src="assets/bamboodefitoken.png" alt="bamboo" width="30px">
+              <mat-icon>favorite</mat-icon><img src="assets/metamask-fox.svg" alt="metamask" width="30px">
+            </button>
+          </span>
+        </mat-card-title>
         <mat-card-content>
           <router-outlet></router-outlet>
         </mat-card-content>

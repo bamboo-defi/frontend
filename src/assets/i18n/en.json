@@ -17,12 +17,13 @@
   "docs": {
     "downloadwp": "Download Bamboo Whitepaper",
     "downloadaudit": "Download Bamboo Audit",
-    "downloadDonation": "Donation Certificate"
+    "downloadDonation": "Donation Certificate",
+    "downloadauditbridge": "Download Bridge Audit"
   },
   "information": {
-    "sumary": "Summary",
+    "sumary": "Bamboo Market",
     "liquidity": "Liquidity",
-    "fees": "Fees",
+    "fees": "Fees 24h",
     "feescollected": "Fees Collected",
     "balance": "Your Bamboo Balance",
     "announcements": "Announcements",
@@ -51,37 +52,38 @@
     "faq9": "Why is the CEO so ugly?",
     "faq10": "Why a panda?",
     "faq11": "Is there any social or ecological work in which the project participates or helps?",
-    "faq12": "What are the achievements of the roadmap?",
-    "faq13": "What is token burning and what is it for?",
-    "faq14": "How can I be sure of the reliability of the contracts?",
-    "faq15": "What is the code audit and what is it for?",
-    "faqr1": "BambooDeFi is an ETH based platform, you can use Metamask or Walletconnect.",
-    "faqr2": "It is a lottery system that takes place every ten days, you can buy tickets with Bamboo, at a rate of one ticket per Bamboo and participate. There are ten winners who will share out the Bamboo accumulated from the purchase of tickets, one of which is the BambooVault, which will dedicate its part to sustaining the system, and the rest will be determined randomly among the competing tickets.",
-    "faqr3": "Bamboo Burn Yearly Party. An annual lottery system, in which to buy tickets bamboo is burned at the rate of one ticket per Bamboo burned. The prize is 10% of the Bamboo accumulated in the BambooVault throughout the year, and there is a single winner determined at random among all the participating tickets.",
+    "faq12": "What is token burning and what is it for?",
+    "faq13": "How can I be sure of the reliability of the contracts?",
+    "faq14": "What is the code audit and what is it for?",
+    "faqr1": "BambooDefI is a platform based on ETH, BSC and VELAS Blockchain, you can use Metamask, Trust Wallet, VelasWallet or Walletconnect.",
+    "faqr2": "It is a lottery system that takes place every ten days, you can buy tickets with Bamboo and participate. There are ten winners who will share the Bamboo accumulated from the purchase of tickets, one of them is the BambooVault, which will dedicate its share to the support of the system, and the rest will be determined randomly among the competing tickets.",
+    "faqr3": "Bamboo Burn Yearly Party. An annual lottery system, in which Bamboo is burned to buy tickets. The prize is 10% of the Bamboo accumulated in the BambooVault over the year, and there is a single winner determined at random from all participating tickets",
     "faqr4": "The BambooDeFi team is working hard to offer the card as soon as possible. When it is available it will be communicated through the official channels.",
     "faqr5": "Bamboo can be implemented in all ATMs sold by AuroraCryptoMachines. We do not yet have an exact date for implementation.",
-    "faqr6": "The community decides everything from developer fees, adding new Pools, rebalancing and even deactivating Pools. The votes are based on the BAMBOO GROWTH RATE. This is a voting system, where you get 1 vote per wallet with Bamboo blocked in the Staking system, under construction yet.",
-    "faqr7": "Currently under development, but will be publicly visible on: <a href=\"https://github.com/bamboo-defi\" target=\"_blank\">GITHUB</a>. The SourceCode of the main SmartContract can also be seen at: <a href=\"https://etherscan.io/token/0xf56842Af3B56Fd72d17cB103f92d027bBa912e89\" target=\"_blank\">EtherScan</a>.",
+    "faqr6": "The community decides everything from developer fees, adding new Pools, rebalancing and even deactivating Pools. Votes are based on the BAMBOO GROW RATIO. This is a voting system, where you get 1 vote per Bamboo in your wallet.",
+    "faqr7": "We are continuously in development, it is publicly visible at: <a href=\"https://github.com/bamboo-defi\" target=\"_blank\">GITHUB</a>.  The SourceCode of the main SmartContract can also be viewed at <a href=\"https://etherscan.io/token/0xf56842Af3B56Fd72d17cB103f92d027bBa912e89\" target=\"_blank\">EtherScan</a>.",
     "faqr8": "We are a software development company based in Spain, visit: <a href=\"https://www.nexxyolabs.com\" target=\"_blank\">www.nexxyolabs.com</a>.",
     "faqr9": "He is like that, you can see his face and the rest of the team at <a href=\"https://www.nexxyolabs.com/about\" target=\"_blank\">www.nexxyolabs.com</a>.",
     "faqr10": "They symbolise peace, perseverance and patience; they are strong yet sweet, as well as being a symbol of good luck and the team's favourite animal.",
     "faqr11": "We collaborate with the Chengdu Giant Panda Research Foundation, donating 5% of the profits obtained with BambooDeFi.",
-    "faqr12": "The roadmap is being followed as planned.",
-    "faqr13": "It is a process of elimination of the token so that it cannot be used or traded, it will be reflected in the network of: <a href=\"https://etherscan.io/token/0xf56842Af3B56Fd72d17cB103f92d027bBa912e89\" target=\"_blank\">EtherScan<a>. Ang pag-aalis ng Bamboo mula sa ecosystem ay isang mekanismo na pumipigil sa pagbawas ng halaga ng presyo ng token.",
-    "faqr14": "All contracts were audited by <a href=\"https://red4sec.com/\" target=\"_blank\">RED4SEC</a>.",
-    "faqr15": "An audit validates the code by an external company, <a href=\"https://red4sec.com/\" target=\"_blank\">RED4SEC<a> in the case of BambooDeFi, ensuring the solidity, security and eliminating any possible vulnerability of it, meeting all requirements to operate without any danger to users.",
+    "faqr12": "It is a process of elimination of the token so that it cannot be used or traded, it will be reflected in the network of: <a href=\"https://etherscan.io/token/0xf56842Af3B56Fd72d17cB103f92d027bBa912e89\" target=\"_blank\">EtherScan<a>.",
+    "faqr13": "All contracts were audited by <a href=\"https://red4sec.com/\" target=\"_blank\">RED4SEC</a>.",
+    "faqr14": "An audit validates the code by an external company, <a href=\"https://red4sec.com/\" target=\"_blank\">RED4SEC<a> in the case of BambooDeFi, ensuring the solidity, security and eliminating any possible vulnerability of it, meeting all requirements to operate without any danger to users.",
     "unstaked": "Unstacked",
     "staked": "Staked",
     "toHarvest": "Seeds ready to harvest",
     "bambooField": "Bamboo Field",
-    "totalBamboo": "Total Bamboo"
+    "totalBamboo": "Total Bamboo",
+    "useGuides": "User Guide",
+    "connectYourWallet": "Please, connect your wallet",
+    "bamboomedia": "Bamboo Pool price media"
   },
   "walletmenu": {
     "resume": "In this section you can check the status of your wallet (Total Bamboo, Bamboo in stake and temporality).  Also from this section you will be able to perform QuickSwaps, to create instant liquidity pools without having to search in the list of pairs.",
     "buy": "Buy",
     "staked": "Stake",
     "moreliquidity": "+ Liquidity",
-    "lessliquidity": "- Liquidity"
+    "lessliquidity": "Liquidity"
   },
   "liquidity": {
     "resume": "In this section you can see the active pools and the history. In the active pools you can see the value in USDT blocked in each pool, its yield per 1000 USDT, the daily, monthly and annual ROI, its available amount, amount in stake and the rewards."
@@ -118,7 +120,10 @@
     "selectToken": "Select Token",
     "tokenName": "Name",
     "tokenAmmount": "Amount",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "selectFromAddress": "Find a Token by address",
+    "setAddress": "Token address",
+    "setToken": "Choose Token"
   },
   "pairs": {
     "name": "Pair",
@@ -132,7 +137,15 @@
     "totalLiquidity": "Total Liquidity"
   },
   "governance": {
-    "resume": "In this section, if you are not connected to your wallet, you will be able to view current and past proposals. Once connected to your wallet, you will be able to launch new proposals and vote on active ones."
+    "resume": "In this section you could view current and past proposals, clicking on the link you will be send to the snapshot page, were you can vote and launch new proposals if you have a wallet with bamboo inside. Proposals must have a period of at least 48 hours to be considered valid. Notice that oficial language for the proposals is English.",
+    "active": "Active",
+    "pending": "Pending",
+    "closed": "Closed",
+    "all": "All",
+    "start": "Start",
+    "end": "End",
+    "setNew": "Set new proposal",
+    "votes": "Number of votes"
   },
   "vault": {
     "resume": "In this section the BAMBOOVAULT accounts will be shown in detail (SOLIDARITY WALLET, TEAM WALLET), as well as a list with the token burns made and the programmed ones. In addition, you will be able to see the remaining blocking time of each Bamboo contained in the team wallet.",
@@ -179,25 +192,42 @@
     "balance": "Balance",
     "errorAmmount": "You have not enough amount",
     "maxReward": "Max reward",
-    "selectPool": "Please select your pool tokens",
+    "selectPool": "Please select your pool tokens, remove liquidity to receive tokens back",
     "lpTokenBalance": "BLP Token Balance",
-    "noPoolsAvailable": "No pool available!"
+    "noPoolsAvailable": "No pool available!",
+    "bambooValue": "Bamboo Value",
+    "yourLiquidity": "Your Liquidity",
+    "noLiquidityOrConnect": "You have no Liquidity",
+    "noConnexion": "Please connect your wallet",
+    "doYouLikeAddLiquidity": "Do you like to add Liquidity?",
+    "goToLiquidityPlus": "Add Liquidity",
+    "noBlps": "You have no Liquidity",
+    "liquidityMinus": "Liquidity Minus",
+    "removeTo": "Remove Liquidity to receive tokens back",
+    "seePoolJoined": "Don't see a pool you joined?",
+    "remove": "Remove"
   },
   "liquidityPlus": {
+    "liquidityPlus": "Add Liquidity",
+    "addToReceive": "Add liquidity to receive BLP tokens",
     "input": "Input",
     "balance": "Balance",
     "select": "Select",
     "per": "per",
     "shareOfPool": "Share of Pool",
+    "poolAllocation": "Pool Allocation",
     "trade": "Supply",
     "position": "Position",
     "firstPoolStrong": "You are the first liquidity provider",
     "firstPool": "The ratio Tokens you add will set the price of this pool. Once you set the rate click supply to review.",
-    "errorTextToken": "You need to select a Token from the list"
+    "firstPoolStrongETH": "The pool doesn't exists",
+    "firstPoolETH": "The pool you are looking for doesn't exist. If you want, you can write a governance proposal and vote to create new pools.",
+    "errorTextToken": "You need to select a Token from the list",
+    "approve": "Approve"
   },
   "to-stake": {
     "yourbamboo": "Your Bamboo",
-    "totaltostake": "Total to stake (500 BAMBOO at least)",
+    "totaltostake": "Total to stake ",
     "time": "Time",
     "selectTime": "Select Time",
     "stakenow": "Stake now",
@@ -205,9 +235,9 @@
     "viewstakes": "Show your stakes",
     "stakedescription": "Stake view",
     "ammount": "Amount",
-    "daysLeft": "Days left",
+    "daysLeft": "Time left",
     "ROI": "ROI",
-    "daysTo": "Days left",
+    "daysTo": "Time left",
     "roi": "ROI",
     "errorTextNoFunds": "You do not have enough funds",
     "errorTextToken": "You need to select a Token from the list",
@@ -265,7 +295,46 @@
     "tokenAmmount": "Amount",
     "account": "Account",
     "timeStamp": "Time Stamp",
-    "search": "Search"
+    "search": "Search",
+    "tokenValue":  "Token Value",
+    "poolTotal": "Pool Total Value",
+    "transaction": "Transaction",
+    "buy": "BUY",
+    "sell": "SELL",
+    "add": "ADD",
+    "remove": "REMOVE",
+    "others": "Others",
+    "totalSells": "SELLS",
+    "totalBuys": "BUYS",
+    "totalAmmount": "Total Ammount",
+    "notOperations": "No Buy or Sell operations",
+    "view": "View",
+    "wallet": "Wallet"
+  },
+  "create-pair": {
+    "explainPairPool": "If you continue with the following three steps, you will create a new token pair. Select the two tokens that make up the pair, then approve them and add the initial liquidity. Please connect your wallet if needed.",
+    "setPair": "Set new Pair",
+    "select": "Select",
+    "explainSelectPair": "Please select two tokens to make a new pair and add liquidity later in this section. You should interact with your wallet to confirm the transaction, please connect your wallet and when it is done you could go to the next step.",
+    "approve": "Approve",
+    "approveTittle": "Approve the tokens",
+    "explainApprovePair": "You must approve the tokens, please connect your wallet to accept the transaction.",
+    "previous": "Previous",
+    "next": "Next step",
+    "addLiquidity": "Add liquidity to the new pair.",
+    "firstPoolStrong": "You are the first liquidity provider",
+    "firstPool": "The ratio Tokens you add will set the price of this pool. Once you set the rate click supply to review.",
+    "approveTokensExplain": "You must add liquidity to either token in order to set the new pair.",
+    "supply": "Supply",
+    "sameTokenError": "Tokens can not be the same.",
+    "pairExistError": "Pair already exists!",
+    "approveTokenError": "Error approving token, try again later.",
+    "selectTokensError": "You must select both tokens to continue.",
+    "waitValidationError": "Wait for pair validation.",
+    "connectWalletError": "Please, connect your wallet.",
+    "notApprovedError": "Approve both tokens, please.",
+    "yourBalance": "Your token balance",
+    "supplyBalanceError": "You don't have enough balance!"
   },
   "pool": {
     "pool": "Pool",
@@ -284,7 +353,9 @@
     "approveStaking": "Approve Staking",
     "deposit": "Deposit",
     "withdraw": "Withdraw",
-    "getReward": "Get Reward"
+    "getReward": "Get Reward",
+    "loading": "Loading...",
+    "goToPools": "Go to pools"
   },
   "settings": {
     "ok": "Save settings",
@@ -309,7 +380,10 @@
     "approveExtraSeeds": "Approve extra Seeds",
     "selectPool": "Please, select a Pool from below to create a BambooField",
     "setPool": "Pool selected",
-    "youNeedMore": "You need at least 2000 Bamboo and a valid Pool"
+    "youNeedMore": "You need at least 2000 Bamboo and a valid Pool",
+    "disclaimer": "<p>Set at least 2001 Bamboo and select a Pool with stake, 2000 Bamboo will be blocked for 7 days, and in adition you receive at least one Bamboo Seed (Seed).</p><p> You can add more Seeds if you want. </p><p>You could withdraw this Bamboo and Seeds in seven days, and when you withdraw you will be rewarded with the 2000 Bamboo staked previously and the equivalent Seeds in Bamboo value at the moment. </p><p>Aditionaly you receive the 0,04% proportional to the Seeds staked in the selected Pool if you have BLp staked at least for 60 days.'</p>'",
+    "atWithdraw": "When you withdraw, you harvest and claim all Bamboo and seeds ammount.",
+    "knowMore": "What is Bamboo Field?"
   },
   "confirm": {
     "validate": "Validate",
@@ -375,5 +449,58 @@
     "low24": "24h Low",
     "priceChange24": "Price Change 24h",
     "circulatingSupply": "Circulating Supply"
+  },
+  "guide": {
+    "title1": "View your Bamboo Wallet:",
+    "title2": "Exchange tokens in Wallet",
+    "title3": "Stake Bamboo in Wallet",
+    "title4": "How to Add Liquidity to a Pool",
+    "title5": "How to Subtract Liquidity from a Pool",
+    "title6": "Using Liquidity Pools",
+    "title7": "Using Raindrop and BBYP",
+    "title8": "Bamboo Field",
+    "explain1": "View your current Bamboo balance: the Bamboo unstaked, the current Bamboo stake, if you have a BambooField, the seeds ready to harvest and the total Bamboo. You can refresh your balance by clicking on the double arrow",
+    "explain2": "Go to Wallet and click in the Buy section to exchange tokens",
+    "explain3": "In Settings select the Slippage and Dead Line Transition tolerance of the trades, save the changes",
+    "explain4": "Select the token you want to trade from and select the amount you want. You can select a percentage for ease of use",
+    "explain5": "Select the token you want to exchange to, the estimated amount to exchange will be reflected as well as the balance. You can select a different wallet to send the token to in Add Wallet if you wish",
+    "explain6": "Once the Send button is clicked, a summary of the transaction will appear for validation",
+    "explain7": "Once validated, the application will wait for you to confirm the transaction in your Wallet",
+    "explain8": "In Stake section you will see the Bamboo you can use to make Stake. By selecting the amount and time from the drop-down menus, the multiplier is displayed for your information",
+    "explain9": "When you click on Stake Now, a summary box is displayed for validation",
+    "explain10": "Select the pair you wish to provide liquidity",
+    "explain11": "You are informed of your position in the pool, accept by clicking on Supply",
+    "explain12": "When you click on Supply, you are informed of the operation and asked to validate",
+    "explain13": "Select the pool from which you want to withdraw liquidity",
+    "explain14": "Select the percentage of the pool you want to withdraw, you are informed of the amount of each token to be withdrawn. Click on approve",
+    "explain15": "You are informed of the pair reward, and asked for validation",
+    "explain16": "Select Aprobe Staking in the desired pool",
+    "explain17": "You are asked for confirmation in your Wallet",
+    "explain18": "In the active pools you can Deposit or Withdraw",
+    "explain19": "In Deposit select the available Seeds for the Pool, you can click on Max to include all of them, and validate the operation",
+    "explain20": "On clicking Withdraw, select the amount of seeds you want to withdraw, you can click on Max to include all of them, and validate the operation",
+    "explain21": "Display the accumulated prize in Bamboo Raindrop and in BBYP",
+    "explain22": "You can see the number of tickets you have bought, as well as buy tickets. The price per ticket is the one marked in the column of the respective lotteries. You can also see the date of the next lottery",
+    "explain23": "Here you can see your seeds and whether you have a Bamboo Field",
+    "explain24": "Select an active Pool and enter at least 2001 Bamboo to validate the Bamboo Field, you will open the Bamboo Field with at least one Seed. With Bamboo Field you generate an added value of 0.4% in the commission of the selected Pool in proportion to the Seeds you are growing",
+    "explain25": "Press Get Reward to collect the reward generated in Bamboo in the pool"
+  },
+  "wrapped": {
+    "wrap": "Make your inner panda wraaaappp!",
+    "resume": "Here we will inform you of all the advances on Wrapped Coins and the new functions of the exchange platform with other blockchain networks"
+  },
+  "brand": {
+    "download": "Download",
+    "fonts": "Tipografy",
+    "images": "Images"
+  },
+  "bridge": {
+    "explain": "Please set your {{netTo}} wallet and the Bamboo ammount you want to convert from {{net}} to {{netTo}}. When you approve the bridge you could go to your {{netTo}} wallet and watch your Bamboo in this network",
+    "wallet": "Set your wallet",
+    "setWallet": "Wallet",
+    "ammount": "Bamboo amount",
+    "setAmmount": "Amount",
+    "setBridge": "Bridge to {{netTo}}!",
+    "approve": "Approve bridge"
   }
 }

@@ -1,0 +1,284 @@
+// @import "~@angular/material/theming";
+// @import '../../styles.scss';
+
+.example-container-pa {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.mat-toolbar{
+  background-color: #f1e8e0;
+}
+.example-is-mobile .bamboo-toolbar {
+  position: fixed;
+  /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+  z-index: 2;
+  display: block;
+}
+
+h1.example-app-name {
+  margin-left: 8px;
+}
+
+.link-no-under{
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.bamboo-sidenav-container {
+  /* When the sidenav is not fixed, stretch the sidenav container to fill the available space. This
+     causes `<mat-sidenav-content>` to act as our scrolling element for desktop layouts. */
+  flex: 1;
+}
+
+.bamboo-is-mobile .example-sidenav-container {
+  /* When the sidenav is fixed, don't constrain the height of the sidenav container. This allows the
+     `<body>` to be our scrolling element for mobile layouts. */
+  flex: 1 0 auto;
+}
+
+.side-nav{
+  width: 260px;
+  padding-right: 10px;
+  padding-left: 10px;
+  background-color: #f1e8e0;
+  display: none;
+}
+.row-img{
+  width: 45px;
+  height: auto;
+}
+
+.nav-bamboo{
+  background-color: #f1e8e0;
+}
+
+.nav-img{
+  justify-content: start;
+}
+.img-nav-botton{
+  padding: 1em;
+  border-top: solid 1px #dab338;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.img-nexxyo{
+  width: 60px;
+  height: auto;
+}
+.img-kindynos{
+  width: 120px;
+  height: auto;
+}
+.container{
+  // margin-top: 3em;
+  margin-bottom: 1em;
+  padding-bottom: 1em;
+  // border-bottom: solid 1px #dab338;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+.container-title{
+  // margin-top: 3em;
+  margin-bottom: 1em;
+  // padding-bottom: 1em;
+  // border-bottom: solid 1px #7ac949;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+}
+
+.bamboo-title{
+  font-size: x-large;
+  color: #dab338;
+}
+
+.is-active{
+  background-color: #e6dcb0;
+  box-shadow:inset 3px 5px 5px 0px #a1a1a1;
+  font-weight: 500;
+  .mat-list-icon{
+    width: 60px!important;
+    height: auto!important;
+    border-radius: 0px;
+    z-index: 99;
+  }
+}
+
+.nav-item-eth{
+  margin: 1px 0px 1px 0px;
+  border-radius: 50px;
+  cursor:pointer;
+  columns: #000000;
+  height: 36px!important;
+}
+.nav-item-eth:hover{
+  background-color:#bdd6a6;
+  box-shadow: 1px 5px 10px 0px #a1a1a1;
+}
+
+.nav-item{
+  margin: 1px 0px 1px 0px;
+  border-radius: 50px;
+  cursor:pointer;
+  columns: #000000;
+  height: 36px!important;
+}
+.nav-item:hover{
+  background-color:#e0be56;
+  box-shadow: 1px 5px 10px 0px #a1a1a1;
+  font-weight: 500;
+}
+.nav-item-bsc{
+  margin: 1px 0px 1px 0px;
+  border-radius: 50px;
+  cursor:pointer;
+  columns: #000000;
+  height: 36px!important;
+}
+.nav-item-bsc:hover{
+  background-color:#e0be56;
+  box-shadow: 1px 5px 10px 0px #a1a1a1;
+}
+.nav-item-velas{
+  margin: 1px 0px 1px 0px;
+  border-radius: 50px;
+  cursor:pointer;
+  columns: #000000;
+  height: 36px!important;
+}
+.nav-item-velas:hover{
+  background-color:#529dff;
+  box-shadow: 1px 5px 10px 0px #a1a1a1;
+}
+.is-active-eth{
+  background-color: #bdd6a6;
+  box-shadow:inset 3px 5px 5px 0px #a1a1a1;
+  .mat-list-icon{
+    width: 60px!important;
+    height: auto!important;
+    border-radius: 0px;
+    z-index: 99;
+  }
+}
+
+.is-active-bsc{
+  background-color: #e0be56;
+  box-shadow:inset 3px 5px 5px 0px #a1a1a1;
+  .mat-list-icon{
+    width: 60px!important;
+    height: auto!important;
+    border-radius: 0px;
+    z-index: 99;
+  }
+}
+
+.is-active-velas{
+  background-color: #529dff;
+  box-shadow:inset 3px 5px 5px 0px #a1a1a1;
+  .mat-list-icon{
+    width: 60px!important;
+    height: auto!important;
+    border-radius: 0px;
+    z-index: 99;
+  }
+}
+.no-border{
+  border: none;
+}
+.lang-separator{
+  margin: 0em 1em;
+  border-bottom: solid 1px #dab338;
+  // padding-bottom: 1em;
+}
+.card-title-home{
+  padding-bottom: 0.5em;
+  padding-top: 0.25em;
+  // border-bottom: solid 1px #dab338;
+  color: #dab338;
+  font-size: 35px;
+  line-height: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-first{
+  height: auto;
+}
+.btn-title-nav{
+  display: block;
+  margin-left: auto;
+  border-radius: 50px;
+}
+.btn-title{
+  display: none;
+}
+
+.content-card{
+  flex-direction: column;
+}
+.item-card {
+  margin: 10px;
+  text-align: center;
+  width: 94%;
+}
+.img-content{
+  display: flex;
+  justify-content: center;
+}
+
+.btn-action{
+  border-radius: 50px;
+}
+
+// Changes
+.mat-drawer-side{
+  border-right: none;
+}
+.mat-drawer-content{
+  background-color: #F1E8E0;
+}
+
+@media only screen and (min-width: 600px) {
+
+  .bamboo-toolbar {
+    position: fixed;
+    /* Make sure the toolbar will stay on top of the content as it scrolls past. */
+    z-index: 2;
+    display: none;
+    background-color: #f1e8e0;
+  }
+
+  .side-nav{
+    width: 260px;
+    padding-right: 10px;
+    padding-left: 10px;
+    background-color: #f1e8e0;
+    display: block;
+  }
+
+  .btn-title-nav{
+    display: none;
+  }
+  .btn-title{
+    display: block;
+    float: right;
+    border-radius: 50px;
+  }
+  .content-card{
+    flex-direction: row;
+  }
+  .item-card {
+    margin: 10px;
+    text-align: center;
+    width: 100%;
+  }
+}

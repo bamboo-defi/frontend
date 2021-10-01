@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PagesComponent } from './pages.component';
 import { AboutComponent } from './about/about.component';
 import { DocsComponent } from './docs/docs.component';
-import { ApproveProposition, DenyProposition, GovernanceComponent, SetProposition } from './governance/governance.component';
+import { GovernanceComponent } from './governance/governance.component';
 import { HomeComponent } from './home/home.component';
 import { InformationComponent } from './information/information.component';
 import { PairsComponent } from './pairs/pairs.component';
@@ -12,8 +12,7 @@ import { RaindropComponent } from './raindrop/raindrop.component';
 import { TokensComponent } from './tokens/tokens.component';
 import { WalletComponent } from './wallet/wallet.component';
 import { PagesRoutingModule } from './pages-routing.module';
-import { DialogAddWalletComponent } from './pages.component';
-import { FormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -51,6 +50,12 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
+import { MatSortModule } from '@angular/material/sort';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatStepperModule} from '@angular/material/stepper';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 import { PairTransactionsComponent } from './pair-transactions/pair-transactions.component';
 import { BamboofieldComponent } from './bamboofield/bamboofield.component';
@@ -66,6 +71,22 @@ import { SumaryComponent } from './sumary/sumary.component';
 import { BalanceComponent } from './balance/balance.component';
 import {GlobalMarketComponent} from './global-market/global-market.component';
 import {AlertModule} from '../_alert';
+import { GuideComponent } from './guide/guide.component';
+import { PandaSpinnerService } from './pandaspinner/pandaspinner.service';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { BrandingComponent } from './branding/branding.component';
+import { WrappedComponent } from './wrapped/wrapped.component';
+import { BridgeComponent } from './bridge/bridge.component';
+import { PairCreateComponent } from './pair-create/pair-create.component';
+import { SelectTokenComponent } from './pair-create/select-token/select-token.component';
+import { CountdownTimerComponent } from '../util-components/countdown-timer/countdown-timer.component';
+import { StakingComponent } from './staking/staking.component';
+import { StakedComponent } from './staking/staked/staked.component';
+import { ApyComponent } from './apy/apy.component';
+import { MenulinksComponent } from './menulinks/menulinks.component';
+import { ActiveFieldComponent } from './bamboofield/active-field/active-field.component';
+import { SearchPairComponent } from './wallet/search-pair/search-pair.component';
+import { MinusLiquidityPairComponent } from './wallet/minus-liquidity-pair/minus-liquidity-pair.component';
 
 const materialModules = [
   MatSidenavModule,
@@ -74,9 +95,9 @@ const materialModules = [
   MatListModule,
   MatCardModule,
   MatGridListModule,
-  MatIconModule,
   MatTabsModule,
   MatTableModule,
+  MatSortModule,
   MatFormFieldModule,
   MatPaginatorModule,
   MatInputModule,
@@ -88,10 +109,14 @@ const materialModules = [
   MatExpansionModule,
   MatTooltipModule,
   MatProgressBarModule,
+  MatMenuModule,
+  MatStepperModule,
+  MatSlideToggleModule,
+  MatProgressSpinnerModule
 ];
 
 // ATTENTION!!! required for AOT compilation
-export function createTranslateLoader(http: HttpClient) {
+export function createTranslateLoader(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
@@ -108,7 +133,6 @@ export function createTranslateLoader(http: HttpClient) {
     RaindropComponent,
     TokensComponent,
     WalletComponent,
-    DialogAddWalletComponent,
     BamboovaultComponent,
     TokenvalueComponent,
     LiquidityMinusComponent,
@@ -116,9 +140,6 @@ export function createTranslateLoader(http: HttpClient) {
     ToStakeComponent,
     ToTradeComponent,
     SelectToken,
-    SetProposition,
-    ApproveProposition,
-    DenyProposition,
     PairComponent,
     PairTransactionsComponent,
     BamboofieldComponent,
@@ -132,7 +153,22 @@ export function createTranslateLoader(http: HttpClient) {
     PandaspinnerComponent,
     SumaryComponent,
     BalanceComponent,
-    GlobalMarketComponent
+    GlobalMarketComponent,
+    GuideComponent,
+    NotFoundComponent,
+    BrandingComponent,
+    WrappedComponent,
+    BridgeComponent,
+    PairCreateComponent,
+    SelectTokenComponent,
+    CountdownTimerComponent,
+    StakingComponent,
+    StakedComponent,
+    ApyComponent,
+    MenulinksComponent,
+    ActiveFieldComponent,
+    SearchPairComponent,
+    MinusLiquidityPairComponent
   ],
   imports: [
     CommonModule,
@@ -148,15 +184,14 @@ export function createTranslateLoader(http: HttpClient) {
       }
     }),
     materialModules,
-    AlertModule
+    AlertModule,
+    ReactiveFormsModule
   ],
   exports: [RouterModule, materialModules],
   entryComponents: [
     SelectToken,
-    SetProposition,
-    ApproveProposition,
-    DenyProposition,
     AddSeedsComponent,
   ],
+  providers: [PandaSpinnerService]
 })
 export class PagesModule { }

@@ -1,0 +1,66 @@
+<img src="{{pool.logoTokenFirst}}" width="30px"><img src="{{pool.logoTokenSecond}}" width="30px">{{pool.pair}}
+
+<!-- If pool doesnt exist on selected tokens-->
+<div *ngIf="errorNoPool" class="token-equal">{{ 'liquidityMinus.noPoolsAvailable' | translate}}</div>
+
+<!--If tokens are equal -->
+<div *ngIf="tokenEqual" class="token-equal">{{ 'liquidityMinus.sameToken' | translate }}</div>
+
+<!--Pool selected-->
+<div *ngIf="liquidTool">
+  <!-- <div *ngIf="liquidTool" style="margin: 20px;"> -->
+
+  <form class="separator" name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()">
+
+    <div class="separator"><strong>{{ 'liquidityMinus.lpTokenBalance' | translate }}:&nbsp;</strong>
+      <span class="form-medium">{{pool.reward}}</span>
+    </div>
+    <div class="separator"><strong>{{ 'liquidityMinus.ammount' | translate}}</strong></div>
+    <div class="separator-big"></div>
+    <div class="form-big-lm separator-big display-liquidity div-display-liquidity">
+
+      <!-- <input matInput #ammount="ngModel" type="ammountPercentaje" name="ammountPercentaje" maxlength="3"
+        [(ngModel)]="ammountPercentaje" id="ammountPercentaje" class="from-big input-percent right"
+        (change)="$event ? maxCien() : null" required>
+      <span style="vertical-align: text-top;">%</span> -->
+      <span class="token-ammount display-liquidity">
+        <input matInput #balance="ngModel" type="number" name="ammountBalance" [(ngModel)]="ammountBalance"
+          id="ammountBalance" class="input-percent right " (change)="$event ? maxBalance() : null" placeholder="0.0"
+          required>
+      </span>
+    </div>
+
+    <div class="separator"></div>
+    <mat-slider class="form-big-lm" style="width: 100%;" [max]="max" [min]="min" [step]="step" (change)="$event?setRewards(): null"
+      name="ammount" [thumbLabel]="thumbLabel" [(ngModel)]="ammountPercentaje">
+    </mat-slider>
+    <div>
+      <mat-chip-list class="mat-chip-list-minus" aria-label="selection" #slip>
+        <mat-chip *ngFor="let percent of percents" selected (click)="setPercent(percent)">
+          {{percent}} %
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+
+    <!--Resume-->
+    <div *ngIf="ammountPercentaje" class="separator">
+      <div class="separator">
+        <mat-icon>arrow_downward</mat-icon>
+      </div>
+
+      <div class="separator"><span class="form-medium">{{ reward.tokenFirst }}</span>&nbsp; <img
+          src="{{pool.logoTokenFirst}}" alt="" srcset="" style="width: 25px; height: 25px; margin-right: 5px;"><span
+          class="font-med"> {{pool.underlyingTokenFirst | uppercase}}</span></div>
+      <div><span class="form-medium">{{ reward.tokenSecond }}</span>&nbsp; <img src="{{pool.logoTokenSecond}}" alt=""
+          srcset="" style="width: 25px; height: 25px; margin-right: 5px;"><span class="font-med">
+          {{pool.underlyingTokenSecond | uppercase}}</span></div>
+    </div>
+    <div class="separator">
+      <button mat-flat-button color="accent" style="width: 100%; border-radius: 50px;"
+        [disabled]="ammountPercentaje==0 || ammountBalance==0" type="submit">{{ 'liquidityMinus.remove' | translate
+        }}</button>
+      <button mat-flat-button color="warn" *ngIf="error" class="btn-title" style="width: 100%;">{{ errorAmmount |
+        translate }}</button>
+    </div>
+  </form>
+</div>

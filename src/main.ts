@@ -6,9 +6,9 @@ import { environment } from './environments/environment.prod';
 
 if (environment.production) {
   enableProdMode();
-  if (window) {
-    window.console.log = () => { };
-  }
+  // if (window) {
+  //   window.console.log = () => { };
+  // }
   localStorage.setItem('connected', 'disconnected');
 }
 

@@ -11,12 +11,18 @@ import BigNumber from 'bignumber.js';
 import {ContractService} from 'src/app/services/contracts/contract.service';
 import {FieldService} from 'src/app/services/contracts/field/field.service';
 import {FieldUserInfo, TokenData} from 'src/app/interfaces/contracts';
-import {bambooField_address} from 'src/app/services/contract-connection/tools/addresses';
+import {NetworkService} from 'src/app/services/contract-connection/network.service';
 import {PandaspinnerComponent} from '../pandaspinner/pandaspinner.component';
 import {OwnWallet} from 'src/app/interfaces/own-wallet';
 import {AlertService} from '../../_alert';
+import { PandaSpinnerService } from '../pandaspinner/pandaspinner.service';
+import { ConnectionService } from 'src/app/services/contract-connection/connection.service';
+import { KeeperService } from 'src/app/services/contracts/keeper/keeper.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 
-const SHOW_DECIMALS = 5;
+const SHOW_DECIMALS = 18 ;
 
 
 @Component({
@@ -25,6 +31,9 @@ const SHOW_DECIMALS = 5;
   styleUrls: ['./bamboofield.component.scss']
 })
 export class BamboofieldComponent implements OnInit {
+
+  addresses;
+
   isWait = false;
 
   bambooRegistered: boolean;
@@ -49,12 +58,20 @@ export class BamboofieldComponent implements OnInit {
   seedValue: BigNumber;
   uInfo: FieldUserInfo;
   error = false;
-  pools: Pool[];
+  pools: Pool[] = [];
   pool: Pool;
   poolsStaked: Pool[];
   isProcessing: boolean;
   isConnect: string;
   ownWallet: OwnWallet;
+  poolsActives: Pool[];
+  dataSource = new MatTableDataSource<Pool>();
+  displayedColumns: string[];
+  poolSelected: Pool;
+  selected = false;
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'determinate';
+  value: number;
 
   constructor(
     private service: ServiceService,
@@ -62,8 +79,14 @@ export class BamboofieldComponent implements OnInit {
     private tokenService: TokenService,
     private fieldService: FieldService,
     private contractService: ContractService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pandaSpinnerService: PandaSpinnerService,
+    private networkService: NetworkService,
+    public connService: ConnectionService,
+    private keeperService: KeeperService,
+
   ) {
+    this.addresses = networkService.getAddressNetwork();
   }
 
   ngOnInit(): void {
@@ -72,7 +95,15 @@ export class BamboofieldComponent implements OnInit {
     this.getOwnWallet(); // Get own wallet
     this.getSeeds(); // Get actual seeds
     this.getUserPools(); // Get all user pool
-    this.getUserPoolsSelected(); // Get pools selected to harvest
+    // this.getUserPoolsSelected(); // Get pools selected to harvest
+
+    // setInterval(async () => {
+    //   if (this.connService.provider !== undefined) {
+    //     this.pools.forEach(async pool => {
+    //       pool.reward = Number((await this.keeperService.getPendingBAMBOO(pool.id)).toFixed(SHOW_DECIMALS));
+    //     });
+    //   }
+    // }, 30000);
   }
 
   /**
@@ -91,9 +122,11 @@ export class BamboofieldComponent implements OnInit {
     }
     this.bambooData = await this.tokenService.getBAMBOOData();
     this.seedData = await this.tokenService.getSeedData();
-    this.uInfo = await this.fieldService.getUserInfo();
-    this.registerCost = await this.fieldService.getRegisterCost();
+    console.log('seedData', this.seedData);
 
+    this.uInfo = await this.fieldService.getUserInfo();
+    console.log('uinfo', this.uInfo);
+    this.registerCost = await this.fieldService.getRegisterCost();
     this.today = new Date(Date.now());
     if (!this.uInfo.isActive || this.uInfo.endTime >= await this.contractService.getCurrentBlockTimestamp()) {
       this.bambooRegistered = false;
@@ -101,6 +134,7 @@ export class BamboofieldComponent implements OnInit {
     }
     this.seedValue = await this.contractService.estimateSeedValue();
     const minStakeTime = await this.fieldService.minStakeTime();
+    console.log('minStakeTime', minStakeTime);
     const tempDate = new BigNumber(this.uInfo.startTime).plus(minStakeTime);
     const timeHarv = new Date(tempDate.toNumber() * 1000);
     const seedBalance = Number(this.seedData.balance.toFixed(SHOW_DECIMALS));
@@ -112,6 +146,20 @@ export class BamboofieldComponent implements OnInit {
       timeHarvest: timeHarv,
       timeWithdraw: timeHarv
     };
+
+    // Fecha salida
+    const salida = tempDate.toNumber() * 1000;
+    console.log('salida', salida);
+    // Fecha arranque
+    console.log('arranque', this.uInfo.startTime * 1000);
+    const entrada = this.uInfo.startTime * 1000;
+    // Today
+    console.log('hoy', Date.now());
+    // Porcentaje
+    console.log('porcentaje', ((Date.now() - entrada) / (salida - entrada)) * 100 );
+    this.value = ((Date.now() - entrada) / (salida - entrada)) * 100 ;
+
+
     if (this.today >= this.seeds.timeWithdraw) {
       this.couldWithdraw = true;
     }
@@ -119,11 +167,35 @@ export class BamboofieldComponent implements OnInit {
   }
 
   /**
-   * Get all user pools, to select one at create bambooField
+   * Get all user pools and show a table
    */
-  async getUserPools(): Promise<void> {
-    this.pools = await this.contractService.getPoolList(false);
+  async getUserPools(): Promise<any> {
+    this.displayedColumns = [
+      'title'
+    ];
+    this.pools = await this.contractService.getPoolList();
+    this.dataSource = new MatTableDataSource<Pool>(this.pools);
+    this.isWait = false;
+    if (this.connService.provider !== undefined) {
+      await this.getUserPoolsActive(this.pools);
+      console.log('get users', this.pools);
+
+    } else {
+      this.isWait = false;
+      console.log('pools', this.pools);
+
+    }
+}
+
+  /**
+   * Get user pools staked to select one at create bambooField
+   */
+   async getUserPoolsActive(pools): Promise<any> {
+      console.log('poollist', pools);
+      this.pools = await this.contractService.getWeb3PoolList(pools);
+
   }
+
 
   /**
    * Get user pool used to get seeds
@@ -137,7 +209,10 @@ export class BamboofieldComponent implements OnInit {
    * Is error, you need more bamboo
    */
   isError(): void {
-    if (this.stakeNew <= 2000 || !this.pool) {
+    console.log('poolSelefcted', this.poolSelected);
+    console.log('stakeNew', this.stakeNew);
+
+    if (this.stakeNew <= 2000 || !this.poolSelected) {
       this.error = true;
     } else if (this.ownWallet.unstaked < this.stakeNew) {
       this.error = true;
@@ -148,10 +223,42 @@ export class BamboofieldComponent implements OnInit {
   }
 
   /**
+   * Selected Pool to set the field
+   */
+   selectPoolToField(row): void{
+    this.displayedColumns = [
+      'title',
+    //  'back'
+    ];
+    this.poolSelected = row;
+    console.log('displayed', this.displayedColumns);
+    this.selected = true;
+    this.pools = [this.poolSelected];
+
+    this.dataSource = new MatTableDataSource<Pool>(this.pools);
+
+    this.pool = this.poolSelected;
+
+    console.log('displayed pool', this.displayedColumns);
+
+    this.isError();
+
+  }
+
+  /**
+   * Go back to all pools to select again
+   */
+  goBackToPools(): void {
+    this.selected = false;
+    this.poolSelected = null;
+    this.getUserPools();
+  }
+
+  /**
    * Register the first Stake
    */
   registerBamboo(): void {
-    if (this.stakeNew >= 2001 && this.pool.address) {
+    if (this.stakeNew >= 2001 && this.poolSelected.address) {
       // Register the firs seeds amount
       this.error = false;
       this.seeds.seeds = this.stakeNew - 2000;
@@ -164,7 +271,7 @@ export class BamboofieldComponent implements OnInit {
         seeds: this.seeds.seeds,
         stake: this.seeds.stake,
         time: this.today,
-        pool: this.pool
+        pool: this.poolSelected
       };
 
       // Confirm Dialog
@@ -204,7 +311,7 @@ export class BamboofieldComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(async (result) => {
-      const dialogPandaSpinner = this.getDialogPandaSpinner();
+      this.pandaSpinnerService.open();
       try {
         if (result) {
           await this.sow(result.amount);
@@ -213,7 +320,7 @@ export class BamboofieldComponent implements OnInit {
       } catch (error) {
         this.alertService.error('Error: ' + error.message);
       } finally {
-        dialogPandaSpinner.close();
+        this.pandaSpinnerService.close();
       }
     });
   }
@@ -223,7 +330,7 @@ export class BamboofieldComponent implements OnInit {
    */
   async sow(amount: BigNumber): Promise<void> {
     if (this.bambooRegistered) {
-      await this.contractService.validateAllowance(this.seedData, bambooField_address, amount);
+      await this.contractService.validateAllowance(this.seedData, this.addresses.bambooField_address, amount);
       const receipt = await this.fieldService.buySeeds(amount);
       await this.getSeeds();
       this.newSeedsAmmount = this.seedsNew * this.seeds.seedValue;
@@ -243,12 +350,12 @@ export class BamboofieldComponent implements OnInit {
       data: operationData
     });
     dialogRef.afterClosed().subscribe(async (result) => {
-      const dialogPandaSpinner = this.getDialogPandaSpinner();
+      this.pandaSpinnerService.open();
       try {
         if (result) {
           // Approve
           const amount = new BigNumber(result.toHarvest);
-          await this.contractService.validateAllowance(this.seedData, bambooField_address, amount);
+          await this.contractService.validateAllowance(this.seedData, this.addresses.bambooField_address, amount);
           const receipt = await this.fieldService.harvestSeeds(amount);
           await this.getSeeds();
 
@@ -259,7 +366,7 @@ export class BamboofieldComponent implements OnInit {
       } catch (error) {
         this.alertService.error('Error: ' + error.message);
       } finally {
-        dialogPandaSpinner.close();
+        this.pandaSpinnerService.close();
       }
     });
   }
@@ -295,10 +402,10 @@ export class BamboofieldComponent implements OnInit {
    */
   async setNewField(seed): Promise<void> {
     const amount = this.registerCost.plus(seed.seeds);
-    const dialogRef = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     // Approve
     try {
-      await this.contractService.validateAllowance(this.bambooData, bambooField_address, amount);
+      await this.contractService.validateAllowance(this.bambooData, this.addresses.bambooField_address, amount);
       const receipt = await this.fieldService.depositBamboo(this.pool.id, amount);
       this.bambooRegistered = true;
       this.alertService.success('Success');
@@ -310,7 +417,7 @@ export class BamboofieldComponent implements OnInit {
     } finally {
       await this.getSeeds();
       this.isProcessing = false;
-      dialogRef.close();
+      this.pandaSpinnerService.close();
     }
   }
 
@@ -318,7 +425,7 @@ export class BamboofieldComponent implements OnInit {
    * Withdraw Bamboos and Harvest Seeds
    */
   private async withdraw(): Promise<void> {
-    const dialogRef = this.getDialogPandaSpinner();
+    this.pandaSpinnerService.open();
     try {
       await this.fieldService.withdrawBamboo();
       this.seeds = {
@@ -338,19 +445,8 @@ export class BamboofieldComponent implements OnInit {
     } catch (error) {
       this.alertService.error('Error: ' + error.message);
     } finally {
-      dialogRef.close();
+      this.pandaSpinnerService.close();
     }
-  }
-
-  /**
-   * PandaSpinner Dialog
-   */
-  private getDialogPandaSpinner(): any {
-    return this.dialog.open(PandaspinnerComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      panelClass: 'panda-spinner'
-    });
   }
 }
 

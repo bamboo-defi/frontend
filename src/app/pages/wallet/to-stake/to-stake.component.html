@@ -1,12 +1,13 @@
 <div style="width: 100%;">
-  <form class="separator" name="form" #f="ngForm" (ngSubmit)="f.form.valid && onSubmit()">
+  <form class="separator" name="form" #f="ngForm" (ngSubmit)="f.form.valid && !error && onSubmit()">
     <div class="container-st">
-      <div>{{ 'to-stake.yourbamboo' | translate }}</div>
-      <div class="form-big-st separator">{{ ownWallet.unstaked }}<img src="/assets/bamboo-head.png" class="logotoken-st">
+      <div><strong>{{ 'to-stake.yourbamboo' | translate }}</strong></div>
+      <div class="form-big-st separator">{{ ownWallet.unstaked }}<img src="/assets/bamboo-head.png"
+          class="logotoken-st">
       </div>
     </div>
     <div class="container-st separator-big">
-      <div>{{ 'to-stake.totaltostake' | translate}}</div>
+      <div><strong>{{ 'to-stake.totaltostake' | translate}}</strong></div>
       <div class="container-row-st separator">
 
         <mat-select class="ammount-select-st" [(ngModel)]="bambooToStake" #ammountToStake name="ammountToStake"
@@ -22,7 +23,7 @@
       </div>
     </div>
     <div class="container-st separator-big">
-      <div>{{ 'to-stake.time' | translate}}</div>
+      <div><strong>{{ 'to-stake.time' | translate}}</strong></div>
       <div class="separator">
         <mat-select class="tex-select-st" [(ngModel)]="toStake.timeToStake" #timeToStake name="timeToStake"
           (selectionChange)="$event ? setMultiplier() : null" placeholder="{{ 'to-stake.selectTime' | translate }}"
@@ -82,8 +83,8 @@
 
           <mat-cell *matCellDef="let stake">
             <span class="mobile-label-st">{{ 'to-stake.daysTo' | translate }}</span>
-            {{stake.daysTo}}
-            {{ 'to-stake.timeUnit' | translate }}
+            <!--{{stake.daysTo}} {{ 'to-stake.timeUnit' | translate }}-->
+            <app-countdown-timer [time]=[stake.daysTo]></app-countdown-timer>
           </mat-cell>
         </ng-container>
 
@@ -102,11 +103,10 @@
             {{stake.acumulated}}&nbsp;
             <img src="/assets/bamboo-head.png" width="25px" height="25px">&nbsp;
             <button mat-flat-button class="btn-title" style="float: inherit;" color="primary"
-              [disabled]="stake.timeLeft >= 0 && stake.ammount > 0" (click)="withdrawAcumulatedRoi(stake)">{{
+              [disabled]="stake.acumulated <= 0" (click)="withdrawAcumulatedRoi(stake)">{{
               'to-stake.claim' | translate }}</button>
           </mat-cell>
         </ng-container>
-
 
         <ng-container matColumnDef="withdraw">
 

@@ -6,9 +6,12 @@ import {TokenData} from 'src/app/interfaces/contracts';
 import BigNumber from 'bignumber.js';
 import {PandaspinnerComponent} from '../pandaspinner/pandaspinner.component';
 import {AlertService} from '../../_alert';
+import { PandaSpinnerService } from '../pandaspinner/pandaspinner.service';
+import { UtilService } from 'src/app/services/contracts/utils/util.service';
 
-const FLOOR_DECIMALS = 1000000;
-
+const FLOOR_DECIMALS = 10000000000000000000;
+const NUMBER_DECIMALS = 18;
+const ZERO = '0';
 
 @Component({
   selector: 'app-deposit',
@@ -23,6 +26,7 @@ export class DepositComponent implements OnInit {
   stakeAmount: string;
   available: string;
   maxSeeds: string;
+  isValid: boolean;
 
   tokenData: TokenData;
   underlyingAmount: BigNumber;
@@ -33,12 +37,15 @@ export class DepositComponent implements OnInit {
     private keeperService: KeeperService,
     private tokenService: TokenService,
     public dialogPandaSpinner: MatDialog,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private pandaSpinnerService: PandaSpinnerService,
+    private utilsService: UtilService
   ) {
   }
 
   ngOnInit(): void {
     this.getAvailable(this.data.row.address);
+    this.isValid = false;
   }
 
   /**
@@ -46,14 +53,14 @@ export class DepositComponent implements OnInit {
    */
   async getAvailable(address): Promise<void> {
     this.tokenData = await this.tokenService.getTokenData(address);
-    this.available = this.tokenData.balance.toFixed(5);
+    this.available =  Number(this.tokenData.balance.toFixed(NUMBER_DECIMALS)) > 0 ? this.tokenData.balance.toFixed(NUMBER_DECIMALS) : ZERO;
   }
 
   /**
    * Set max amount of seeds. Need Service
    */
   setMaxSeeds(): string {
-    this.stakeAmount = (Math.floor(Number(this.tokenData.balance) * FLOOR_DECIMALS) / FLOOR_DECIMALS).toString();
+    this.stakeAmount = Number(this.tokenData.balance.toFixed(NUMBER_DECIMALS)) > 0 ? this.tokenData.balance.toFixed(NUMBER_DECIMALS) : ZERO;
     return this.stakeAmount;
   }
 
@@ -61,29 +68,8 @@ export class DepositComponent implements OnInit {
    * Need service. Genera depósito de slp en la pool
    */
   async depositSlp(): Promise<void> {
-    const dialogPandaSpinner = this.getDialogPandaSpinner();
-    try {
-      const amount = new BigNumber(this.stakeAmount);
-      const receipt = await this.keeperService.depositLP(this.data.row.id, amount, this.tokenData);
-      this.ok = true;
-      this.dialogRef.close(this.ok);
-      this.alertService.success('Success');
-    } catch (error) {
-      this.alertService.error('Error: ' + error.message);
-    } finally {
-      this.dialogRef.close();
-      dialogPandaSpinner.close();
-    }
+    const amount = new BigNumber(this.stakeAmount);
+    this.dialogRef.close({amount, tokenData: this.tokenData});
   }
 
-  /**
-   * PandaSpinner Dialog
-   */
-  private getDialogPandaSpinner(): any {
-    return this.dialogPandaSpinner.open(PandaspinnerComponent, {
-      closeOnNavigation: false,
-      disableClose: true,
-      panelClass: 'panda-spinner'
-    });
-  }
 }

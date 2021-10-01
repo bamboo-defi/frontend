@@ -1,0 +1,10 @@
+export const bambooToken_address = '0x198abb2d13faa2e52e577d59209b5c23c20cd6b3';
+export const router_address = '0xBA9DF2c143C502A433d6A876C1a291C9FC940cf9';
+export const factory_address = '0xFC2604a3BCB3BA6016003806A288E7aBF75c8Aa3';
+export const zooKeeper_address = '0x89929ef8f5094c023283AdE38Ee27a6f5e7a1D6E';
+export const raindrop_address = '0xA7EAfC5Caf4b965714694E6A344072c8B9F15099';
+export const bbyp_address = '0xa3aF533cf6D9F6C41DbaB0A39785d62A90353643';
+export const bambooField_address = '0xd1d3B8ed23b89492927513d2A0E39f37C574d640';
+export const weth_address = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+export const usdt_address = '0x55d398326f99059fF775485246999027B3197955';
+export const zero_address = '0x0000000000000000000000000000000000000000';

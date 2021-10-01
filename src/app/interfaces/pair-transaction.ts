@@ -7,6 +7,11 @@ export interface PairTransaction {
   tokenAmmount1: number;
   tokenName2: string;
   tokenAmmount2: number;
-  account: string;
+  from: string;
+  to: string;
+  hash: string;
+  blockNumber: number;
   timeStamp: string;
+  contractAddress: string;
+  poolId: number;
 }

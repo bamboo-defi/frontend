@@ -1,7 +1,8 @@
 <div class="container-wallet">
 
   <div class="content-card-home-left card-100">
-    <mat-tab-group mat-align-tabs="space-between" class="tab-100">
+    <mat-tab-group mat-align-tabs="space-between" class="tab-100"
+    [selectedIndex]="liquidityPlusActive">
       <mat-tab label="{{ 'walletmenu.buy' | translate }}">
         <div class="buy-box box mat-elevation-z6">
           <app-settings></app-settings>
@@ -9,22 +10,23 @@
 
         </div>
       </mat-tab>
-      <mat-tab label="{{ 'walletmenu.staked' | translate }}">
+      <!--<mat-tab label="{{ 'walletmenu.staked' | translate }}">
         <div class="buy-box staked-box box mat-elevation-z6">
           <app-to-stake></app-to-stake>
         </div>
 
-      </mat-tab>
+      </mat-tab>-->
 
-      <mat-tab label="{{ 'walletmenu.moreliquidity' | translate }}">
-        <div class="buy-box moreliquidity-box box mat-elevation-z6">
+      <mat-tab *ngIf="hasLiquidityPlus" label="{{ 'walletmenu.moreliquidity' | translate }}" >
+        <div class="buy-box moreliquidity-box box">
+          <!-- <app-settings></app-settings> -->
           <app-liquidity-plus></app-liquidity-plus>
         </div>
       </mat-tab>
 
       <mat-tab label="{{ 'walletmenu.lessliquidity' | translate }}">
         <div class="buy-box lessliquidity-box box mat-elevation-z6">
-          <app-liquidity-minus></app-liquidity-minus>
+          <app-liquidity-minus  style="width: 95%;"></app-liquidity-minus>
         </div>
       </mat-tab>
 
